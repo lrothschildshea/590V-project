@@ -23,23 +23,36 @@
 			var height = screen.height;
 			var svg = d3.select("#mapHere").append("svg").attr("width", width).attr("height", height);
 			var path = d3.geoPath();
+			
+
+			
 
 			d3.json("https://d3js.org/us-10m.v1.json", function(error, us) {
 				if (error) throw error;
 
 				svg.append("g")
 					.attr("class", "states")
-					.attr("fill", "#5b0793")
 					.selectAll("path")
 					.data(topojson.feature(us, us.objects.states).features)
 					.enter().append("path")
-					.attr("d", path);
+					.attr("d", path)
+					.attr("class", function(d){
+						return d.id
+					})
+					.attr("fill", function(d){
+						return "rgb(" + (3*d.id + 80) + ",0," + (3*d.id + 80) + ")"
+					});
 
 				svg.append("path")
 					.attr("class", "state-borders")
 					.attr("d", path(topojson.mesh(us, us.objects.states, function(a, b) { return a !== b; })));
-				});
 
+				svg.select("g").selectAll("path")
+					.on("click", function(){
+						//change the current data here
+						d3.select(this).attr("fill", "orange")
+					})
+				});
         </script>
     </body>
 </html>
