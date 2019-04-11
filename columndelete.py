@@ -23,7 +23,7 @@ df = pd.read_csv(file+path, sep='\t')
 
 headers = list(df)
 #Name of columns you wish to keep
-cols_to_keep = ['V101', 'commonweight_vv']
+cols_to_keep = ['inputstate', 'countyfips', 'countyname', 'birthyr', 'gender', 'sexuality', 'trans', 'educ', 'race', 'employ', 'marstat', 'pid3', 'religpew', 'faminc', 'CC16_326', 'CC16_410a']
 if cols_to_keep:
     print("Keeping the following columns: ", cols_to_keep)
     for col in headers:
