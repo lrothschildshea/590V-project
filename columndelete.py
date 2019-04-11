@@ -1,9 +1,25 @@
 import pandas as pd
+import tarfile
+import sys
 
 #The TSV file you wish to drop columns from
-file = 'data/CCES16_Common_OUTPUT_Feb2018_VV.tab.tsv'
-print("Reading in ",  file)
-df = pd.read_csv(file, sep='\t')
+file = 'data/CCES16_Common_OUTPUT_Feb2018_VV'
+
+import os.path
+if not (os.path.isfile(file+'.tab.tsv') or os.path.isfile(file+'.tab')):
+    tar = tarfile.open('data.tar.gz', "r:gz")
+    tar.extractall()
+    tar.close()
+
+if os.path.isfile(file+'.tab.tsv'):
+    path = '.tab.tsv'
+elif os.path.isfile(file+'.tab'):
+    path = '.tab'
+else:
+    sys.exit("Missing CCES file or not in data folder")
+
+print("Reading in ",  file+path)
+df = pd.read_csv(file+path, sep='\t')
 
 headers = list(df)
 #Name of columns you wish to keep
