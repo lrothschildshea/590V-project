@@ -24,24 +24,25 @@
 			var svg = d3.select("#mapHere").append("svg").attr("width", width).attr("height", height);
 			var path = d3.geoPath();
 
-			function getPopDist(file, cb){
-				var popDist = new Array(57).fill(0);
+			function getPopDist(poliData){
+				var dist = new Array(57).fill(0)
+				poliData.forEach(function(index){
+					dist[index.inputstate] += 1
+				})
+				return dist
+			}
+
+			function loadData(file, cb){
 				d3.tsv(file, function(error,data){
 					if (error) throw error;
-					data.forEach(function(d){
-						if (d.inputstate != ""){
-							stateid = parseInt(d.inputstate)
-							popDist[stateid] += 1
-						}
-					});
-					cb(popDist)
+					cb(data)
 				});
 			}
 
-			getPopDist('data/output.tsv', function(popDist){
+			loadData('data/output.tsv', function(poliData){
 				d3.json("https://d3js.org/us-10m.v1.json", function(error, us) {
 					if (error) throw error;
-
+					var popDist = getPopDist(poliData);
 					svg.append("g")
 						.attr("class", "states")
 						.selectAll("path")
