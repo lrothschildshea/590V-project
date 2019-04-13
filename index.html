@@ -25,7 +25,11 @@
 				<h2 style="text-align:center">Data Options</h2>
 				<input type="radio" name="dataType" value="Population" id='pop' checked>Population</input>
 				<br>
-				<input type="radio" name="dataType" value="2016_vote" id='vote2016'>3 Point Party Identification</input>
+				<input type="radio" name="dataType" value="pid_3" id='pid3'>3 Point Party Identification</input>
+				<br>
+				<input type="radio" name="dataType" value="2016_vote" id='vote2016'>2016 Predisential Election Results</input>
+				<br>
+				<input type="radio" name="dataType" value="2012_vote" id='vote2012'>2012 Predisential Election Results</input>
 			</div>
 		</div>
 		<script src="https://d3js.org/d3.v4.min.js"></script>
@@ -40,12 +44,18 @@
 			//distribution data var creation
 			var popDist;
 			var partyDist;
+			var vote2016;
+			var vote2012;
 
 			//radio button setup
 			var popradio = d3.select("#pop")
 			popradio.on("change", radioUpdate)
-			var vote2016radio = d3.select("#vote2016")
+			var pid3radio = d3.select("#pid3")
+			pid3radio.on("change", radioUpdate)
+			var vote2016radio = d3.select('#vote2016')
 			vote2016radio.on("change", radioUpdate)
+			var vote2012radio = d3.select('#vote2012')
+			vote2012radio.on("change", radioUpdate)
 			
 			function filter(index, filterNames, filterValues){
 				for(var i = 0; i < filterNames.length; i++){
@@ -101,6 +111,72 @@
 				return colors;
 			}
 
+			function getVote2016(poliData){
+				var dist = new Array(57);
+				for(var i=0; i < dist.length; i++){
+					dist[i] = new Array(8).fill(0);
+				}
+				poliData.forEach(function(index){
+					var inputstate = parseInt(index.inputstate);
+					var pres = parseInt(index.CC16_410a)-1;
+					if(pres<7){
+						dist[inputstate][pres] += 1;
+					}
+				});
+				return dist;
+			}
+
+			function maxVote2016(vote2016, d){
+				var id = parseInt(d.id);
+				var pres = vote2016[id].indexOf(Math.max.apply(Math, vote2016[id]));
+				var colors = [0,0,0];
+				var value = vote2016[id][pres];
+				switch(pres){
+					case 0:
+						return [value, 0, 0];
+					case 1:
+						return [0, 0, value];
+					case 2:
+						return [0,value,value];
+					case 3:
+						return [0,value,0];
+					case 7:
+						return [value, value, 0];
+				}
+				return colors;
+			}
+
+			function getVote2012(poliData){
+				var dist = new Array(57);
+				for(var i=0; i < dist.length; i++){
+					dist[i] = new Array(3).fill(0);
+				}
+				poliData.forEach(function(index){
+					var inputstate = parseInt(index.inputstate);
+					var pres = parseInt(index.CC16_326)-1;
+					if(pres < 3){
+						dist[inputstate][pres] += 1;
+					}
+				});
+				return dist;
+			}
+
+			function maxVote2012(vote2012, d){
+				var id = parseInt(d.id);
+				var pres = vote2012[id].indexOf(Math.max.apply(Math, vote2012[id]));
+				var colors = [0,0,0];
+				var value = vote2012[id][pres];
+				switch(pres){
+					case 0:
+						return [0, 0, value];
+					case 1:
+						return [value, 0, 0];
+					case 2:
+						return [0,value,0];
+				}
+				return colors;
+			}
+
 			function makeRandomColor(){
 				return "rgb(" + Math.ceil(Math.random()*255) + "," + Math.ceil(Math.random()*255) + "," + Math.ceil(Math.random()*255) + ")"
 			}
@@ -117,8 +193,14 @@
 					if(d){
 						if(popradio.property("checked")){
 							return "rgb(" + popDist[parseInt(d.id)]/10 + ",0," + popDist[parseInt(d.id)]/10 + ")"
-						} else if(vote2016radio.property("checked")){
+						} else if(pid3radio.property("checked")){
 							var colors = maxParty(partyDist, d);
+							return "rgb(" + colors[0] + "," + colors[1] + "," + colors[2] + ")";
+						} else if(vote2016radio.property("checked")){
+							var colors = maxVote2016(vote2016, d);
+							return "rgb(" + colors[0] + "," + colors[1] + "," + colors[2] + ")";
+						} else if(vote2012radio.property("checked")){
+							var colors = maxVote2012(vote2012, d);
 							return "rgb(" + colors[0] + "," + colors[1] + "," + colors[2] + ")";
 						}
 					}
@@ -127,6 +209,8 @@
 
 			loadData('data/output.tsv', function(poliData){
 				partyDist = getParty(poliData);
+				vote2016 = getVote2016(poliData);
+				vote2012 = getVote2012(poliData);
 				d3.json("https://d3js.org/us-10m.v1.json", function(error, us) {
 					if (error) throw error;
 					popDist = getPopDist(poliData);
