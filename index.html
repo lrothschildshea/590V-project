@@ -1,10 +1,70 @@
 <!DOCTYPE html>
 <html lang="en">
 	<style>
-		.state-borders {
+		.area-borders {
 			fill: none;
 			stroke: #fff;
 			stroke-width: 0.5px;
+		}
+
+		.switch {
+  			position: relative;
+  			display: inline-block;
+  			width: 32px;
+  			height: 20px;
+		}
+
+		.switch input {
+  			opacity: 0;
+  			width: 0;
+  			height: 0;
+		}
+
+		.slider {
+  			position: absolute;
+  			cursor: pointer;
+  			top: 0;
+ 			left: 0;
+  			right: 0;
+  			bottom: 0;
+  			background-color: #ccc;
+  			-webkit-transition: .4s;
+  			transition: .4s;
+		}
+
+		.slider:before {
+			position: absolute;
+			content: "";
+			height: 12px;
+			width: 12px;
+			left: 4px;
+			bottom: 4px;
+			background-color: white;
+			-webkit-transition: .4s;
+			transition: .4s;
+		}
+
+		input:checked + .slider {
+			background-color: #2196F3;
+		}
+
+		input:focus + .slider {
+			box-shadow: 0 0 1px #2196F3;
+		}
+
+		input:checked + .slider:before {
+			-webkit-transform: translateX(12px);
+			-ms-transform: translateX(12px);
+			transform: translateX(12px);
+		}
+
+		/* Rounded sliders */
+		.slider.round {
+			border-radius: 34px;
+		}
+
+		.slider.round:before {
+			border-radius: 50%;
 		}
 	</style>
 	<head>
@@ -23,6 +83,13 @@
 			</div>
 			<div id='radio' style="justify-content: flex-end; border: black solid 1px; margin:20px; padding:10px">
 				<h2 style="text-align:center">Data Options</h2>
+				<label class="switch">
+					<input id="stateCountyCheck" type="checkbox">
+					<span class="slider round"></span>
+					
+				</label>
+				<p>Counties instead of states (thats the slider above. will fix later)</p>
+				<br>
 				<input type="radio" name="dataType" value="Population" id='pop' checked>Population</input>
 				<br>
 				<input type="radio" name="dataType" value="2016_vote" id='vote2016'>2016 Presidential Vote</input>
@@ -46,6 +113,10 @@
 			popradio.on("change", radioUpdate)
 			var vote2016radio = d3.select("#vote2016")
 			vote2016radio.on("change", radioUpdate)
+
+			//state county toggle
+			var stateCountyCheckbox = d3.select("#stateCountyCheck")
+			stateCountyCheckbox.on("change", stateCountyCheckboxUpdate)
 			
 
 			function getPopDist(poliData){
@@ -115,7 +186,51 @@
 				})
 			}
 
-			loadData('data/output.tsv', function(poliData){
+			function stateCountyCheckboxUpdate(){
+				if(stateCountyCheckbox.property("checked")){
+					loadCounties()
+				} else {
+					loadStates()
+				}
+			}
+
+			function loadCounties(){
+				svg.selectAll("*").remove()
+				loadData('data/output.tsv', function(poliData){
+				partyDist = getParty(poliData);
+				d3.json("https://d3js.org/us-10m.v1.json", function(error, us) {
+					if (error) throw error;
+					popDist = getPopDist(poliData);
+					svg.append("g")
+						.attr("class", "counties")
+						.selectAll("path")
+						.data(topojson.feature(us, us.objects.counties).features)
+						.enter().append("path")
+						.attr("d", path)
+						.attr("class", function(d){
+							return d.id
+						})
+						.attr("fill", function(d){
+							//need to make radio update work with counties
+							return makeRandomColor()
+						});
+
+					svg.append("path")
+						.attr("class", "area-borders")
+						.attr("d", path(topojson.mesh(us, us.objects.counties, function(a, b) { return a !== b; })));
+
+					svg.select("g").selectAll("path")
+						.on("click", function(){
+							//change the current data here
+							d3.select(this).attr("fill", makeRandomColor)
+						})
+				});
+				});
+			}
+
+			function loadStates(){
+				svg.selectAll("*").remove()
+				loadData('data/output.tsv', function(poliData){
 				partyDist = getParty(poliData);
 				d3.json("https://d3js.org/us-10m.v1.json", function(error, us) {
 					if (error) throw error;
@@ -135,7 +250,7 @@
 						});
 
 					svg.append("path")
-						.attr("class", "state-borders")
+						.attr("class", "area-borders")
 						.attr("d", path(topojson.mesh(us, us.objects.states, function(a, b) { return a !== b; })));
 
 					svg.select("g").selectAll("path")
@@ -144,7 +259,11 @@
 							d3.select(this).attr("fill", makeRandomColor)
 						})
 				});
-			});
+				});
+			}
+
+			stateCountyCheckboxUpdate()
+			
         </script>
     </body>
 </html>
