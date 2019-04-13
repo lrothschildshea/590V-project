@@ -92,7 +92,7 @@
 				<br>
 				<input type="radio" name="dataType" value="Population" id='pop' checked>Population</input>
 				<br>
-				<input type="radio" name="dataType" value="2016_vote" id='vote2016'>2016 Presidential Vote</input>
+				<input type="radio" name="dataType" value="2016_vote" id='vote2016'>3 Point Party Identification</input>
 			</div>
 		</div>
 		<script src="https://d3js.org/d3.v4.min.js"></script>
@@ -118,6 +118,14 @@
 			var stateCountyCheckbox = d3.select("#stateCountyCheck")
 			stateCountyCheckbox.on("change", stateCountyCheckboxUpdate)
 			
+			function filter(index, filterNames, filterValues){
+				for(var i = 0; i < filterNames.length; i++){
+					if (index[filterNames[i]] != filterValues[i]){
+						return false;
+					}
+				}
+				return true;
+			}
 
 			function getPopDist(poliData){
 				var dist = new Array(57).fill(0);
@@ -177,12 +185,14 @@
 
 			function radioUpdate(){
 				d3.selectAll("path").attr("fill", function(d){
-					if(popradio.property("checked")){
-						return "rgb(" + popDist[parseInt(d.id)]/10 + ",0," + popDist[parseInt(d.id)]/10 + ")"
-					} else if(vote2016radio.property("checked")){
-						var colors = maxParty(partyDist, d);
-						return "rgb(" + colors[0] + "," + colors[1] + "," + colors[2] + ")";
-					}	
+					if(d){
+						if(popradio.property("checked")){
+							return "rgb(" + popDist[parseInt(d.id)]/10 + ",0," + popDist[parseInt(d.id)]/10 + ")"
+						} else if(vote2016radio.property("checked")){
+							var colors = maxParty(partyDist, d);
+							return "rgb(" + colors[0] + "," + colors[1] + "," + colors[2] + ")";
+						}
+					}
 				})
 			}
 
