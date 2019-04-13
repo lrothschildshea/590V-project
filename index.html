@@ -20,7 +20,7 @@
 			<div id='radio' style="justify-content: flex-end; border: black solid 1px;">
 				<input type="radio" name="dataType" value="Population" id='pop' checked>Population</input>
 				<br>
-				<input type="radio" name="dataType" value="2016_vote" id='vote2016'>2016 Presidential Vote</input>
+				<input type="radio" name="dataType" value="2016_vote" id='vote2016'>3 Point Party Identification</input>
 			</div>
 		</div>
 		<script src="https://d3js.org/d3.v4.min.js"></script>
@@ -42,6 +42,14 @@
 			var vote2016radio = d3.select("#vote2016")
 			vote2016radio.on("change", radioUpdate)
 			
+			function filter(index, filterNames, filterValues){
+				for(var i = 0; i < filterNames.length; i++){
+					if (index[filterNames[i]] != filterValues[i]){
+						return false;
+					}
+				}
+				return true;
+			}
 
 			function getPopDist(poliData){
 				var dist = new Array(57).fill(0);
