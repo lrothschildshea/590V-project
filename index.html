@@ -25,21 +25,59 @@
 			var path = d3.geoPath();
 
 			function getPopDist(poliData){
-				var dist = new Array(57).fill(0)
+				var dist = new Array(57).fill(0);
 				poliData.forEach(function(index){
-					dist[index.inputstate] += 1
-				})
-				return dist
+					dist[parseInt(index.inputstate)] += 1;
+				});
+				return dist;
+			}
+
+			function getParty(poliData){
+				var dist = new Array(57);
+				for(var i = 0; i < dist.length; i++){
+					dist[i] = new Array(8).fill(0);
+				}
+				poliData.forEach(function(index){
+					if (index.pid3 != ""){
+						var inputstate = parseInt(index.inputstate);
+						var pid3 = parseInt(index.pid3)-1;
+						dist[inputstate][pid3] += 1;
+					}
+				});
+				return dist;
+			}
+
+			function maxParty(partyDist, d){
+				var id = parseInt(d.id);
+				var party = partyDist[id].indexOf(Math.max.apply(Math, partyDist[id]));
+				var colors = [0,0,0];
+				var value = partyDist[id][party];
+				switch(party){
+					case 0:
+						return [0, 0, value];
+					case 1:
+						return [value, 0, 0];
+					case 2:
+						return [0, value, 0];
+					case 3:
+						return [value, 0, value];
+					case 4:
+						return [0, value, value];
+					case 5:
+						return [value, value, 0];
+				}
+				return colors;
 			}
 
 			function loadData(file, cb){
 				d3.tsv(file, function(error,data){
 					if (error) throw error;
-					cb(data)
+					cb(data);
 				});
 			}
-
+			
 			loadData('data/output.tsv', function(poliData){
+				var partyDist = getParty(poliData);
 				d3.json("https://d3js.org/us-10m.v1.json", function(error, us) {
 					if (error) throw error;
 					var popDist = getPopDist(poliData);
@@ -53,7 +91,8 @@
 							return d.id
 						})
 						.attr("fill", function(d){
-							return "rgb("+ +popDist[parseInt(d.id)]/10 +  ",0," + popDist[parseInt(d.id)]/10 + ")"
+							var colors = maxParty(partyDist, d);
+							return "rgb("+colors[0]+","+colors[1]+","+colors[2]+")";
 						});
 
 					svg.append("path")
