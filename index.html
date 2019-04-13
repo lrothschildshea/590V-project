@@ -34,7 +34,7 @@
 
 			//distribution data var creation
 			var popDist;
-			var tempdata = []
+			var partyDist;
 
 			//radio button setup
 			var popradio = d3.select("#pop")
@@ -88,7 +88,7 @@
 				return colors;
 			}
 
-			function makeNewColors(){
+			function makeRandomColor(){
 				return "rgb(" + Math.ceil(Math.random()*255) + "," + Math.ceil(Math.random()*255) + "," + Math.ceil(Math.random()*255) + ")"
 			}
 
@@ -104,20 +104,17 @@
 					if(popradio.property("checked")){
 						return "rgb(" + popDist[parseInt(d.id)]/10 + ",0," + popDist[parseInt(d.id)]/10 + ")"
 					} else if(vote2016radio.property("checked")){
-						return tempdata[parseInt(d.id)]
+						var colors = maxParty(partyDist, d);
+						return "rgb(" + colors[0] + "," + colors[1] + "," + colors[2] + ")";
 					}	
 				})
 			}
 
 			loadData('data/output.tsv', function(poliData){
-				var partyDist = getParty(poliData);
+				partyDist = getParty(poliData);
 				d3.json("https://d3js.org/us-10m.v1.json", function(error, us) {
 					if (error) throw error;
 					popDist = getPopDist(poliData);
-					tempdata = []
-					for(i=0; i < 51; i++){
-						tempdata.push(makeNewColors())
-					}
 					svg.append("g")
 						.attr("class", "states")
 						.selectAll("path")
@@ -128,8 +125,8 @@
 							return d.id
 						})
 						.attr("fill", function(d){
-							var colors = maxParty(partyDist, d);
-							return "rgb(" + colors[0] + "," + colors[1] + "," + colors[2] + ")";
+							//radioUpdate returns the colors based on what button is selected
+							radioUpdate()
 						});
 
 					svg.append("path")
