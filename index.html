@@ -114,12 +114,14 @@
 
 			function radioUpdate(){
 				d3.selectAll("path").attr("fill", function(d){
-					if(popradio.property("checked")){
-						return "rgb(" + popDist[parseInt(d.id)]/10 + ",0," + popDist[parseInt(d.id)]/10 + ")"
-					} else if(vote2016radio.property("checked")){
-						var colors = maxParty(partyDist, d);
-						return "rgb(" + colors[0] + "," + colors[1] + "," + colors[2] + ")";
-					}	
+					if(d){
+						if(popradio.property("checked")){
+							return "rgb(" + popDist[parseInt(d.id)]/10 + ",0," + popDist[parseInt(d.id)]/10 + ")"
+						} else if(vote2016radio.property("checked")){
+							var colors = maxParty(partyDist, d);
+							return "rgb(" + colors[0] + "," + colors[1] + "," + colors[2] + ")";
+						}
+					}
 				})
 			}
 
