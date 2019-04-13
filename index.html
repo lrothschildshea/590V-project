@@ -9,15 +9,20 @@
 	</style>
 	<head>
 		<meta charset="utf-8">
-		<title>D3: Axis moved to the bottom</title>
+		<title>U.S. Map</title>
 		<script type="text/javascript" src="d3.js"></script>
 		<style type="text/css">
 		</style>
 	</head>
 	<body>
+		<h1 style="text-align:center">Our Title Here</h1>
 		<div style="display:flex">
-			<div id='mapHere' style="justify-content: flex-start; border: black solid 1px;"></div>
-			<div id='radio' style="justify-content: flex-end; border: black solid 1px;">
+			<div style="justify-content: flex-start; border: black solid 1px; margin:20px;">
+				<h2 style="text-align:center">United State of America</h2>
+				<div id='mapHere'></div>
+			</div>
+			<div id='radio' style="justify-content: flex-end; border: black solid 1px; margin:20px; padding:10px">
+				<h2 style="text-align:center">Data Options</h2>
 				<input type="radio" name="dataType" value="Population" id='pop' checked>Population</input>
 				<br>
 				<input type="radio" name="dataType" value="2016_vote" id='vote2016'>2016 Presidential Vote</input>
