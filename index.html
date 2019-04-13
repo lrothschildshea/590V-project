@@ -15,14 +15,33 @@
 		</style>
 	</head>
 	<body>
-		<div id='mapHere'></div>
+		<div style="display:flex">
+			<div id='mapHere' style="justify-content: flex-start; border: black solid 1px;"></div>
+			<div id='radio' style="justify-content: flex-end; border: black solid 1px;">
+				<input type="radio" name="dataType" value="Population" id='pop' checked>Population</input>
+				<br>
+				<input type="radio" name="dataType" value="2016_vote" id='vote2016'>2016 Presidential Vote</input>
+			</div>
+		</div>
 		<script src="https://d3js.org/d3.v4.min.js"></script>
 		<script src="https://d3js.org/topojson.v2.min.js"></script>
 		<script type="text/javascript">
-			var width = screen.width;
-			var height = screen.height;
+			//basic svg setup
+			var width = 1000;
+			var height = 600;
 			var svg = d3.select("#mapHere").append("svg").attr("width", width).attr("height", height);
 			var path = d3.geoPath();
+
+			//distribution data var creation
+			var popDist;
+			var tempdata = []
+
+			//radio button setup
+			var popradio = d3.select("#pop")
+			popradio.on("change", radioUpdate)
+			var vote2016radio = d3.select("#vote2016")
+			vote2016radio.on("change", radioUpdate)
+			
 
 			function getPopDist(poliData){
 				var dist = new Array(57).fill(0)
@@ -32,6 +51,10 @@
 				return dist
 			}
 
+			function makeNewColors(){
+				return "rgb(" + Math.ceil(Math.random()*255) + "," + Math.ceil(Math.random()*255) + "," + Math.ceil(Math.random()*255) + ")"
+			}
+
 			function loadData(file, cb){
 				d3.tsv(file, function(error,data){
 					if (error) throw error;
@@ -39,10 +62,24 @@
 				});
 			}
 
+			function radioUpdate(){
+				d3.selectAll("path").attr("fill", function(d){
+					if(popradio.property("checked")){
+						return "rgb(" + popDist[parseInt(d.id)]/10 + ",0," + popDist[parseInt(d.id)]/10 + ")"
+					} else if(vote2016radio.property("checked")){
+						return tempdata[parseInt(d.id)]
+					}	
+				})
+			}
+
 			loadData('data/output.tsv', function(poliData){
 				d3.json("https://d3js.org/us-10m.v1.json", function(error, us) {
 					if (error) throw error;
-					var popDist = getPopDist(poliData);
+					popDist = getPopDist(poliData);
+					tempdata = []
+					for(i=0; i < 51; i++){
+						tempdata.push(makeNewColors())
+					}
 					svg.append("g")
 						.attr("class", "states")
 						.selectAll("path")
@@ -53,7 +90,7 @@
 							return d.id
 						})
 						.attr("fill", function(d){
-							return "rgb("+ +popDist[parseInt(d.id)]/10 +  ",0," + popDist[parseInt(d.id)]/10 + ")"
+							return "rgb(" + popDist[parseInt(d.id)]/10 + ",0," + popDist[parseInt(d.id)]/10 + ")"
 						});
 
 					svg.append("path")
@@ -63,7 +100,7 @@
 					svg.select("g").selectAll("path")
 						.on("click", function(){
 							//change the current data here
-							d3.select(this).attr("fill", "orange")
+							d3.select(this).attr("fill", makeNewColors)
 						})
 				});
 			});
