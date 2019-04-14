@@ -97,6 +97,8 @@
 				<input type="radio" name="dataType" value="2016_vote" id='vote2016'>2016 Predisential Election Results</input>
 				<br>
 				<input type="radio" name="dataType" value="2012_vote" id='vote2012'>2012 Predisential Election Results</input>
+				<br>
+				<button type="button" id="clrButton">Clear Selection</button>
 			</div>
 		</div>
 		<script src="https://d3js.org/d3.v4.min.js"></script>
@@ -123,6 +125,9 @@
 			var vote2016County;
 			var vote2012County;
 
+			//clear button
+			d3.select("#clrButton").on("click", clrButtonClick)
+
 			//radio button setup
 			var popradio = d3.select("#pop")
 			popradio.on("change", radioUpdate)
@@ -135,7 +140,12 @@
 
 			//state county toggle
 			var stateCountyCheckbox = d3.select("#stateCountyCheck")
-			stateCountyCheckbox.on("change", stateCountyCheckboxUpdate)
+			stateCountyCheckbox.on("change", renderMap)
+			
+			function clrButtonClick(){
+				selected = new Map()
+				renderMap()
+			}
 			
 			function filter(index, filterNames, filterValues){
 				for(var i = 0; i < filterNames.length; i++){
@@ -445,7 +455,7 @@
 				})
 			}
 
-			function stateCountyCheckboxUpdate(){
+			function renderMap(){
 				if(stateCountyCheckbox.property("checked")){
 					loadAreas(false)
 				} else {
@@ -519,7 +529,7 @@
 				});
 			}
 
-			stateCountyCheckboxUpdate()
+			renderMap()
 			
         </script>
     </body>
