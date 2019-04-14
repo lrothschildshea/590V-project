@@ -4,7 +4,7 @@
 		.area-borders {
 			fill: none;
 			stroke: #fff;
-			stroke-width: 0.5px;
+			stroke-width: 0px;
 		}
 
 		.switch {
@@ -107,6 +107,11 @@
 			var height = 600;
 			var svg = d3.select("#mapHere").append("svg").attr("width", width).attr("height", height);
 			var path = d3.geoPath();
+			var selected = new Map();
+			const selectedColor = "#aaaaaa"
+			const selectedWidth = "4px"
+			const unselectedColor = "#fff"
+			const unselectedWidth = "0px"
 
 			//distribution data var creation
 			var popDist;
@@ -248,6 +253,20 @@
 				return colors;
 			}
 
+			function highlightSelectedArea(element){
+				if(selected.get(d3.select(element).attr("class")) === "undefined"){
+					selected.set(d3.select(element).attr("class"), true)
+				} else {
+					selected.set(d3.select(element).attr("class"), !selected.get(d3.select(element).attr("class")))
+				}
+
+				if(selected.get(d3.select(element).attr("class"))){
+					d3.select(element).attr("stroke", selectedColor).attr("stroke-width", selectedWidth)
+				} else {
+					d3.select(element).attr("stroke", unselectedColor).attr("stroke-width", unselectedWidth)
+				}
+			}
+
 			function makeRandomColor(){
 				return "rgb(" + Math.ceil(Math.random()*255) + "," + Math.ceil(Math.random()*255) + "," + Math.ceil(Math.random()*255) + ")"
 			}
@@ -285,47 +304,13 @@
 
 			function stateCountyCheckboxUpdate(){
 				if(stateCountyCheckbox.property("checked")){
-					loadCounties()
+					loadAreas(false)
 				} else {
-					loadStates()
+					loadAreas(true)
 				}
 			}
 
-			function loadCounties(){
-				svg.selectAll("*").remove()
-				loadData('data/output.tsv', function(poliData){
-				partyDist = getParty(poliData);
-				d3.json("https://d3js.org/us-10m.v1.json", function(error, us) {
-					if (error) throw error;
-					popDist = getPopDist(poliData);
-					svg.append("g")
-						.attr("class", "counties")
-						.selectAll("path")
-						.data(topojson.feature(us, us.objects.counties).features)
-						.enter().append("path")
-						.attr("d", path)
-						.attr("class", function(d){
-							return d.id
-						})
-						.attr("fill", function(d){
-							//need to make radio update work with counties
-							return makeRandomColor()
-						});
-
-					svg.append("path")
-						.attr("class", "area-borders")
-						.attr("d", path(topojson.mesh(us, us.objects.counties, function(a, b) { return a !== b; })));
-
-					svg.select("g").selectAll("path")
-						.on("click", function(){
-							//change the current data here
-							d3.select(this).attr("fill", makeRandomColor)
-						})
-				});
-				});
-			}
-
-			function loadStates(){
+			function loadAreas(statesBool){
 				svg.selectAll("*").remove()
 				loadData('data/output.tsv', function(poliData){
 				partyDist = getParty(poliData);
@@ -334,7 +319,9 @@
 				d3.json("https://d3js.org/us-10m.v1.json", function(error, us) {
 					if (error) throw error;
 					popDist = getPopDist(poliData);
-					svg.append("g")
+
+					if(statesBool){
+						svg.append("g")
 						.attr("class", "states")
 						.selectAll("path")
 						.data(topojson.feature(us, us.objects.states).features)
@@ -343,19 +330,43 @@
 						.attr("class", function(d){
 							return d.id
 						})
-						.attr("fill", function(d){
+					} else {
+						svg.append("g")
+						.attr("class", "counties")
+						.selectAll("path")
+						.data(topojson.feature(us, us.objects.counties).features)
+						.enter().append("path")
+						.attr("d", path)
+						.attr("class", function(d){
+							return d.id
+						})
+					}
+
+					svg.selectAll("path")
+						.attr("fill", function(){
 							//radioUpdate returns the colors based on what button is selected
 							radioUpdate()
+						}).attr("stroke", function(){
+							if(selected.get(d3.select(this).attr("class"))){
+								return selectedColor
+							} else {
+								return unselectedColor
+							}
+						}).attr("stroke-width", function(){
+							if(selected.get(d3.select(this).attr("class"))){
+								return selectedWidth
+							} else {
+								return unselectedWidth
+							}
 						});
 
 					svg.append("path")
 						.attr("class", "area-borders")
 						.attr("d", path(topojson.mesh(us, us.objects.states, function(a, b) { return a !== b; })));
 
-					svg.select("g").selectAll("path")
+					svg.selectAll("path")
 						.on("click", function(){
-							//change the current data here
-							d3.select(this).attr("fill", makeRandomColor)
+							highlightSelectedArea(this)
 						})
 				});
 				});
