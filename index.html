@@ -164,7 +164,7 @@
 				var id = parseInt(d.id);
 				var party = partyDist[id].indexOf(Math.max.apply(Math, partyDist[id]));
 				var colors = [0,0,0];
-				var value = partyDist[id][party];
+				var value = (partyDist[id][party]/popDist[id]) * 255;
 				switch(party){
 					case 0:
 						return [0, 0, value];
@@ -201,7 +201,7 @@
 				var id = parseInt(d.id);
 				var pres = vote2016[id].indexOf(Math.max.apply(Math, vote2016[id]));
 				var colors = [0,0,0];
-				var value = vote2016[id][pres];
+				var value = (vote2016[id][pres]/popDist[id])*255;
 				switch(pres){
 					case 0:
 						return [value, 0, 0];
@@ -236,7 +236,7 @@
 				var id = parseInt(d.id);
 				var pres = vote2012[id].indexOf(Math.max.apply(Math, vote2012[id]));
 				var colors = [0,0,0];
-				var value = vote2012[id][pres];
+				var value = (vote2012[id][pres]/popDist[id])*255;
 				switch(pres){
 					case 0:
 						return [0, 0, value];
@@ -263,7 +263,12 @@
 				d3.selectAll("path").attr("fill", function(d){
 					if(d){
 						if(popradio.property("checked")){
-							return "rgb(" + popDist[parseInt(d.id)]/10 + ",0," + popDist[parseInt(d.id)]/10 + ")"
+							var total = 0;
+							for(var i=0; i < popDist.length; i++){
+								total += popDist[i];
+							}
+							total = total/10000
+							return "rgb(" + popDist[parseInt(d.id)]/total + ",0," + popDist[parseInt(d.id)]/total + ")"
 						} else if(pid3radio.property("checked")){
 							var colors = maxParty(partyDist, d);
 							return "rgb(" + colors[0] + "," + colors[1] + "," + colors[2] + ")";
