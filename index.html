@@ -125,6 +125,10 @@
 			var vote2016County;
 			var vote2012County;
 
+			var maxPartyCty = new Map()
+			var max2016VtCty = new Map()
+			var max2012VtCty = new Map()
+
 			//clear button
 			d3.select("#clrButton").on("click", clrButtonClick)
 
@@ -231,27 +235,27 @@
 			}
 
 			function maxPartyCounty(partyDistCounty, d){
-				var id = parseInt(d.id);
-				var colors = [0,0,0];
+				var id = parseInt(d.countyfips);
 				if(partyDistCounty[id]){
+					
 					var party = partyDistCounty[id].indexOf(Math.max.apply(Math, partyDistCounty[id]));
 					var value = (partyDistCounty[id][party]/popDistCounty[id]) * 255;
 					switch(party){
 						case 0:
-							return [0, 0, value];
+							return "rgb(0,0," + value + ")";
 						case 1:
-							return [value, 0, 0];
+							return "rgb(" + value + ",0,0)";
 						case 2:
-							return [0, value, 0];
+							return "rgb(0," + value + ",0)";
 						case 3:
-							return [value, 0, value];
+							return "rgb(" + value + ",0," + value + ")";
 						case 4:
-							return [0, value, value];
+							return "rgb(0," + value + "," + value + ")";
 						case 5:
-							return [value, value, 0];
+							return "rgb(" + value + "," + value + ",0)";
 					}
 				}
-				return colors;
+				return "rgb(0,0,0)";
 			}
 
 			function getVote2016(poliData){
@@ -305,22 +309,22 @@
 			}
 
 			function maxVote2016County(vote2016County, d){
-				var id = parseInt(d.id);
+				var id = parseInt(d.countyfips);
 				var colors = [0,0,0];
 				if(vote2016County[id]){
 					var pres = vote2016County[id].indexOf(Math.max.apply(Math, vote2016County[id]));
 					var value = (vote2016County[id][pres]/popDistCounty[id])*255;
 					switch(pres){
 						case 0:
-							return [value, 0, 0];
+							return "rgb(" + value + ",0,0)";
 						case 1:
-							return [0, 0, value];
+							return "rgb(0,0," + value + ")";
 						case 2:
-							return [0,value,value];
+							return "rgb(0," + value + "," + value + ")";
 						case 3:
-							return [0,value,0];
+							return "rgb(0," + value + ",0)";
 						case 7:
-							return [value, value, 0];
+							return "rgb(" + value + "," + value + ",0)";
 					}
 				}
 				return colors;
@@ -387,7 +391,7 @@
 			}
 			
 			function maxVote2012County(vote2012County, d){
-				var id = parseInt(d.id);
+				var id = parseInt(d.countyfips);
 				var colors = [0,0,0];
 				if(vote2012County[id]){
 					var pres = vote2012County[id].indexOf(Math.max.apply(Math, vote2012County[id]));
@@ -442,13 +446,20 @@
 							}
 							return "rgb(" + value + ",0," + value + ")"
 						}else if(pid3radio.property("checked")  && stateCountyCheckbox.property("checked")){
-							var colors = maxPartyCounty(partyDistCounty, d);
-							return "rgb(" + colors[0] + "," + colors[1] + "," + colors[2] + ")";
+							if(!maxPartyCty.get(parseInt(d.id))){
+								return "rgb(0,0,0)"
+							}
+							return maxPartyCty.get(parseInt(d.id));
 						}else if(vote2016radio.property("checked") && stateCountyCheckbox.property("checked")){
-							var colors = maxVote2016County(vote2016County, d);
-							return "rgb(" + colors[0] + "," + colors[1] + "," + colors[2] + ")";
+							if(!max2016VtCty.get(parseInt(d.id))){
+								return "rgb(0,0,0)"
+							}
+							return max2016VtCty.get(parseInt(d.id))
 						}else if(vote2012radio.property("checked") && stateCountyCheckbox.property("checked")){
-							var colors = maxVote2012County(vote2012County, d);
+							if(!max2012VtCty.get(parseInt(d.id))){
+								return "rgb(0,0,0)"
+							}
+							var colors = max2012VtCty.get(parseInt(d.id))
 							return "rgb(" + colors[0] + "," + colors[1] + "," + colors[2] + ")";
 						}
 					}
@@ -466,16 +477,24 @@
 			function loadAreas(statesBool){
 				svg.selectAll("*").remove()
 				loadData('data/output.tsv', function(poliData){
-				popDistCounty = getPopDistCounty(poliData);
-				partyDistCounty = getPartyCounty(poliData);
-				vote2016County = getVote2016County(poliData);
-				vote2012County = getVote2012County(poliData);
-				partyDist = getParty(poliData);
-				vote2016 = getVote2016(poliData);
-				vote2012 = getVote2012(poliData);
+				if(popDistCounty === undefined){
+					popDist = getPopDist(poliData);
+					popDistCounty = getPopDistCounty(poliData);
+					partyDistCounty = getPartyCounty(poliData);
+					vote2016County = getVote2016County(poliData);
+					vote2012County = getVote2012County(poliData);
+					partyDist = getParty(poliData);
+					vote2016 = getVote2016(poliData);
+					vote2012 = getVote2012(poliData);
+					poliData.forEach(function(d){
+						maxPartyCty.set(parseInt(d.countyfips), maxPartyCounty(partyDistCounty, d))
+						max2016VtCty.set(parseInt(d.countyfips), maxVote2016County(vote2016County, d))
+						max2012VtCty.set(parseInt(d.countyfips), maxVote2012County(vote2012County, d))
+					});
+				}
 				d3.json("https://d3js.org/us-10m.v1.json", function(error, us) {
 					if (error) throw error;
-					popDist = getPopDist(poliData);
+					
 
 					if(statesBool){
 						svg.append("g")
@@ -515,16 +534,13 @@
 							} else {
 								return unselectedWidth
 							}
+						}).on("click", function(){
+							highlightSelectedArea(this)
 						});
 
 					svg.append("path")
 						.attr("class", "area-borders")
 						.attr("d", path(topojson.mesh(us, us.objects.states, function(a, b) { return a !== b; })));
-
-					svg.selectAll("path")
-						.on("click", function(){
-							highlightSelectedArea(this)
-						})
 				});
 				});
 			}
