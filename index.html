@@ -98,7 +98,15 @@
 				<br>
 				<input type="radio" name="dataType" value="2012_vote" id='vote2012'>2012 Predisential Election Results</input>
 				<br>
+				<h3 style="text-align:center">Filters</h3>
+				<br>
+				Gender
+				<br>
+				<input type="checkbox" name="gender" value="1" id="gen1">Male</input>
+				<input type="checkbox" name="gender" value="2" id="gen2">Female</input>
+				<br>
 				<button type="button" id="clrButton">Clear Selection</button>
+				<br>
 			</div>
 		</div>
 		<script src="https://d3js.org/d3.v4.min.js"></script>
@@ -124,6 +132,9 @@
 			var partyDistCounty;
 			var vote2016County;
 			var vote2012County;
+			var filterNames = new Array();
+			var filterValues = new Array();
+			var statesBool = true;
 
 			//clear button
 			d3.select("#clrButton").on("click", clrButtonClick)
@@ -137,6 +148,21 @@
 			vote2016radio.on("change", radioUpdate)
 			var vote2012radio = d3.select('#vote2012')
 			vote2012radio.on("change", radioUpdate)
+			var gen1Filter = d3.select("#gen1")
+			gen1Filter.on("change", function(){
+				if(document.getElementById('gen1').checked == true){
+					filterNames.push('gender');
+					filterValues.push('1');
+				}else{
+					filterValues.splice(filterNames.indexOf('gender'), 1);
+					filterNames.splice(filterNames.indexOf('gender'), 1);
+				}
+				loadAreas(statesBool);
+			});
+			var gen2Filter = d3.select('#gen2')
+			gen2Filter.on("change",function(){
+				filterData(this);
+			});
 
 			//state county toggle
 			var stateCountyCheckbox = d3.select("#stateCountyCheck")
@@ -147,7 +173,7 @@
 				renderMap()
 			}
 			
-			function filter(index, filterNames, filterValues){
+			function filter(index){
 				for(var i = 0; i < filterNames.length; i++){
 					if (index[filterNames[i]] != filterValues[i]){
 						return false;
@@ -156,10 +182,25 @@
 				return true;
 			}
 
+			function filterData(obj){
+				if(document.getElementById(obj.id).checked == true){
+					filterNames.push(obj.name);
+					filterValues.push(obj.value);
+				}else{
+					filterValues.splice(filterNames.indexOf(obj.name), 1);
+					filterNames.splice(filterNames.indexOf(obj.name), 1);
+				}
+				console.log(filterNames)
+				console.log(filterValues)
+				loadAreas(statesBool);
+			}
+
 			function getPopDist(poliData){
 				var dist = new Array(57).fill(0);
 				poliData.forEach(function(index){
-					dist[parseInt(index.inputstate)] += 1;
+					if(filter(index)){
+						dist[parseInt(index.inputstate)] += 1;
+					}
 				});
 				return dist;
 			}
@@ -167,12 +208,14 @@
 			function getPopDistCounty(poliData){
 				let dist = new Object();
 				poliData.forEach(function(index){
-					let county = parseInt(index.countyfips);
-					if(county){
-						if(!(dist[county])){
-							dist[county] = 0;
+					if (filter(index)){	
+						let county = parseInt(index.countyfips);
+						if(county){
+							if(!(dist[county])){
+								dist[county] = 0;
+							}
+							dist[county] += 1;
 						}
-						dist[county] += 1;
 					}
 				});
 				return dist;
@@ -184,11 +227,14 @@
 					dist[i] = new Array(8).fill(0);
 				}
 				poliData.forEach(function(index){
-					if (index.pid3 != ""){
-						let inputstate = parseInt(index.inputstate);
-						let pid3 = parseInt(index.pid3)-1;
-						dist[inputstate][pid3] += 1;
+					if (filter(index)){
+						if (index.pid3 != ""){
+							let inputstate = parseInt(index.inputstate);
+							let pid3 = parseInt(index.pid3)-1;
+							dist[inputstate][pid3] += 1;
+						}
 					}
+					
 				});
 				return dist;
 			}
@@ -196,13 +242,15 @@
 			function getPartyCounty(poliData){
 				let dist = new Object();
 				poliData.forEach(function(index){
-					if(index.pid3 != ""){
-						let county = parseInt(index.countyfips);
-						if(!(dist[county])){
-							dist[county] = new Array(8).fill(0);
+					if (filter(index)){
+						if(index.pid3 != ""){
+							let county = parseInt(index.countyfips);
+							if(!(dist[county])){
+								dist[county] = new Array(8).fill(0);
+							}
+							let pid3 = parseInt(index.pid3)-1;
+							dist[county][pid3] += 1;
 						}
-						let pid3 = parseInt(index.pid3)-1;
-						dist[county][pid3] += 1;
 					}
 				});
 				return dist;
@@ -260,10 +308,12 @@
 					dist[i] = new Array(8).fill(0);
 				}
 				poliData.forEach(function(index){
-					var inputstate = parseInt(index.inputstate);
-					var pres = parseInt(index.CC16_410a)-1;
-					if(pres<7){
-						dist[inputstate][pres] += 1;
+					if (filter(index)){
+						var inputstate = parseInt(index.inputstate);
+						var pres = parseInt(index.CC16_410a)-1;
+						if(pres<7){
+							dist[inputstate][pres] += 1;
+						}
 					}
 				});
 				return dist;
@@ -272,13 +322,15 @@
 			function getVote2016County(poliData){
 				let dist = new Object();
 				poliData.forEach(function(index){
-					var county = parseInt(index.countyfips);
-					if(!(dist[county])){
-						dist[county] = new Array(8).fill(0);
-					}
-					var pres = parseInt(index.CC16_410a)-1;
-					if(pres < 7){
-						dist[county][pres] += 1;
+					if (filter(index)){
+						var county = parseInt(index.countyfips);
+						if(!(dist[county])){
+							dist[county] = new Array(8).fill(0);
+						}
+						var pres = parseInt(index.CC16_410a)-1;
+						if(pres < 7){
+							dist[county][pres] += 1;
+						}
 					}
 				});
 				return dist;
@@ -332,10 +384,12 @@
 					dist[i] = new Array(3).fill(0);
 				}
 				poliData.forEach(function(index){
-					var inputstate = parseInt(index.inputstate);
-					var pres = parseInt(index.CC16_326)-1;
-					if(pres < 3){
-						dist[inputstate][pres] += 1;
+					if (filter(index)){
+						var inputstate = parseInt(index.inputstate);
+						var pres = parseInt(index.CC16_326)-1;
+						if(pres < 3){
+							dist[inputstate][pres] += 1;
+						}
 					}
 				});
 				return dist;
@@ -344,13 +398,15 @@
 			function getVote2012County(poliData){
 				let dist = new Object();
 				poliData.forEach(function(index){
-					var county = parseInt(index.countyfips);
-					if(!(dist[county])){
-						dist[county] = new Array(8).fill(0);
-					}
-					var pres = parseInt(index.CC16_326)-1;
-					if(pres < 3){
-						dist[county][pres] += 1;
+					if (filter(index)){
+						var county = parseInt(index.countyfips);
+						if(!(dist[county])){
+							dist[county] = new Array(8).fill(0);
+						}
+						var pres = parseInt(index.CC16_326)-1;
+						if(pres < 3){
+							dist[county][pres] += 1;
+						}
 					}
 				});
 				return dist;
@@ -457,10 +513,11 @@
 
 			function renderMap(){
 				if(stateCountyCheckbox.property("checked")){
-					loadAreas(false)
+					statesBool = false;
 				} else {
-					loadAreas(true)
+					statesBool = true;
 				}
+				loadAreas(statesBool);
 			}
 
 			function loadAreas(statesBool){
