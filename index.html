@@ -105,6 +105,11 @@
 				<input type="checkbox" class="gender" value="1" id="male">Male</input>
 				<input type="checkbox" class="gender" value="2" id="female">Female</input>
 				<br>
+				Clause
+				<br>
+				<input type="radio" name="clause" value="AND" id="and" checked>AND</input>
+				<input type="radio" name="clause" value="OR" id="or">OR</input>
+				<br>
 				<button type="button" id="clrButton">Clear Selection</button>
 				<button type="button" id="clrFilter">Clear Filters</button>
 				<br>
@@ -138,6 +143,7 @@
 			var filterClass = new Array();
 			var statesBool = true;
 			var filterLength = 0;
+			var filterClause = 'AND';
 
 			var maxPartyCty = new Map()
 			var max2016VtCty = new Map()
@@ -158,11 +164,48 @@
 			vote2012radio.on("change", radioUpdate)
 			var maleFilter = d3.select("#male")
 			maleFilter.on("change", function(){
+				if (filterClause == 'AND'){
+					var boxes = document.getElementsByClassName('gender');
+					for(var i = 0; i < boxes.length; i++){
+						if(boxes[i].id != "male"){
+							if(boxes[i].checked == true){
+								boxes[i].checked = false;
+								filterValues.splice(filterID.indexOf(boxes[i].id), 1);
+								filterClass.splice(filterID.indexOf(boxes[i].id), 1);
+								filterID.splice(filterID.indexOf(boxes[i].id), 1);
+								filterLength = -1
+							}
+						}
+					}
+				}
 				filterData(this);
 			});
 			var femaleFilter = d3.select('#female')
 			femaleFilter.on("change",function(){
+				if (filterClause == 'AND'){
+					var boxes = document.getElementsByClassName('gender');
+					for(var i = 0; i < boxes.length; i++){
+						if(boxes[i].id != "female"){
+							if(boxes[i].checked == true){
+								boxes[i].checked = false;
+								filterValues.splice(filterID.indexOf(boxes[i].id), 1);
+								filterClass.splice(filterID.indexOf(boxes[i].id), 1);
+								filterID.splice(filterID.indexOf(boxes[i].id), 1);
+								filterLength = -1
+							}
+						}
+						
+					}
+				}
 				filterData(this);
+			});
+			var andradio = d3.select('#and');
+			andradio.on("change", function(){
+				loadAreas(statesBool);
+			});
+			var orradio = d3.select('#or');
+			orradio.on("change", function(){
+				loadAreas(statesBool);
 			});
 
 			//state county toggle
@@ -185,12 +228,26 @@
 			}
 			
 			function filter(index){
-				for(var i = 0; i < filterClass.length; i++){
-					if (index[filterClass[i]] != filterValues[i]){
-						return false;
+				if(filterClause == 'AND'){
+					for(var i = 0; i < filterClass.length; i++){
+						if (index[filterClass[i]] != filterValues[i]){
+							return false;
+						}
 					}
+					return true;
 				}
-				return true;
+				else{
+					if(filterClass.length == 0){
+						return true;
+					}
+					for(var i = 0; i < filterClass.length; i++){
+						if (index[filterClass[i]] == filterValues[i]){
+							return true;
+						}
+					}
+					return false;
+
+				}
 			}
 
 			function filterData(obj){
@@ -541,7 +598,12 @@
 			function loadAreas(statesBool){
 				svg.selectAll("*").remove()
 				loadData('data/output.tsv', function(poliData){
-				if(popDistCounty === undefined || filterLength != filterClass.length){
+				if(popDistCounty === undefined || filterLength != filterClass.length || (filterClause == 'AND' && document.getElementById('and').checked == false) || (filterClause == 'OR' && document.getElementById('or').checked == false)){
+					if(document.getElementById('and').checked == true){
+						filterClause = 'AND';
+					} else {
+						filterClause = 'OR';
+					}
 					filterLength = filterClass.length;
 					popDist = getPopDist(poliData);
 					popDistCounty = getPopDistCounty(poliData);
