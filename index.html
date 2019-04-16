@@ -102,8 +102,8 @@
 				<br>
 				Gender
 				<br>
-				<input type="checkbox" name="gender" value="1" id="gen1">Male</input>
-				<input type="checkbox" name="gender" value="2" id="gen2">Female</input>
+				<input type="checkbox" class="gender" name="male" value="1" id="gen1">Male</input>
+				<input type="checkbox" class="gender" name="female" value="2" id="gen2">Female</input>
 				<br>
 				<button type="button" id="clrButton">Clear Selection</button>
 				<br>
@@ -134,7 +134,9 @@
 			var vote2012County;
 			var filterNames = new Array();
 			var filterValues = new Array();
+			var filterClass = new Array();
 			var statesBool = true;
+			var filterLength = 0;
 
 			var maxPartyCty = new Map()
 			var max2016VtCty = new Map()
@@ -154,14 +156,7 @@
 			vote2012radio.on("change", radioUpdate)
 			var gen1Filter = d3.select("#gen1")
 			gen1Filter.on("change", function(){
-				if(document.getElementById('gen1').checked == true){
-					filterNames.push('gender');
-					filterValues.push('1');
-				}else{
-					filterValues.splice(filterNames.indexOf('gender'), 1);
-					filterNames.splice(filterNames.indexOf('gender'), 1);
-				}
-				loadAreas(statesBool);
+				filterData(this);
 			});
 			var gen2Filter = d3.select('#gen2')
 			gen2Filter.on("change",function(){
@@ -178,8 +173,8 @@
 			}
 			
 			function filter(index){
-				for(var i = 0; i < filterNames.length; i++){
-					if (index[filterNames[i]] != filterValues[i]){
+				for(var i = 0; i < filterClass.length; i++){
+					if (index[filterClass[i]] != filterValues[i]){
 						return false;
 					}
 				}
@@ -188,14 +183,14 @@
 
 			function filterData(obj){
 				if(document.getElementById(obj.id).checked == true){
+					filterClass.push(obj.className);
 					filterNames.push(obj.name);
 					filterValues.push(obj.value);
 				}else{
 					filterValues.splice(filterNames.indexOf(obj.name), 1);
+					filterClass.splice(filterNames.indexOf(obj.name), 1);
 					filterNames.splice(filterNames.indexOf(obj.name), 1);
 				}
-				console.log(filterNames)
-				console.log(filterValues)
 				loadAreas(statesBool);
 			}
 
@@ -534,7 +529,8 @@
 			function loadAreas(statesBool){
 				svg.selectAll("*").remove()
 				loadData('data/output.tsv', function(poliData){
-				if(popDistCounty === undefined){
+				if(popDistCounty === undefined || filterLength != filterClass.length){
+					filterLength = filterClass.length;
 					popDist = getPopDist(poliData);
 					popDistCounty = getPopDistCounty(poliData);
 					partyDistCounty = getPartyCounty(poliData);
