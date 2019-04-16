@@ -102,10 +102,11 @@
 				<br>
 				Gender
 				<br>
-				<input type="checkbox" class="gender" name="male" value="1" id="gen1">Male</input>
-				<input type="checkbox" class="gender" name="female" value="2" id="gen2">Female</input>
+				<input type="checkbox" class="gender" value="1" id="male">Male</input>
+				<input type="checkbox" class="gender" value="2" id="female">Female</input>
 				<br>
 				<button type="button" id="clrButton">Clear Selection</button>
+				<button type="button" id="clrFilter">Clear Filters</button>
 				<br>
 			</div>
 		</div>
@@ -132,7 +133,7 @@
 			var partyDistCounty;
 			var vote2016County;
 			var vote2012County;
-			var filterNames = new Array();
+			var filterID = new Array();
 			var filterValues = new Array();
 			var filterClass = new Array();
 			var statesBool = true;
@@ -144,6 +145,7 @@
 
 			//clear button
 			d3.select("#clrButton").on("click", clrButtonClick)
+			d3.select("#clrFilter").on("click", clrFilterClick)
 
 			//radio button setup
 			var popradio = d3.select("#pop")
@@ -154,12 +156,12 @@
 			vote2016radio.on("change", radioUpdate)
 			var vote2012radio = d3.select('#vote2012')
 			vote2012radio.on("change", radioUpdate)
-			var gen1Filter = d3.select("#gen1")
-			gen1Filter.on("change", function(){
+			var maleFilter = d3.select("#male")
+			maleFilter.on("change", function(){
 				filterData(this);
 			});
-			var gen2Filter = d3.select('#gen2')
-			gen2Filter.on("change",function(){
+			var femaleFilter = d3.select('#female')
+			femaleFilter.on("change",function(){
 				filterData(this);
 			});
 
@@ -170,6 +172,16 @@
 			function clrButtonClick(){
 				selected = new Map()
 				renderMap()
+			}
+
+			function clrFilterClick(){
+				for(var i = 0; i < filterID.length; i++){
+					document.getElementById(filterID[i]).checked = false
+				}
+				filterID = new Array();
+				filterValues = new Array();
+				filterClass = new Array();
+				loadAreas(statesBool);
 			}
 			
 			function filter(index){
@@ -184,12 +196,12 @@
 			function filterData(obj){
 				if(document.getElementById(obj.id).checked == true){
 					filterClass.push(obj.className);
-					filterNames.push(obj.name);
+					filterID.push(obj.id);
 					filterValues.push(obj.value);
 				}else{
-					filterValues.splice(filterNames.indexOf(obj.name), 1);
-					filterClass.splice(filterNames.indexOf(obj.name), 1);
-					filterNames.splice(filterNames.indexOf(obj.name), 1);
+					filterValues.splice(filterID.indexOf(obj.id), 1);
+					filterClass.splice(filterID.indexOf(obj.id), 1);
+					filterID.splice(filterID.indexOf(obj.id), 1);
 				}
 				loadAreas(statesBool);
 			}
