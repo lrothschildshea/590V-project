@@ -609,7 +609,6 @@
 			}
 
 			function loadAreas(statesBool){
-				svg.selectAll("*").remove()
 				loadData('data/output.tsv', function(poliData){
 				if(popDistCounty === undefined || filterLength != filterClass.length || (filterClause == 'AND' && document.getElementById('and').checked == false) || (filterClause == 'OR' && document.getElementById('or').checked == false)){
 					if(document.getElementById('and').checked == true){
@@ -634,7 +633,7 @@
 				}
 				d3.json("https://d3js.org/us-10m.v1.json", function(error, us) {
 					if (error) throw error;
-					
+					svg.selectAll("path").remove()
 					if(statesBool){
 						svg.append("g")
 						.attr("class", "states")
