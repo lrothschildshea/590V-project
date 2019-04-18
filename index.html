@@ -74,45 +74,53 @@
 		<style type="text/css">
 		</style>
 	</head>
-	<body>
-		<h1 style="text-align:center">Our Title Here</h1>
-		<div style="display:flex">
-			<div style="justify-content: flex-start; border: black solid 1px; margin:20px;">
-				<h2 style="text-align:center">United State of America</h2>
-				<div id='mapHere'></div>
+	<body style="background-color: rgb(253,253,253); margin:0px">
+		<h1 style="text-align:center; color: white; font-size: 45px; background-color:#090C9B; margin:0px; padding:30px">Our Title Here</h1>
+		<div style="display:flex; justify-content: space-evenly">
+			<div style="border: #090C9B solid 2px; margin:20px; border-radius: 10px">
+				<h2 style="text-align:center; background-color: #090C9B; color: white; margin: 0px; padding:20px; border-top-left-radius: 10px; border-top-right-radius: 10px">United State of America</h2>
+				<div id='mapHere' style="background-color: white; border-bottom-left-radius: 10px; border-bottom-right-radius: 10px"></div>
 			</div>
-			<div id='radio' style="justify-content: flex-end; border: black solid 1px; margin:20px; padding:10px">
-				<h2 style="text-align:center">Data Options</h2>
-				<label class="switch">
-					<input id="stateCountyCheck" type="checkbox">
-					<span class="slider round"></span>
-					
-				</label>
-				<p>Counties instead of states (thats the slider above. will fix later)</p>
-				<br>
-				<input type="radio" name="dataType" value="Population" id='pop' checked>Population</input>
-				<br>
-				<input type="radio" name="dataType" value="pid_3" id='pid3'>3 Point Party Identification</input>
-				<br>
-				<input type="radio" name="dataType" value="2016_vote" id='vote2016'>2016 Predisential Election Results</input>
-				<br>
-				<input type="radio" name="dataType" value="2012_vote" id='vote2012'>2012 Predisential Election Results</input>
-				<br>
-				<h3 style="text-align:center">Filters</h3>
-				<br>
-				Gender
-				<br>
-				<input type="checkbox" class="gender" value="1" id="male">Male</input>
-				<input type="checkbox" class="gender" value="2" id="female">Female</input>
-				<br>
-				Clause
-				<br>
-				<input type="radio" name="clause" value="AND" id="and" checked>AND</input>
-				<input type="radio" name="clause" value="OR" id="or">OR</input>
-				<br>
-				<button type="button" id="clrButton">Clear Selection</button>
-				<button type="button" id="clrFilter">Clear Filters</button>
-				<br>
+			<div id='radio' style="border: #090C9B solid 2px; margin:20px; border-radius:10px">
+				<h2 style="text-align:center; background-color: #090C9B; color: white; margin: 0px; margin-bottom:20px; padding:20px; border-top-left-radius: 10px; border-top-right-radius: 10px">Data Options</h2>
+				<div style="padding-left:10px; padding-right:10px">
+					<div style="display:flex; justify-content: space-evenly">
+						<strong>
+							<p style="margin:0px">States</p>
+						</strong>
+						<label class="switch">
+							<input id="stateCountyCheck" type="checkbox">
+							<span class="slider round"></span>
+						</label>
+						<strong>
+							<p style="margin:0px">Counties</p>
+						</strong>
+					</div>
+					<br>
+					<input type="radio" name="dataType" value="Population" id='pop' checked>Population</input>
+					<br>
+					<input type="radio" name="dataType" value="pid_3" id='pid3'>3 Point Party Identification</input>
+					<br>
+					<input type="radio" name="dataType" value="2016_vote" id='vote2016'>2016 Predisential Election Results</input>
+					<br>
+					<input type="radio" name="dataType" value="2012_vote" id='vote2012'>2012 Predisential Election Results</input>
+					<br>
+					<h3 style="text-align:center">Filters</h3>
+					<br>
+					Gender
+					<br>
+					<input type="checkbox" class="gender" value="1" id="male">Male</input>
+					<input type="checkbox" class="gender" value="2" id="female">Female</input>
+					<br>
+					Clause
+					<br>
+					<input type="radio" name="clause" value="AND" id="and" checked>AND</input>
+					<input type="radio" name="clause" value="OR" id="or">OR</input>
+					<br>
+					<button type="button" id="clrButton">Clear Selection</button>
+					<button type="button" id="clrFilter">Clear Filters</button>
+					<br>
+				</div>
 			</div>
 		</div>
 		<script src="https://d3js.org/d3.v4.min.js"></script>
