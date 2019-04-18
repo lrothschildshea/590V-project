@@ -107,6 +107,15 @@
 					<br>
 					<h3 style="text-align:center">Filters</h3>
 					<br>
+					Generation (Birth Year)
+					<br>
+					<input type="checkbox" class="birthyr" value="1900, 1924" id="greatest">The "Greates Generation" (1924 or earlier)</input>
+					<input type="checkbox" class="birthyr" value="1925, 1945" id="silent">The "Silent Generation" (1925 - 1945)</input>
+					<input type="checkbox" class="birthyr" value="1946, 1964" id="boomers">Baby Boomers (1946-1964)</input>
+					<input type="checkbox" class="birthyr" value="1965, 1979" id="genx">Generation X (1965-1979)</input>
+					<input type="checkbox" class="birthyr" value="1980, 2000" id="mill">Millennials (1980-2000)</input>
+					<br>
+					<br>
 					Gender
 					<br>
 					<input type="checkbox" class="gender" value="1" id="male">Male</input>
@@ -375,7 +384,7 @@
 			function filter(index){
 				if(filterClause == 'AND'){
 					for(var i = 0; i < filterClass.length; i++){
-						if (index[filterClass[i]] != filterValues[i]){
+						if (parseInt(index[filterClass[i]]) != parseInt(filterValues[i])){
 							return false;
 						}
 					}
@@ -441,14 +450,14 @@
 			}
 
 			function getParty(poliData){
-				let dist = new Array(57);
-				for(var i = 0; i < dist.length; i++){
-					dist[i] = new Array(8).fill(0);
-				}
+				let dist = new Object();
 				poliData.forEach(function(index){
 					if (filter(index)){
 						if (index.pid3 != ""){
 							let inputstate = parseInt(index.inputstate);
+							if(!dist[inputstate]){
+								dist[inputstate] = new Array(8).fill(0);
+							}
 							let pid3 = parseInt(index.pid3)-1;
 							dist[inputstate][pid3] += 1;
 						}
@@ -477,30 +486,30 @@
 
 			function maxParty(partyDist, d){
 				var id = parseInt(d.id);
-				var party = partyDist[id].indexOf(Math.max.apply(Math, partyDist[id]));
-				var colors = [0,0,0];
-				var value = (partyDist[id][party]/popDist[id]) * 255;
-				switch(party){
-					case 0:
-						return [0, 0, value];
-					case 1:
-						return [value, 0, 0];
-					case 2:
-						return [0, value, 0];
-					case 3:
-						return [value, 0, value];
-					case 4:
-						return [0, value, value];
-					case 5:
-						return [value, value, 0];
+				if(partyDist[id]){
+					var party = partyDist[id].indexOf(Math.max.apply(Math, partyDist[id]));
+					var value = (partyDist[id][party]/popDist[id]) * 255;
+					switch(party){
+						case 0:
+							return "rgb(0,0," + value + ")";
+						case 1:
+							return "rgb(" + value + ",0,0)";
+						case 2:
+							return "rgb(0," + value + ",0)";
+						case 3:
+							return "rgb(" + value + ",0," + value + ")";
+						case 4:
+							return "rgb(0," + value + "," + value + ")";
+						case 5:
+							return "rgb(" + value + "," + value + ",0)";
+					}
 				}
-				return colors;
+				return "rgb(0,0,0)";
 			}
 
 			function maxPartyCounty(partyDistCounty, d){
 				var id = parseInt(d.countyfips);
-				if(partyDistCounty[id]){
-					
+				if(partyDistCounty[id]){	
 					var party = partyDistCounty[id].indexOf(Math.max.apply(Math, partyDistCounty[id]));
 					var value = (partyDistCounty[id][party]/popDistCounty[id]) * 255;
 					switch(party){
@@ -522,15 +531,15 @@
 			}
 
 			function getVote2016(poliData){
-				var dist = new Array(57);
-				for(var i=0; i < dist.length; i++){
-					dist[i] = new Array(8).fill(0);
-				}
+				var dist = new Object();
 				poliData.forEach(function(index){
 					if (filter(index)){
 						var inputstate = parseInt(index.inputstate);
+						if(!dist[inputstate]){
+							dist[inputstate] = new Array(8).fill(0);
+						}
 						var pres = parseInt(index.CC16_410a)-1;
-						if(pres<7){
+						if(pres<8){
 							dist[inputstate][pres] += 1;
 						}
 					}
@@ -547,7 +556,7 @@
 							dist[county] = new Array(8).fill(0);
 						}
 						var pres = parseInt(index.CC16_410a)-1;
-						if(pres < 7){
+						if(pres < 8){
 							dist[county][pres] += 1;
 						}
 					}
@@ -557,27 +566,30 @@
 
 			function maxVote2016(vote2016, d){
 				var id = parseInt(d.id);
-				var pres = vote2016[id].indexOf(Math.max.apply(Math, vote2016[id]));
-				var colors = [0,0,0];
-				var value = (vote2016[id][pres]/popDist[id])*255;
-				switch(pres){
-					case 0:
-						return [value, 0, 0];
-					case 1:
-						return [0, 0, value];
-					case 2:
-						return [0,value,value];
-					case 3:
-						return [0,value,0];
-					case 7:
-						return [value, value, 0];
+				if(vote2016[id]){
+					var pres = vote2016[id].indexOf(Math.max.apply(Math, vote2016[id]));
+					var value = (vote2016[id][pres]/popDist[id])*255;
+					switch(pres){
+						case 0:
+							return "rgb(" + value + ",0,0)";
+						case 1:
+							return "rgb(0,0," + value + ")";
+						case 2:
+							return "rgb(0," + value + "," + value + ")";
+						case 3:
+							return "rgb(0," + value + ",0)";
+						case 4:
+							return "rbg(" + value + ",0,"+value+")";
+						case 7:
+							return "rgb(" + value + "," + value + ",0)";
+					}
+					return "rgb(0,0,0)";
 				}
-				return colors;
+
 			}
 
 			function maxVote2016County(vote2016County, d){
 				var id = parseInt(d.countyfips);
-				var colors = [0,0,0];
 				if(vote2016County[id]){
 					var pres = vote2016County[id].indexOf(Math.max.apply(Math, vote2016County[id]));
 					var value = (vote2016County[id][pres]/popDistCounty[id])*255;
@@ -590,21 +602,25 @@
 							return "rgb(0," + value + "," + value + ")";
 						case 3:
 							return "rgb(0," + value + ",0)";
+						case 4:
+							return "rbg(" + value + ",0,"+value+")";
 						case 7:
 							return "rgb(" + value + "," + value + ",0)";
 					}
 				}
-				return colors;
+				return "rgb(0,0,0)";
 			}
 
 			function getVote2012(poliData){
-				var dist = new Array(57);
+				var dist = new Object();
 				for(var i=0; i < dist.length; i++){
-					dist[i] = new Array(3).fill(0);
 				}
 				poliData.forEach(function(index){
 					if (filter(index)){
 						var inputstate = parseInt(index.inputstate);
+						if(!dist[inputstate]){
+							dist[inputstate] = new Array(3).fill(0);
+						}
 						var pres = parseInt(index.CC16_326)-1;
 						if(pres < 3){
 							dist[inputstate][pres] += 1;
@@ -620,7 +636,7 @@
 					if (filter(index)){
 						var county = parseInt(index.countyfips);
 						if(!(dist[county])){
-							dist[county] = new Array(8).fill(0);
+							dist[county] = new Array(3).fill(0);
 						}
 						var pres = parseInt(index.CC16_326)-1;
 						if(pres < 3){
@@ -633,18 +649,19 @@
 
 			function maxVote2012(vote2012, d){
 				var id = parseInt(d.id);
-				var pres = vote2012[id].indexOf(Math.max.apply(Math, vote2012[id]));
-				var colors = [0,0,0];
-				var value = (vote2012[id][pres]/popDist[id])*255;
-				switch(pres){
-					case 0:
-						return [0, 0, value];
-					case 1:
-						return [value, 0, 0];
-					case 2:
-						return [0,value,0];
+				if(vote2012[id]){
+					var pres = vote2012[id].indexOf(Math.max.apply(Math, vote2012[id]));
+					var value = (vote2012[id][pres]/popDist[id])*255;
+					switch(pres){
+						case 0:
+							return "rgb(0,0," + value + ")";
+						case 1:
+							return "rgb(" + value + ",0,0)";
+						case 2:
+							return "rgb(0," + value + ",0)";
+					}
 				}
-				return colors;
+				return "rgb(0,0,0)";
 			}
 
 			function highlightSelectedArea(element){
@@ -669,14 +686,14 @@
 					var value = (vote2012County[id][pres]/popDistCounty[id])*255;
 					switch(pres){
 						case 0:
-							return [0, 0, value];
+							return "rgb(0,0," + value + ")";
 						case 1:
-							return [value, 0, 0];
+							return "rgb(" + value + ",0,0)";
 						case 2:
-							return [0,value,0];
+							return "rgb(0," + value + ",0)";
 					}
 				}
-				return colors;
+				return "rgb(0,0,0)";
 			}
 
 			function makeRandomColor(){
@@ -698,23 +715,19 @@
 						for(var i=0; i < arr.length; i++){
 							total += popDist[arr[i]];
 						}
-						console.log(total);
 						let id = parseInt(d.id);
 						let value = 0;
 						if(popDist[id]){
 							value = popDist[id];
 						}
 						total = total/10000
-						return "rgb(" + popDist[parseInt(d.id)]/total + ",0," + popDist[parseInt(d.id)]/total + ")"
+						return "rgb(" + value/total + ",0," + value/total + ")"
 					} else if(pid3radio.property("checked")  && !(stateCountyCheckbox.property("checked"))){
-						var colors = maxParty(partyDist, d);
-						return "rgb(" + colors[0] + "," + colors[1] + "," + colors[2] + ")";
+						return maxParty(partyDist, d);
 					} else if(vote2016radio.property("checked") && !(stateCountyCheckbox.property("checked"))){
-						var colors = maxVote2016(vote2016, d);
-						return "rgb(" + colors[0] + "," + colors[1] + "," + colors[2] + ")";
+						return maxVote2016(vote2016, d);
 					} else if(vote2012radio.property("checked") && !(stateCountyCheckbox.property("checked"))){
-						var colors = maxVote2012(vote2012, d);
-						return "rgb(" + colors[0] + "," + colors[1] + "," + colors[2] + ")";
+						return maxVote2012(vote2012, d);
 					}else if(popradio.property("checked") && stateCountyCheckbox.property("checked")){
 						let id = parseInt(d.id);
 						let value = 0;
@@ -736,8 +749,7 @@
 						if(!max2012VtCty.get(parseInt(d.id))){
 							return "rgb(0,0,0)"
 						}
-						var colors = max2012VtCty.get(parseInt(d.id))
-						return "rgb(" + colors[0] + "," + colors[1] + "," + colors[2] + ")";
+						return max2012VtCty.get(parseInt(d.id))
 					}
 				}
 
