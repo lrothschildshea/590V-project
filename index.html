@@ -121,13 +121,20 @@
 			//basic svg setup
 			var width = 1000;
 			var height = 600;
-			var svg = d3.select("#mapHere").append("svg").attr("width", width).attr("height", height);
 			var path = d3.geoPath();
 			var selected = new Map();
 			const selectedColor = "#aaaaaa"
-			const selectedWidth = "4px"
+			const selectedWidth = "2px"
 			const unselectedColor = "#fff"
 			const unselectedWidth = "0px"
+
+			const zoom = d3.zoom()
+				.scaleExtent([1, 5])
+				.translateExtent([[0,0], [width, height]])
+				.extent([[0, 0], [width, height]])
+				.on("zoom", zoomed);
+
+			var svg = d3.select("#mapHere").append("svg").attr("width", width).attr("height", height).call(zoom);
 
 			//distribution data var creation
 			var popDist;
@@ -226,6 +233,10 @@
 			//this is the line that actually draws the map. all vars and stuff should be above it. only functions should be below it.
 			renderMap()
 			
+			function zoomed(){
+				d3.select("g").attr("transform", d3.event.transform);
+			}
+
 			function clrButtonClick(){
 				selected = new Map()
 				renderMap()
