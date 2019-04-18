@@ -832,7 +832,13 @@
 							}
 						}).on("click", function(){
 							highlightSelectedArea(this)
-						});
+						}).on("mouseover", function(){
+							d3.select(this).attr("fill", "orange");
+						}).on("mouseout", function(){
+							d3.select(this).attr("fill", function(d){
+								return radioUpdate(d)
+							});
+						})
 
 					svg.append("path")
 						.attr("class", "area-borders")
