@@ -1036,11 +1036,14 @@
 						}).on("click", function(){
 							highlightSelectedArea(this)
 						}).on("mouseover", function(){
-							d3.select(this).attr("fill", "orange");
+							//d3.select(this).attr("fill", "orange");
+							d3.select(this).attr("stroke", "orange").attr("stroke-width", selectedWidth)
 						}).on("mouseout", function(){
-							d3.select(this).attr("fill", function(d){
+							/*d3.select(this).attr("fill", function(d){
 								return radioUpdate(d)
-							});
+							});*/
+							highlightSelectedArea(this)
+							highlightSelectedArea(this)
 						})
 
 					svg.append("path")
