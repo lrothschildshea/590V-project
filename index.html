@@ -84,16 +84,16 @@
 			<div id='radio' style="border: #090C9B solid 2px; margin:20px; border-radius:10px">
 				<h2 style="text-align:center; background-color: #090C9B; color: white; margin: 0px; margin-bottom:20px; padding:20px; border-top-left-radius: 10px; border-top-right-radius: 10px">Data Options</h2>
 				<div style="padding-left:10px; padding-right:10px">
-					<div style="display:flex; justify-content: space-evenly">
+					<div style="display:flex; justify-content: flex-start">
 						<strong>
-							<p style="margin:0px">States</p>
+							<p style="margin:0px">States &nbsp;</p>
 						</strong>
 						<label class="switch">
 							<input id="stateCountyCheck" type="checkbox">
 							<span class="slider round"></span>
 						</label>
 						<strong>
-							<p style="margin:0px">Counties</p>
+							<p style="margin:0px">&nbsp; Counties</p>
 						</strong>
 					</div>
 					<br>
@@ -107,145 +107,281 @@
 					<br>
 					<h3 style="text-align:center">Filters</h3>
 					<br>
-					Generation (Birth Year)
-					<br>
-					<input type="checkbox" class="birthyr" value="1900, 1924" id="greatest">The "Greates Generation" (1924 or earlier)</input>
-					<input type="checkbox" class="birthyr" value="1925, 1945" id="silent">The "Silent Generation" (1925 - 1945)</input>
-					<input type="checkbox" class="birthyr" value="1946, 1964" id="boomers">Baby Boomers (1946-1964)</input>
-					<input type="checkbox" class="birthyr" value="1965, 1979" id="genx">Generation X (1965-1979)</input>
-					<input type="checkbox" class="birthyr" value="1980, 2000" id="mill">Millennials (1980-2000)</input>
-					<br>
-					<br>
-					Gender
-					<br>
-					<input type="checkbox" class="gender" value="1" id="male">Male</input>
-					<input type="checkbox" class="gender" value="2" id="female">Female</input>
-					<br>
-					<br>
-					Sexuality
-					<br>
-					<input type="checkbox" class="sexuality" value="1.0" id="hetero">Heterosexual/Straight</input>
-					<input type="checkbox" class="sexuality" value="2.0" id="lesbian">Lesbian/Gay Woman</input>
-					<input type="checkbox" class="sexuality" value="3.0" id="gay">Gay Man</input>
-					<input type="checkbox" class="sexuality" value="4.0" id="bi">Bisexual</input>
-					<br>
-					<br>
-					Transexual
-					<br>
-					<input type="checkbox" class="trans" value="1.0" id="yes_trans">Yes</input>
-					<input type="checkbox" class="trans" value="2.0" id="no_trans">No</input>
-					<br>
-					<br>
-					Education
-					<br>
-					<input type="checkbox" class="educ" value="1" id="no_hs">No HS</input>
-					<input type="checkbox" class="educ" value="2" id="hs_grad">High School Graduate</input>
-					<input type="checkbox" class="educ" value="3" id="some_colg">Some College</input>
-					<input type="checkbox" class="educ" value="4" id="yr2">2-Year</input>
-					<input type="checkbox" class="educ" value="5" id="yr4">4-Year</input>
-					<input type="checkbox" class="educ" value="6" id="post_grad">Post-Grad</input>
-					<br>
-					<br>
-					Race
-					<br>
-					<input type="checkbox" class="race" value="1" id="white">White</input>
-					<input type="checkbox" class="race" value="2" id="black">Black</input>
-					<input type="checkbox" class="race" value="3" id="hispanic">Hispanic</input>
-					<input type="checkbox" class="race" value="4" id="asian">Asian</input>
-					<input type="checkbox" class="race" value="5" id="native">Native American</input>
-					<input type="checkbox" class="race" value="8" id="mid_east">Middle Eastern</input>
-					<br>
-					<br>
-					Marital Status
-					<br>
-					<input type="checkbox" class="marstat" value="1.0" id="mar">Married</input>
-					<input type="checkbox" class="marstat" value="2.0" id="sep">Separated</input>
-					<input type="checkbox" class="marstat" value="3.0" id="div">Divorced</input>
-					<input type="checkbox" class="marstat" value="4.0" id="wid">Widowed</input>
-					<input type="checkbox" class="marstat" value="5.0" id="sing">Single</input>
-					<input type="checkbox" class="marstat" value="6.0" id="dom">Domestic Partnership</input>
-					<br>
-					<br>
-					Employment
-					<br>
-					<input type="checkbox" class="employ" value="1" id="full">Full-Time</input>
-					<input type="checkbox" class="employ" value="2" id="part">Part-Time</input>
-					<input type="checkbox" class="employ" value="3" id="temp">Temporarily Laid Off</input>
-					<input type="checkbox" class="employ" value="4" id="unemp">Unemployed</input>
-					<input type="checkbox" class="employ" value="5" id="retire">Retired</input>
-					<input type="checkbox" class="employ" value="6" id="dis">Permanently Disabled</input>
-					<input type="checkbox" class="employ" value="7" id="home">Homemaker</input>
-					<input type="checkbox" class="employ" value="8" id="stud">Sudent</input>
-					<br>
-					<br>
-					Religion
-					<br>
-					<input type="checkbox" class="religpew" value="1.0" id="prot">Protestant</input>
-					<input type="checkbox" class="religpew" value="2.0" id="roman">Roman Catholic</input>
-					<input type="checkbox" class="religpew" value="3.0" id="morm">Mormon</input>
-					<input type="checkbox" class="religpew" value="4.0" id="east_or_greek">Eastern or Greek Orthodox</input>
-					<input type="checkbox" class="religpew" value="5.0" id="jew">Jewish</input>
-					<input type="checkbox" class="religpew" value="6.0" id="mus">Muslim</input>
-					<input type="checkbox" class="religpew" value="7.0" id="bud">Buddhist</input>
-					<input type="checkbox" class="religpew" value="8.0" id="hindu">Hindu</input>
-					<input type="checkbox" class="religpew" value="9.0" id="ath">Atheist</input>
-					<input type="checkbox" class="religpew" value="10.0" id="agn">Agnostic</input>
-					<input type="checkbox" class="religpew" value="11.0" id="not">Nothing in Particular</input>
-					<input type="checkbox" class="religpew" value="12.0" id="else">Something Else</input>
-					<br>
-					<br>
-					Family Income
-					<br>
-					<input type="checkbox" class="faminc" value="1.0" id="lt10">Less than $10,000</input>
-					<input type="checkbox" class="faminc" value="2.0" id="ten">$10,000 - $19,999</input>
-					<input type="checkbox" class="faminc" value="3.0" id="twenty">$20,000 - $29,999</input>
-					<input type="checkbox" class="faminc" value="4.0" id="thirty">$30,000 - $39,999</input>
-					<input type="checkbox" class="faminc" value="5.0" id="fourty">$40,000 - $49,999</input>
-					<input type="checkbox" class="faminc" value="6.0" id="fifty">$50,000 - $59,999</input>
-					<input type="checkbox" class="faminc" value="7.0" id="sixty">$60,000 - $69,999</input>
-					<input type="checkbox" class="faminc" value="8.0" id="seventy">$70,000 - $79,999</input>
-					<input type="checkbox" class="faminc" value="9.0" id="eighty">$80,000 - $99,999</input>
-					<input type="checkbox" class="faminc" value="10.0" id="hundred">$100,000 - $119,999</input>
-					<input type="checkbox" class="faminc" value="11.0" id="hundred_20">$120,000 - $149,999</input>
-					<input type="checkbox" class="faminc" value="31.0" id="gt150">$150,000 or more</input>
-					<input type="checkbox" class="faminc" value="12.0" id="hundred_50">$150,000 - $199,999</input>
-					<input type="checkbox" class="faminc" value="13.0" id="two_hundred">$200,000 - $249,999</input>
-					<input type="checkbox" class="faminc" value="14.0" id="two_hundred_50">$250,000 - $349,999</input>
-					<input type="checkbox" class="faminc" value="15.0" id="three_hundred_50">$350,000 - $499,999</input>
-					<input type="checkbox" class="faminc" value="16.0" id="gt500">$500,000 or more</input>
-					<br>
-					<br>
-					3 Point Party Identification
-					<br>
-					<input type="checkbox" class="pid3" value="1.0" id="dem">Democrat</input>
-					<input type="checkbox" class="pid3" value="2.0" id="rep">Republican</input>
-					<input type="checkbox" class="pid3" value="3.0" id="ind">Independent</input>
-					<input type="checkbox" class="pid3" value="4.0" id="oth_pid3">Other</input>
-					<input type="checkbox" class="pid3" value="5.0" id="ns">Not Sure</input>
-					<br>
-					<br>
-					2016 Predisential Election
-					<br>
-					<input type="checkbox" class="CC16_410a" value="1.0" id="trump">Donald Trump (Republican)</input>
-					<input type="checkbox" class="CC16_410a" value="2.0" id="clinton">Hillary Clinton (Democrat)</input>
-					<input type="checkbox" class="CC16_410a" value="3.0" id="john">Gary Johnson (Libeertarian)</input>
-					<input type="checkbox" class="CC16_410a" value="4.0" id="stein">Jill Stein (Green)</input>
-					<input type="checkbox" class="CC16_410a" value="8.0" id="mcmul">Evan McMullin (Independent)</input>
-					<input type="checkbox" class="CC16_410a" value="5.0" id="oth_2016">Other</input>
-					<br>
-					<br>
-					2012 Predidential Election
-					<br>
-					<input type="checkbox" class="CC16_326" value="1.0" id="obama">Barack Obama</input>
-					<input type="checkbox" class="CC16_326" value="2.0" id="romney">Mitt Romney</input>
-					<input type="checkbox" class="CC16_326" value="3.0" id="se">Someone Else</input>
-					<br>
-					<br>
-					Clause
-					<br>
-					<input type="radio" name="clause" value="AND" id="and" checked>AND</input>
-					<input type="radio" name="clause" value="OR" id="or">OR</input>
-					<br>
+					<div style="display:flex; flex-direction: row; flex-wrap: wrap">
+						<div style="width: 33%">
+							<h4 style="margin: 0px">Generation (Birth Year)</h4>
+							<br>
+							<input type="checkbox" class="birthyr" value="1900, 1924" id="greatest">The "Greatest Generation" (1924 or earlier)</input>
+							<br>
+							<input type="checkbox" class="birthyr" value="1925, 1945" id="silent">The "Silent Generation" (1925 - 1945)</input>
+							<br>
+							<input type="checkbox" class="birthyr" value="1946, 1964" id="boomers">Baby Boomers (1946-1964)</input>
+							<br>
+							<input type="checkbox" class="birthyr" value="1965, 1979" id="genx">Generation X (1965-1979)</input>
+							<br>
+							<input type="checkbox" class="birthyr" value="1980, 2000" id="mill">Millennials (1980-2000)</input>
+						</div>
+						<br>
+						<div style="width: 33%">
+							<h4 style="margin: 0px">Gender</h4>
+							<br>
+							<input type="checkbox" class="gender" value="1" id="male">Male</input>
+							<br>
+							<input type="checkbox" class="gender" value="2" id="female">Female</input>
+							<br>
+						</div>
+						<br>
+						<div style="width: 33%">
+							<h4 style="margin: 0px">Sexuality</h4>
+							<br>
+							<input type="checkbox" class="sexuality" value="1.0" id="hetero">Heterosexual/Straight</input>
+							<br>
+							<input type="checkbox" class="sexuality" value="2.0" id="lesbian">Lesbian/Gay Woman</input>
+							<br>
+							<input type="checkbox" class="sexuality" value="3.0" id="gay">Gay Man</input>
+							<br>
+							<input type="checkbox" class="sexuality" value="4.0" id="bi">Bisexual</input>
+							<br>
+						</div>
+						<br>
+						<div style="width: 33%">
+							<h4 style="margin: 0px">Transexual</h4>
+							<br>
+							<input type="checkbox" class="trans" value="1.0" id="yes_trans">Yes</input>
+							<br>
+							<input type="checkbox" class="trans" value="2.0" id="no_trans">No</input>
+							<br>
+						</div>
+						<br>
+						<div style="width: 33%">
+							<h4 style="margin: 0px">Education</h4>
+							<br>
+							<input type="checkbox" class="educ" value="1" id="no_hs">No HS</input>
+							<br>
+							<input type="checkbox" class="educ" value="2" id="hs_grad">High School Graduate</input>
+							<br>
+							<input type="checkbox" class="educ" value="3" id="some_colg">Some College</input>
+							<br>
+							<input type="checkbox" class="educ" value="4" id="yr2">2-Year</input>
+							<br>
+							<input type="checkbox" class="educ" value="5" id="yr4">4-Year</input>
+							<br>
+							<input type="checkbox" class="educ" value="6" id="post_grad">Post-Grad</input>
+							<br>
+						</div>
+						<br>
+						<div style="width: 33%">
+							<h4 style="margin: 0px">Race</h4>
+							<br>
+							<div style="display:flex; justify-content: flex-start">
+								<label class="switch">
+									<input id="white" type="checkbox" value="1" class="race">
+									<span class="slider round"></span>
+								</label>
+								<p style="margin:0px">&nbsp;White</p>
+							</div>
+							<br>
+							<div style="display:flex; justify-content: flex-start">
+								<label class="switch">
+									<input id="black" type="checkbox" value="2" class="race">
+									<span class="slider round"></span>
+								</label>
+								<p style="margin:0px">&nbsp;Black</p>
+							</div>
+							<br>
+							<div style="display:flex; justify-content: flex-start">
+								<label class="switch">
+									<input id="hispanic" type="checkbox" value="3" class="race">
+									<span class="slider round"></span>
+								</label>
+								<p style="margin:0px">&nbsp;Hispanic</p>
+							</div>
+							<br>
+							<div style="display:flex; justify-content: flex-start">
+								<label class="switch">
+									<input id="asian" type="checkbox" value="4" class="race">
+									<span class="slider round"></span>
+								</label>
+								<p style="margin:0px">&nbsp;Asian</p>
+							</div>
+							<br>
+							<div style="display:flex; justify-content: flex-start">
+								<label class="switch">
+									<input id="native" type="checkbox" value="5" class="race">
+									<span class="slider round"></span>
+								</label>
+								<p style="margin:0px">&nbsp;Native American</p>
+							</div>
+							<br>
+							<div style="display:flex; justify-content: flex-start">
+								<label class="switch">
+									<input id="mid_east" type="checkbox" value="8" class="race">
+									<span class="slider round"></span>
+								</label>
+								<p style="margin:0px">&nbsp;Middle Eastern</p>
+							</div>
+							<br>
+						</div>
+						<br>
+						<div style="width: 33%">
+							<h4 style="margin: 0px">Marital Status</h4>
+							<br>
+							<input type="checkbox" class="marstat" value="1.0" id="mar">Married</input>
+							<br>
+							<input type="checkbox" class="marstat" value="2.0" id="sep">Separated</input>
+							<br>
+							<input type="checkbox" class="marstat" value="3.0" id="div">Divorced</input>
+							<br>
+							<input type="checkbox" class="marstat" value="4.0" id="wid">Widowed</input>
+							<br>
+							<input type="checkbox" class="marstat" value="5.0" id="sing">Single</input>
+							<br>
+							<input type="checkbox" class="marstat" value="6.0" id="dom">Domestic Partnership</input>
+							<br>
+						</div>
+						<br>
+						<div style="width: 33%">
+							<h4 style="margin: 0px">Employment</h4>
+							<br>
+							<input type="checkbox" class="employ" value="1" id="full">Full-Time</input>
+							<br>
+							<input type="checkbox" class="employ" value="2" id="part">Part-Time</input>
+							<br>
+							<input type="checkbox" class="employ" value="3" id="temp">Temporarily Laid Off</input>
+							<br>
+							<input type="checkbox" class="employ" value="4" id="unemp">Unemployed</input>
+							<br>
+							<input type="checkbox" class="employ" value="5" id="retire">Retired</input>
+							<br>
+							<input type="checkbox" class="employ" value="6" id="dis">Permanently Disabled</input>
+							<br>
+							<input type="checkbox" class="employ" value="7" id="home">Homemaker</input>
+							<br>
+							<input type="checkbox" class="employ" value="8" id="stud">Sudent</input>
+							<br>
+						</div>
+						<br>
+						<div style="width: 33%">
+							<h4 style="margin: 0px">Religion</h4>
+							<br>
+							<input type="checkbox" class="religpew" value="1.0" id="prot">Protestant</input>
+							<br>
+							<input type="checkbox" class="religpew" value="2.0" id="roman">Roman Catholic</input>
+							<br>
+							<input type="checkbox" class="religpew" value="3.0" id="morm">Mormon</input>
+							<br>
+							<input type="checkbox" class="religpew" value="4.0" id="east_or_greek">Eastern or Greek Orthodox</input>
+							<br>
+							<input type="checkbox" class="religpew" value="5.0" id="jew">Jewish</input>
+							<br>
+							<input type="checkbox" class="religpew" value="6.0" id="mus">Muslim</input>
+							<br>
+							<input type="checkbox" class="religpew" value="7.0" id="bud">Buddhist</input>
+							<br>
+							<input type="checkbox" class="religpew" value="8.0" id="hindu">Hindu</input>
+							<br>
+							<input type="checkbox" class="religpew" value="9.0" id="ath">Atheist</input>
+							<br>
+							<input type="checkbox" class="religpew" value="10.0" id="agn">Agnostic</input>
+							<br>
+							<input type="checkbox" class="religpew" value="11.0" id="not">Nothing in Particular</input>
+							<br>
+							<input type="checkbox" class="religpew" value="12.0" id="else">Something Else</input>
+							<br>
+						</div>
+						<br>
+						<div style="width: 33%">
+							<h4 style="margin: 0px">Family Income</h4>
+							<br>
+							<input type="checkbox" class="faminc" value="1.0" id="lt10">Less than $10,000</input>
+							<br>
+							<input type="checkbox" class="faminc" value="2.0" id="ten">$10,000 - $19,999</input>
+							<br>
+							<input type="checkbox" class="faminc" value="3.0" id="twenty">$20,000 - $29,999</input>
+							<br>
+							<input type="checkbox" class="faminc" value="4.0" id="thirty">$30,000 - $39,999</input>
+							<br>
+							<input type="checkbox" class="faminc" value="5.0" id="fourty">$40,000 - $49,999</input>
+							<br>
+							<input type="checkbox" class="faminc" value="6.0" id="fifty">$50,000 - $59,999</input>
+							<br>
+							<input type="checkbox" class="faminc" value="7.0" id="sixty">$60,000 - $69,999</input>
+							<br>
+							<input type="checkbox" class="faminc" value="8.0" id="seventy">$70,000 - $79,999</input>
+							<br>
+							<input type="checkbox" class="faminc" value="9.0" id="eighty">$80,000 - $99,999</input>
+							<br>
+							<input type="checkbox" class="faminc" value="10.0" id="hundred">$100,000 - $119,999</input>
+							<br>
+							<input type="checkbox" class="faminc" value="11.0" id="hundred_20">$120,000 - $149,999</input>
+							<br>
+							<input type="checkbox" class="faminc" value="31.0" id="gt150">$150,000 or more</input>
+							<br>
+							<input type="checkbox" class="faminc" value="12.0" id="hundred_50">$150,000 - $199,999</input>
+							<br>
+							<input type="checkbox" class="faminc" value="13.0" id="two_hundred">$200,000 - $249,999</input>
+							<br>
+							<input type="checkbox" class="faminc" value="14.0" id="two_hundred_50">$250,000 - $349,999</input>
+							<br>
+							<input type="checkbox" class="faminc" value="15.0" id="three_hundred_50">$350,000 - $499,999</input>
+							<br>
+							<input type="checkbox" class="faminc" value="16.0" id="gt500">$500,000 or more</input>
+							<br>
+						</div>
+						<br>
+						<div style="width: 33%">
+							<h4 style="margin: 0px">3 Point Party Identification</h4>
+							<br>
+							<input type="checkbox" class="pid3" value="1.0" id="dem">Democrat</input>
+							<br>
+							<input type="checkbox" class="pid3" value="2.0" id="rep">Republican</input>
+							<br>
+							<input type="checkbox" class="pid3" value="3.0" id="ind">Independent</input>
+							<br>
+							<input type="checkbox" class="pid3" value="4.0" id="oth_pid3">Other</input>
+							<br>
+							<input type="checkbox" class="pid3" value="5.0" id="ns">Not Sure</input>
+							<br>
+						</div>
+						<br>
+						<div style="width: 33%">
+							<h4 style="margin: 0px">2016 Predisential Election</h4>
+							<br>
+							<input type="checkbox" class="CC16_410a" value="1.0" id="trump">Donald Trump (Republican)</input>
+							<br>
+							<input type="checkbox" class="CC16_410a" value="2.0" id="clinton">Hillary Clinton (Democrat)</input>
+							<br>
+							<input type="checkbox" class="CC16_410a" value="3.0" id="john">Gary Johnson (Libeertarian)</input>
+							<br>
+							<input type="checkbox" class="CC16_410a" value="4.0" id="stein">Jill Stein (Green)</input>
+							<br>
+							<input type="checkbox" class="CC16_410a" value="8.0" id="mcmul">Evan McMullin (Independent)</input>
+							<br>
+							<input type="checkbox" class="CC16_410a" value="5.0" id="oth_2016">Other</input>
+							<br>
+						</div>
+						<br>
+						<div style="width: 33%">
+							<h4 style="margin: 0px">2012 Predidential Election</h4>
+							<br>
+							<input type="checkbox" class="CC16_326" value="1.0" id="obama">Barack Obama</input>
+							<br>
+							<input type="checkbox" class="CC16_326" value="2.0" id="romney">Mitt Romney</input>
+							<br>
+							<input type="checkbox" class="CC16_326" value="3.0" id="se">Someone Else</input>
+							<br>
+						</div>
+						<br>
+						<div>
+						Clause
+							<br>
+							<input type="radio" name="clause" value="AND" id="and" checked>AND</input>
+							<br>
+							<input type="radio" name="clause" value="OR" id="or">OR</input>
+							<br>
+						</div>
+						<br>
+					</div>
 					<button type="button" id="clrButton">Clear Selection</button>
 					<button type="button" id="clrFilter">Clear Filters</button>
 					<br>
