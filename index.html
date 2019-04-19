@@ -359,6 +359,7 @@
 				renderMap()
 			})
 
+			var idToCounty = new Map()
 			var idToState = new Map()
 			idToState.set(1, "Alabama")
 			idToState.set(2, "Alaska")
@@ -717,6 +718,14 @@
 				return "rgb(0,0,0)";
 			}
 
+			function countyNameMaker(poliData){
+				poliData.forEach(function(d){
+					if(!idToCounty.get(parseInt(d.countyfips))){
+						idToCounty.set(parseInt(d.countyfips), d.countyname)
+					}
+				});
+			}
+
 			function highlightSelectedArea(element){
 				if(selected.get(d3.select(element).attr("class")) === "undefined"){
 					selected.set(d3.select(element).attr("class"), true)
@@ -834,6 +843,7 @@
 					partyDist = getParty(poliData);
 					vote2016 = getVote2016(poliData);
 					vote2012 = getVote2012(poliData);
+					countyNameMaker(poliData);
 					poliData.forEach(function(d){
 						maxPartyCty.set(parseInt(d.countyfips), maxPartyCounty(partyDistCounty, d))
 						max2016VtCty.set(parseInt(d.countyfips), maxVote2016County(vote2016County, d))
@@ -869,6 +879,8 @@
 							return d.id
 						}).attr("fill", function(d){
 							return radioUpdate(d)
+						}).append("title").text(function(d){
+							return idToCounty.get(parseInt(d.id))
 						})
 					}
 
