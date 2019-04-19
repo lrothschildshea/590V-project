@@ -111,15 +111,15 @@
 						<div style="width: 33%">
 							<h4 style="margin: 0px">Generation (Birth Year)</h4>
 							<br>
-							<input type="checkbox" class="birthyr" value="1900, 1924" id="greatest">The "Greatest Generation" (1924 or earlier)</input>
+							<input type="checkbox" class="birthyr" value="1900,1924" id="greatest">The "Greatest Generation" (1924 or earlier)</input>
 							<br>
-							<input type="checkbox" class="birthyr" value="1925, 1945" id="silent">The "Silent Generation" (1925 - 1945)</input>
+							<input type="checkbox" class="birthyr" value="1925,1945" id="silent">The "Silent Generation" (1925 - 1945)</input>
 							<br>
-							<input type="checkbox" class="birthyr" value="1946, 1964" id="boomers">Baby Boomers (1946-1964)</input>
+							<input type="checkbox" class="birthyr" value="1946,1964" id="boomers">Baby Boomers (1946-1964)</input>
 							<br>
-							<input type="checkbox" class="birthyr" value="1965, 1979" id="genx">Generation X (1965-1979)</input>
+							<input type="checkbox" class="birthyr" value="1965,1979" id="genx">Generation X (1965-1979)</input>
 							<br>
-							<input type="checkbox" class="birthyr" value="1980, 2000" id="mill">Millennials (1980-2000)</input>
+							<input type="checkbox" class="birthyr" value="1980,2000" id="mill">Millennials (1980-2000)</input>
 						</div>
 						<br>
 						<div style="width: 33%">
@@ -574,8 +574,15 @@
 			function filter(index){
 				if(filterClause == 'AND'){
 					for(var i = 0; i < filterClass.length; i++){
-						if (parseInt(index[filterClass[i]]) != parseInt(filterValues[i])){
-							return false;
+						if(filterClass[i] == 'birthyr'){
+							var range = filterValues[i].split(",");
+							if(parseInt(range[0]) > parseInt(index[filterClass[i]]) || parseInt(index[filterClass[i]]) > parseInt(range[1])){
+								return false;
+							}
+						}else{
+							if (parseInt(index[filterClass[i]]) != parseInt(filterValues[i])){
+								return false;
+							}
 						}
 					}
 					return true;
@@ -585,8 +592,15 @@
 						return true;
 					}
 					for(var i = 0; i < filterClass.length; i++){
-						if (index[filterClass[i]] == filterValues[i]){
-							return true;
+						if(filterClass[i] == 'birthyr'){
+							var range = filterValues[i].split(",");
+							if(parseInt(range[0]) <= parseInt(index[filterClass[i]]) && parseInt(index[filterClass[i]]) <= parseInt(range[1])){
+								return true;
+							}
+						}else{
+							if (index[filterClass[i]] == filterValues[i]){
+								return true;
+							}
 						}
 					}
 					return false;
@@ -913,6 +927,7 @@
 						for(var i=0; i < arr.length; i++){
 							total += popDist[arr[i]];
 						}
+						console.log(total);
 						let id = parseInt(d.id);
 						let value = 0;
 						if(popDist[id]){
