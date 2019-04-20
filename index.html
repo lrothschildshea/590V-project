@@ -429,6 +429,9 @@
 			var max2016VtCty = new Map()
 			var max2012VtCty = new Map()
 
+			var popScale;
+			var popCountyScale;
+
 			//clear button
 			d3.select("#clrButton").on("click", clrButtonClick)
 			d3.select("#clrFilter").on("click", clrFilterClick)
@@ -919,22 +922,28 @@
 				});
 			}
 
+			function makeScale(dist){
+				var max = 0
+				var min = 1000000
+				for(var k in dist){
+					if (dist[k] > max){
+						max = dist[k]
+					}
+					else if (dist[k] < min){
+						min = dist[k]
+					}
+				}
+				return d3.scaleLinear().domain([min, max]).range([60, 255])
+			}
+
 			function radioUpdate(d){
 				if(d){
 					if(popradio.property("checked") && !(stateCountyCheckbox.property("checked"))){
-						let total = 0;
-						let arr = Object.keys(popDist);
-						for(var i=0; i < arr.length; i++){
-							total += popDist[arr[i]];
-						}
-						console.log(total);
-						let id = parseInt(d.id);
 						let value = 0;
-						if(popDist[id]){
-							value = popDist[id];
+						if(popDist[parseInt(d.id)]){
+							value = popDist[parseInt(d.id)];
 						}
-						total = total/10000
-						return "rgb(" + value/total + ",0," + value/total + ")"
+						return "rgb(" + popScale(value) + ",0," + popScale(value) + ")"
 					} else if(pid3radio.property("checked")  && !(stateCountyCheckbox.property("checked"))){
 						return maxParty(partyDist, d);
 					} else if(vote2016radio.property("checked") && !(stateCountyCheckbox.property("checked"))){
@@ -942,12 +951,7 @@
 					} else if(vote2012radio.property("checked") && !(stateCountyCheckbox.property("checked"))){
 						return maxVote2012(vote2012, d);
 					}else if(popradio.property("checked") && stateCountyCheckbox.property("checked")){
-						let id = parseInt(d.id);
-						let value = 0;
-						if(popDistCounty[id]){
-							value = popDistCounty[id]*10;
-						}
-						return "rgb(" + value + ",0," + value + ")"
+						return "rgb(" + popCountyScale(popDistCounty[parseInt(d.id)]) + ",0," + popCountyScale(popDistCounty[parseInt(d.id)]) + ")"
 					}else if(pid3radio.property("checked")  && stateCountyCheckbox.property("checked")){
 						if(!maxPartyCty.get(parseInt(d.id))){
 							return "rgb(0,0,0)"
@@ -986,8 +990,13 @@
 						filterClause = 'OR';
 					}
 					filterLength = filterClass.length;
+					
 					popDist = getPopDist(poliData);
+					popScale = makeScale(popDist);
+					
 					popDistCounty = getPopDistCounty(poliData);
+					popCountyScale = makeScale(popDistCounty);
+
 					partyDistCounty = getPartyCounty(poliData);
 					vote2016County = getVote2016County(poliData);
 					vote2012County = getVote2012County(poliData);
