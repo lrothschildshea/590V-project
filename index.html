@@ -358,8 +358,14 @@
 				.on("zoom", zoomed);
 
 			var svg = d3.select("#mapHere").append("svg").attr("width", width).attr("height", height).call(zoom);
+			
+			//used for labels
 			var svg2 = d3.select("#labelsHere").append("svg").attr("width", width).attr("height", 30);
-			var svg3 = d3.select("#labelsHere").append("svg").attr("width", width).attr("height", 0);
+			var svg3 = d3.select("#labelsHere").append("svg").attr("width", 0).attr("height", 0);
+			var svg4 = d3.select("#labelsHere").append("svg").attr("width", width).attr("height", 30);
+			
+			svg4.append("rect").attr("width", 15).attr("height", 15).attr("fill", "black").attr('x', width/2 - 60)
+			svg4.append("text").text("No Data").attr('x', width/2 - 40).attr('y', 15).attr("font-family", "sans-serif").attr("font-size", "20px").attr("fill", "black")
 
 			//distribution data var creation
 			var popDist;
@@ -600,6 +606,9 @@
 						}
 					}
 				});
+
+				maxPopState = 0
+				minPopState = 1000000
 				for(var key in dist){
 					if(dist[key] > maxPopState){
 						maxPopState = dist[key]
@@ -623,6 +632,9 @@
 						}
 					}
 				});
+
+				maxPopCounty = 0
+				minPopCounty = 1000000
 				for(var key in dist){
 					if(dist[key] > maxPopCounty){
 						maxPopCounty = dist[key]
@@ -1086,7 +1098,7 @@
 						.attr("d", path(topojson.mesh(us, us.objects.states, function(a, b) { return a !== b; })));
 					
 					svg2.selectAll("*").remove()
-					svg3.attr("height", 0)
+					svg3.attr("height", 0).attr("width", 0)
 
 					if(popradio.property("checked") && !stateCountyCheckbox.property("checked")){
 						svg2.append("text").text(minPopState).attr('x', width/2 - 70).attr('y', 15).attr("font-family", "sans-serif").attr("font-size", "20px").attr("fill", "black")
@@ -1120,7 +1132,7 @@
 					}
 
 					if(vote2016radio.property("checked")){
-						svg3.attr("height", 30)
+						svg3.attr("height", 30).attr("width", width)
 						svg2.append("rect").attr("width", 15).attr("height", 15).attr("fill", "red").attr('x', width/4 - 60)
 						svg2.append("text").text("Donald Trump").attr('x', width/4 - 40).attr('y', 15).attr("font-family", "sans-serif").attr("font-size", "20px").attr("fill", "black")
 						
