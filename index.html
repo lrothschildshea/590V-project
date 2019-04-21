@@ -81,7 +81,7 @@
 				<h2 style="text-align:center; background-color: #090C9B; color: white; margin: 0px; padding:20px; border-top-left-radius: 10px; border-top-right-radius: 10px">United State of America</h2>
 				<div id='mapHere' style="background-color: white; border-bottom-left-radius: 10px; border-bottom-right-radius: 10px"></div>
 			</div>
-			<div id='radio' style="border: #090C9B solid 2px; margin:20px; border-radius:10px">
+			<div id='radio' style="border: #090C9B solid 2px; margin:20px; border-radius:10px; width: 30%">
 				<h2 style="text-align:center; background-color: #090C9B; color: white; margin: 0px; margin-bottom:20px; padding:20px; border-top-left-radius: 10px; border-top-right-radius: 10px">Data Options</h2>
 				<div style="padding-left:10px; padding-right:10px">
 					<div style="display:flex; justify-content: flex-start">
@@ -107,55 +107,9 @@
 					<br>
 					<h3 style="text-align:center">Filters</h3>
 					<br>
-					<div style="display:flex; flex-direction: row; flex-wrap: wrap">
-						<div style="width: 33%">
-							<h4 style="margin: 0px">Generation (Birth Year)</h4>
-							<br>
-							<input type="checkbox" class="birthyr" value="1900,1924" id="greatest">The "Greatest Generation" (1924 or earlier)</input>
-							<br>
-							<input type="checkbox" class="birthyr" value="1925,1945" id="silent">The "Silent Generation" (1925 - 1945)</input>
-							<br>
-							<input type="checkbox" class="birthyr" value="1946,1964" id="boomers">Baby Boomers (1946-1964)</input>
-							<br>
-							<input type="checkbox" class="birthyr" value="1965,1979" id="genx">Generation X (1965-1979)</input>
-							<br>
-							<input type="checkbox" class="birthyr" value="1980,2000" id="mill">Millennials (1980-2000)</input>
-						</div>
-						<br>
-						<div style="width: 33%">
-							<h4 style="margin: 0px">Gender</h4>
-							<br>
-							<input type="checkbox" class="gender" value="1" id="male">Male</input>
-							<br>
-							<input type="checkbox" class="gender" value="2" id="female">Female</input>
-							<br>
-						</div>
-						<br>
-						<div style="width: 33%">
-							<h4 style="margin: 0px">Sexuality</h4>
-							<br>
-							<input type="checkbox" class="sexuality" value="1.0" id="hetero">Heterosexual/Straight</input>
-							<br>
-							<input type="checkbox" class="sexuality" value="2.0" id="lesbian">Lesbian/Gay Woman</input>
-							<br>
-							<input type="checkbox" class="sexuality" value="3.0" id="gay">Gay Man</input>
-							<br>
-							<input type="checkbox" class="sexuality" value="4.0" id="bi">Bisexual</input>
-							<br>
-						</div>
-						<br>
-						<div style="width: 33%">
-							<h4 style="margin: 0px">Transexual</h4>
-							<br>
-							<input type="checkbox" class="trans" value="1.0" id="yes_trans">Yes</input>
-							<br>
-							<input type="checkbox" class="trans" value="2.0" id="no_trans">No</input>
-							<br>
-						</div>
-						<br>
-						<div style="width: 33%">
-							<h4 style="margin: 0px">Education</h4>
-							<br>
+					<div style="display:flex; flex-direction: row; flex-wrap: wrap;">
+						<div style="width: 50%">
+							<h4 style="margin: 0px; padding-top: 15px;">Education</h4>
 							<input type="checkbox" class="educ" value="1" id="no_hs">No HS</input>
 							<br>
 							<input type="checkbox" class="educ" value="2" id="hs_grad">High School Graduate</input>
@@ -170,62 +124,65 @@
 							<br>
 						</div>
 						<br>
-						<div style="width: 33%">
-							<h4 style="margin: 0px">Race</h4>
+						<div style="width: 50%">
+							<h4 style="margin: 0px; padding-top: 15px;">Race</h4>
+							<input type="checkbox" class="race" value="1" id="white">White</input>
 							<br>
-							<div style="display:flex; justify-content: flex-start">
-								<label class="switch">
-									<input id="white" type="checkbox" value="1" class="race">
-									<span class="slider round"></span>
-								</label>
-								<p style="margin:0px">&nbsp;White</p>
-							</div>
+							<input type="checkbox" class="race" value="2" id="black">Black</input>
 							<br>
-							<div style="display:flex; justify-content: flex-start">
-								<label class="switch">
-									<input id="black" type="checkbox" value="2" class="race">
-									<span class="slider round"></span>
-								</label>
-								<p style="margin:0px">&nbsp;Black</p>
-							</div>
+							<input type="checkbox" class="race" value="3" id="hispanic">Hispanic</input>
 							<br>
-							<div style="display:flex; justify-content: flex-start">
-								<label class="switch">
-									<input id="hispanic" type="checkbox" value="3" class="race">
-									<span class="slider round"></span>
-								</label>
-								<p style="margin:0px">&nbsp;Hispanic</p>
-							</div>
+							<input type="checkbox" class="race" value="4" id="asian">Asian</input>
 							<br>
-							<div style="display:flex; justify-content: flex-start">
-								<label class="switch">
-									<input id="asian" type="checkbox" value="4" class="race">
-									<span class="slider round"></span>
-								</label>
-								<p style="margin:0px">&nbsp;Asian</p>
-							</div>
+							<input type="checkbox" class="race" value="5" id="native">Native American</input>
 							<br>
-							<div style="display:flex; justify-content: flex-start">
-								<label class="switch">
-									<input id="native" type="checkbox" value="5" class="race">
-									<span class="slider round"></span>
-								</label>
-								<p style="margin:0px">&nbsp;Native American</p>
-							</div>
-							<br>
-							<div style="display:flex; justify-content: flex-start">
-								<label class="switch">
-									<input id="mid_east" type="checkbox" value="8" class="race">
-									<span class="slider round"></span>
-								</label>
-								<p style="margin:0px">&nbsp;Middle Eastern</p>
-							</div>
+							<input type="checkbox" class="race" value="8" id="mid_east">Middle Eastern</input>
 							<br>
 						</div>
 						<br>
-						<div style="width: 33%">
-							<h4 style="margin: 0px">Marital Status</h4>
+						<div style="width: 50%">
+							<h4 style="margin: 0px; padding-top: 15px;">Generation (Birth Year)</h4>
+							<input type="checkbox" class="birthyr" value="1900,1924" id="greatest">The "Greatest Generation" (1924 or earlier)</input>
 							<br>
+							<input type="checkbox" class="birthyr" value="1925,1945" id="silent">The "Silent Generation" (1925 - 1945)</input>
+							<br>
+							<input type="checkbox" class="birthyr" value="1946,1964" id="boomers">Baby Boomers (1946-1964)</input>
+							<br>
+							<input type="checkbox" class="birthyr" value="1965,1979" id="genx">Generation X (1965-1979)</input>
+							<br>
+							<input type="checkbox" class="birthyr" value="1980,2000" id="mill">Millennials (1980-2000)</input>
+						</div>
+						<br>
+						<div style="width: 50%">
+							<h4 style="margin: 0px; padding-top: 15px;">Sexuality</h4>
+							<input type="checkbox" class="sexuality" value="1.0" id="hetero">Heterosexual/Straight</input>
+							<br>
+							<input type="checkbox" class="sexuality" value="2.0" id="lesbian">Lesbian/Gay Woman</input>
+							<br>
+							<input type="checkbox" class="sexuality" value="3.0" id="gay">Gay Man</input>
+							<br>
+							<input type="checkbox" class="sexuality" value="4.0" id="bi">Bisexual</input>
+							<br>
+						</div>
+						<br>
+						<div style="width: 50%; padding-top: 10px">
+							<h4 style="margin: 0px; padding-top: 15px;">Gender</h4>
+							<input type="checkbox" class="gender" value="1" id="male">Male</input>
+							<br>
+							<input type="checkbox" class="gender" value="2" id="female">Female</input>
+							<br>
+						</div>
+						<br>
+						<div style="width: 50%">
+							<h4 style="margin: 0px; padding-top: 15px;">Transexual</h4>
+							<input type="checkbox" class="trans" value="1.0" id="yes_trans">Yes</input>
+							<br>
+							<input type="checkbox" class="trans" value="2.0" id="no_trans">No</input>
+							<br>
+						</div>
+						<br>
+						<div style="width: 50%">
+							<h4 style="margin: 0px; padding-top: 15px;">Marital Status</h4>
 							<input type="checkbox" class="marstat" value="1.0" id="mar">Married</input>
 							<br>
 							<input type="checkbox" class="marstat" value="2.0" id="sep">Separated</input>
@@ -240,9 +197,8 @@
 							<br>
 						</div>
 						<br>
-						<div style="width: 33%">
-							<h4 style="margin: 0px">Employment</h4>
-							<br>
+						<div style="width: 50%">
+							<h4 style="margin: 0px; padding-top: 15px;">Employment</h4>
 							<input type="checkbox" class="employ" value="1" id="full">Full-Time</input>
 							<br>
 							<input type="checkbox" class="employ" value="2" id="part">Part-Time</input>
@@ -261,9 +217,8 @@
 							<br>
 						</div>
 						<br>
-						<div style="width: 33%">
-							<h4 style="margin: 0px">Religion</h4>
-							<br>
+						<div style="width: 50%">
+							<h4 style="margin: 0px; padding-top: 15px;">Religion</h4>
 							<input type="checkbox" class="religpew" value="1.0" id="prot">Protestant</input>
 							<br>
 							<input type="checkbox" class="religpew" value="2.0" id="roman">Roman Catholic</input>
@@ -290,9 +245,8 @@
 							<br>
 						</div>
 						<br>
-						<div style="width: 33%">
-							<h4 style="margin: 0px">Family Income</h4>
-							<br>
+						<div style="width: 50%">
+							<h4 style="margin: 0px; padding-top: 15px;">Family Income</h4>
 							<input type="checkbox" class="faminc" value="1.0" id="lt10">Less than $10,000</input>
 							<br>
 							<input type="checkbox" class="faminc" value="2.0" id="ten">$10,000 - $19,999</input>
@@ -329,9 +283,8 @@
 							<br>
 						</div>
 						<br>
-						<div style="width: 33%">
-							<h4 style="margin: 0px">3 Point Party Identification</h4>
-							<br>
+						<div style="width: 50%">
+							<h4 style="margin: 0px; padding-top: 15px;">3 Point Party Identification</h4>
 							<input type="checkbox" class="pid3" value="1.0" id="dem">Democrat</input>
 							<br>
 							<input type="checkbox" class="pid3" value="2.0" id="rep">Republican</input>
@@ -344,9 +297,8 @@
 							<br>
 						</div>
 						<br>
-						<div style="width: 33%">
-							<h4 style="margin: 0px">2016 Predisential Election</h4>
-							<br>
+						<div style="width: 50%">
+							<h4 style="margin: 0px; padding-top: 15px;">2016 Predisential Election</h4>
 							<input type="checkbox" class="CC16_410a" value="1.0" id="trump">Donald Trump (Republican)</input>
 							<br>
 							<input type="checkbox" class="CC16_410a" value="2.0" id="clinton">Hillary Clinton (Democrat)</input>
@@ -361,9 +313,8 @@
 							<br>
 						</div>
 						<br>
-						<div style="width: 33%">
+						<div style="width: 50%; padding-top: 15px;">
 							<h4 style="margin: 0px">2012 Predidential Election</h4>
-							<br>
 							<input type="checkbox" class="CC16_326" value="1.0" id="obama">Barack Obama</input>
 							<br>
 							<input type="checkbox" class="CC16_326" value="2.0" id="romney">Mitt Romney</input>
@@ -373,18 +324,16 @@
 						</div>
 						<br>
 						<div>
-						Clause
-							<br>
+							<h4 style="margin: 0px; padding-top: 15px;">Clause</h4>
 							<input type="radio" name="clause" value="AND" id="and" checked>AND</input>
 							<br>
 							<input type="radio" name="clause" value="OR" id="or">OR</input>
 							<br>
 						</div>
-						<br>
 					</div>
-					<button type="button" id="clrButton">Clear Selection</button>
-					<button type="button" id="clrFilter">Clear Filters</button>
 					<br>
+					<button style="margin-bottom: 10px" type="button" id="clrButton">Clear Selection</button>
+					<button style="margin-bottom: 10px" type="button" id="clrFilter">Clear Filters</button>
 				</div>
 			</div>
 		</div>
