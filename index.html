@@ -79,8 +79,8 @@
 		<div style="display:flex; justify-content: space-evenly">
 			<div style="border: #090C9B solid 2px; margin:20px; border-radius: 10px">
 				<h2 style="text-align:center; background-color: #090C9B; color: white; margin: 0px; padding:20px; border-top-left-radius: 10px; border-top-right-radius: 10px">United State of America</h2>
-				<div id='mapHere' style="background-color: white; border-bottom-left-radius: 10px; border-bottom-right-radius: 10px"></div>
-				<div id='labelsHere'></div>
+				<div id='mapHere' style="width: 1000px; background-color: white; border-bottom-left-radius: 10px; border-bottom-right-radius: 10px"></div>
+				<div id='labelsHere' style="width: 1000px;"></div>
 			</div>
 			<div id='radio' style="border: #090C9B solid 2px; margin:20px; border-radius:10px; width: 30%">
 				<h2 style="text-align:center; background-color: #090C9B; color: white; margin: 0px; margin-bottom:20px; padding:20px; border-top-left-radius: 10px; border-top-right-radius: 10px">Data Options</h2>
@@ -359,6 +359,7 @@
 
 			var svg = d3.select("#mapHere").append("svg").attr("width", width).attr("height", height).call(zoom);
 			var svg2 = d3.select("#labelsHere").append("svg").attr("width", width).attr("height", 30);
+			var svg3 = d3.select("#labelsHere").append("svg").attr("width", width).attr("height", 0);
 
 			//distribution data var creation
 			var popDist;
@@ -1085,6 +1086,7 @@
 						.attr("d", path(topojson.mesh(us, us.objects.states, function(a, b) { return a !== b; })));
 					
 					svg2.selectAll("*").remove()
+					svg3.attr("height", 0)
 
 					if(popradio.property("checked") && !stateCountyCheckbox.property("checked")){
 						svg2.append("text").text(minPopState).attr('x', width/2 - 70).attr('y', 15).attr("font-family", "sans-serif").attr("font-size", "20px").attr("fill", "black")
@@ -1115,6 +1117,27 @@
 						
 						svg2.append("rect").attr("width", 15).attr("height", 15).attr("fill", "green").attr('x', 3*width/4 - 60)
 						svg2.append("text").text("Independent").attr('x', 3*width/4 - 40).attr('y', 15).attr("font-family", "sans-serif").attr("font-size", "20px").attr("fill", "black")
+					}
+
+					if(vote2016radio.property("checked")){
+						svg3.attr("height", 30)
+						svg2.append("rect").attr("width", 15).attr("height", 15).attr("fill", "red").attr('x', width/4 - 60)
+						svg2.append("text").text("Donald Trump").attr('x', width/4 - 40).attr('y', 15).attr("font-family", "sans-serif").attr("font-size", "20px").attr("fill", "black")
+						
+						svg2.append("rect").attr("width", 15).attr("height", 15).attr("fill", "blue").attr('x', 2*width/4 - 60)
+						svg2.append("text").text("Hillary Clinton").attr('x', 2*width/4 - 40).attr('y', 15).attr("font-family", "sans-serif").attr("font-size", "20px").attr("fill", "black")
+						
+						svg2.append("rect").attr("width", 15).attr("height", 15).attr("fill", "rgb(0, 200, 200)").attr('x', 3*width/4 - 60)
+						svg2.append("text").text("Gary Johnson").attr('x', 3*width/4 - 40).attr('y', 15).attr("font-family", "sans-serif").attr("font-size", "20px").attr("fill", "black")
+						
+						svg3.append("rect").attr("width", 15).attr("height", 15).attr("fill", "green").attr('x', width/4 - 60)
+						svg3.append("text").text("Jill Stein").attr('x', width/4 - 40).attr('y', 15).attr("font-family", "sans-serif").attr("font-size", "20px").attr("fill", "black")
+						
+						svg3.append("rect").attr("width", 15).attr("height", 15).attr("fill", "rgb(200, 200, 0)").attr('x', 2*width/4 - 60)
+						svg3.append("text").text("Evan McMullin").attr('x', 2*width/4 - 40).attr('y', 15).attr("font-family", "sans-serif").attr("font-size", "20px").attr("fill", "black")
+						
+						svg3.append("rect").attr("width", 15).attr("height", 15).attr("fill", "rgb(200, 0, 200)").attr('x', 3*width/4 - 60)
+						svg3.append("text").text("Other").attr('x', 3*width/4 - 40).attr('y', 15).attr("font-family", "sans-serif").attr("font-size", "20px").attr("fill", "black")
 					}
 
 					if(vote2012radio.property("checked")){
