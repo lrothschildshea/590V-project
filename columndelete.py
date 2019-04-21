@@ -20,19 +20,8 @@ else:
 
 print("Reading in ",  file+path)
 df = pd.read_csv(file+path, sep='\t')
-
-headers = list(df)
-#Name of columns you wish to keep
 cols_to_keep = ['inputstate', 'countyfips', 'countyname', 'birthyr', 'gender', 'sexuality', 'trans', 'educ', 'race', 'employ', 'marstat', 'pid3', 'religpew', 'faminc', 'CC16_326', 'CC16_410a']
-if cols_to_keep:
-    print("Keeping the following columns: ", cols_to_keep)
-    for col in headers:
-        if col not in cols_to_keep:
-            df.drop(col, axis=1, inplace=True)
-else:
-    print("Not dropping everything")
-
-#print(df)
+df = df.filter(cols_to_keep)
 
 #Files to save our TSV to
 outputFile = 'data/output.tsv'
