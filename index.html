@@ -376,6 +376,11 @@
 			var filterLength = 0;
 			var filterClause = 'AND';
 
+			var minPopState = 1000000;
+			var maxPopState = 0;
+			var minPopCounty = 1000000;
+			var maxPopCounty = 0;
+
 			var maxPartyCty = new Map()
 			var max2016VtCty = new Map()
 			var max2012VtCty = new Map()
@@ -594,6 +599,13 @@
 						}
 					}
 				});
+				for(var key in dist){
+					if(dist[key] > maxPopState){
+						maxPopState = dist[key]
+					} else if(dist[key] < minPopState){
+						minPopState = dist[key]
+					}
+				}
 				return dist;
 			}
 
@@ -610,6 +622,13 @@
 						}
 					}
 				});
+				for(var key in dist){
+					if(dist[key] > maxPopCounty){
+						maxPopCounty = dist[key]
+					} else if(dist[key] < minPopCounty){
+						minPopCounty = dist[key]
+					}
+				}
 				return dist;
 			}
 
@@ -1066,6 +1085,27 @@
 						.attr("d", path(topojson.mesh(us, us.objects.states, function(a, b) { return a !== b; })));
 					
 					svg2.selectAll("*").remove()
+
+					if(popradio.property("checked") && !stateCountyCheckbox.property("checked")){
+						svg2.append("text").text(minPopState).attr('x', width/2 - 70).attr('y', 15).attr("font-family", "sans-serif").attr("font-size", "20px").attr("fill", "black")
+						svg2.append("rect").attr("width", 15).attr("height", 15).attr("fill", "rgb(" + popScale(minPopState) + ",0," + popScale(minPopState) + ")").attr('x', width/2 - 45)
+						svg2.append("rect").attr("width", 15).attr("height", 15).attr("fill", "rgb(" + popScale((maxPopState - minPopState)/5 + minPopState) + ",0," + popScale((maxPopState - minPopState)/5 + minPopState) + ")").attr('x', width/2 - 30)
+						svg2.append("rect").attr("width", 15).attr("height", 15).attr("fill", "rgb(" + popScale(2*(maxPopState - minPopState)/5 + minPopState) + ",0," + popScale(2*(maxPopState - minPopState)/5 + minPopState) + ")").attr('x', width/2 - 15)
+						svg2.append("rect").attr("width", 15).attr("height", 15).attr("fill", "rgb(" + popScale(3*(maxPopState - minPopState)/5 + minPopState) + ",0," + popScale(3*(maxPopState - minPopState)/5 + minPopState) + ")").attr('x', width/2)
+						svg2.append("rect").attr("width", 15).attr("height", 15).attr("fill", "rgb(" + popScale(4*(maxPopState - minPopState)/5 + minPopState) + ",0," + popScale(4*(maxPopState - minPopState)/5 + minPopState) + ")").attr('x', width/2 + 15)
+						svg2.append("rect").attr("width", 15).attr("height", 15).attr("fill", "rgb(" + popScale(maxPopState) + ",0," + popScale(maxPopState) + ")").attr('x', width/2 + 30)
+						svg2.append("text").text(maxPopState).attr('x', width/2 + 55).attr('y', 15).attr("font-family", "sans-serif").attr("font-size", "20px").attr("fill", "black")
+					} else if(popradio.property("checked") && stateCountyCheckbox.property("checked")){
+						svg2.append("text").text(minPopCounty).attr('x', width/2 - 70).attr('y', 15).attr("font-family", "sans-serif").attr("font-size", "20px").attr("fill", "black")
+						svg2.append("rect").attr("width", 15).attr("height", 15).attr("fill", "rgb(" + popScale(minPopCounty) + ",0," + popScale(minPopCounty) + ")").attr('x', width/2 - 45)
+						svg2.append("rect").attr("width", 15).attr("height", 15).attr("fill", "rgb(" + popScale((maxPopCounty - minPopCounty)/5 + minPopCounty) + ",0," + popScale((maxPopCounty - minPopCounty)/5 + minPopCounty) + ")").attr('x', width/2 - 30)
+						svg2.append("rect").attr("width", 15).attr("height", 15).attr("fill", "rgb(" + popScale(2*(maxPopCounty - minPopCounty)/5 + minPopCounty) + ",0," + popScale(2*(maxPopCounty - minPopCounty)/5 + minPopCounty) + ")").attr('x', width/2 - 15)
+						svg2.append("rect").attr("width", 15).attr("height", 15).attr("fill", "rgb(" + popScale(3*(maxPopCounty - minPopCounty)/5 + minPopCounty) + ",0," + popScale(3*(maxPopCounty - minPopCounty)/5 + minPopCounty) + ")").attr('x', width/2)
+						svg2.append("rect").attr("width", 15).attr("height", 15).attr("fill", "rgb(" + popScale(4*(maxPopCounty - minPopCounty)/5 + minPopCounty) + ",0," + popScale(4*(maxPopCounty - minPopCounty)/5 + minPopCounty) + ")").attr('x', width/2 + 15)
+						svg2.append("rect").attr("width", 15).attr("height", 15).attr("fill", "rgb(" + popScale(maxPopCounty) + ",0," + popScale(maxPopCounty) + ")").attr('x', width/2 + 30)
+						svg2.append("text").text(maxPopCounty).attr('x', width/2 + 55).attr('y', 15).attr("font-family", "sans-serif").attr("font-size", "20px").attr("fill", "black")
+					}
+					
 					if(pid3radio.property("checked")){
 						svg2.append("rect").attr("width", 15).attr("height", 15).attr("fill", "blue").attr('x', width/4 - 60)
 						svg2.append("text").text("Democrat").attr('x', width/4 - 40).attr('y', 15).attr("font-family", "sans-serif").attr("font-size", "20px").attr("fill", "black")
