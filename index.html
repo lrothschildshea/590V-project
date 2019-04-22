@@ -338,6 +338,10 @@
 				</div>
 			</div>
 		</div>
+		<div style="border: #090C9B solid 2px; margin:20px; border-radius: 10px">
+			<h2 style="text-align:center; background-color: #090C9B; color: white; margin: 0px; padding:20px; border-top-left-radius: 10px; border-top-right-radius: 10px">Bar Chart</h2>
+			<div id='barChart' style="background-color: white; border-bottom-left-radius: 10px; border-bottom-right-radius: 10px"></div>
+		</div>
 		<script src="https://d3js.org/d3.v4.min.js"></script>
 		<script src="https://d3js.org/topojson.v2.min.js"></script>
 		<script type="text/javascript">
@@ -358,12 +362,14 @@
 				.on("zoom", zoomed);
 
 			var svg = d3.select("#mapHere").append("svg").attr("width", width).attr("height", height).call(zoom);
-			
+
 			//used for labels
 			var svg2 = d3.select("#labelsHere").append("svg").attr("width", width).attr("height", 30);
 			var svg3 = d3.select("#labelsHere").append("svg").attr("width", 0).attr("height", 0);
 			var svg4 = d3.select("#labelsHere").append("svg").attr("width", width).attr("height", 30);
-			
+
+			var barSVG = d3.select("#barChart").append("svg");
+
 			svg4.append("rect").attr("width", 15).attr("height", 15).attr("fill", "black").attr('x', width/2 - 60)
 			svg4.append("text").text("No Data").attr('x', width/2 - 40).attr('y', 15).attr("font-family", "sans-serif").attr("font-size", "20px").attr("fill", "black")
 
@@ -400,6 +406,8 @@
 			var vote2016CountyScale;
 			var vote2012Scale;
 			var vote2012CountyScale;
+
+			var barPoliData;
 
 			//clear button
 			d3.select("#clrButton").on("click", clrButtonClick)
@@ -523,7 +531,7 @@
 
 			//this is the line that actually draws the map. all vars and stuff should be above it. only functions should be below it.
 			renderMap()
-			
+
 			function zoomed(){
 				d3.select("g").attr("transform", d3.event.transform);
 			}
@@ -542,7 +550,7 @@
 				filterClass = new Array();
 				loadAreas(statesBool);
 			}
-			
+
 			function filter(index){
 				if(filterClause == 'AND'){
 					for(var i = 0; i < filterClass.length; i++){
@@ -622,7 +630,7 @@
 			function getPopDistCounty(poliData){
 				let dist = new Object();
 				poliData.forEach(function(index){
-					if (filter(index)){	
+					if (filter(index)){
 						let county = parseInt(index.countyfips);
 						if(county){
 							if(!(dist[county])){
@@ -658,7 +666,7 @@
 							dist[inputstate][pid3] += 1;
 						}
 					}
-					
+
 				});
 				return dist;
 			}
@@ -706,7 +714,7 @@
 
 			function maxPartyCounty(partyDistCounty, d){
 				var id = parseInt(d.countyfips);
-				if(partyDistCounty[id]){	
+				if(partyDistCounty[id]){
 					var party = partyDistCounty[id].indexOf(Math.max.apply(Math, partyDistCounty[id]));
 					//var value = (partyDistCounty[id][party]/popDistCounty[id]) * 255;
 					var value = partyCountyScale(partyDistCounty[id][party])
@@ -886,7 +894,7 @@
 					d3.select(element).attr("stroke", unselectedColor).attr("stroke-width", unselectedWidth)
 				}
 			}
-			
+
 			function maxVote2012County(vote2012County, d){
 				var id = parseInt(d.countyfips);
 				var colors = [0,0,0];
@@ -1001,10 +1009,10 @@
 						filterClause = 'OR';
 					}
 					filterLength = filterClass.length;
-					
+
 					popDist = getPopDist(poliData);
 					popScale = makeScale(popDist);
-					
+
 					popDistCounty = getPopDistCounty(poliData);
 					popCountyScale = makeScale(popDistCounty);
 
@@ -1027,6 +1035,9 @@
 					vote2012Scale = makeScaleArrays(vote2012, 80);
 
 					countyNameMaker(poliData);
+
+					barPoliData = getBarChartData(poliData);
+
 					poliData.forEach(function(d){
 						maxPartyCty.set(parseInt(d.countyfips), maxPartyCounty(partyDistCounty, d))
 						max2016VtCty.set(parseInt(d.countyfips), maxVote2016County(vote2016County, d))
@@ -1096,7 +1107,7 @@
 					svg.append("path")
 						.attr("class", "area-borders")
 						.attr("d", path(topojson.mesh(us, us.objects.states, function(a, b) { return a !== b; })));
-					
+
 					svg2.selectAll("*").remove()
 					svg3.attr("height", 0).attr("width", 0)
 
@@ -1119,14 +1130,14 @@
 						svg2.append("rect").attr("width", 15).attr("height", 15).attr("fill", "rgb(0," + .5*popCountyScale(maxPopCounty) + "," + popCountyScale(maxPopCounty) + ")").attr('x', width/2 + 30)
 						svg2.append("text").text(maxPopCounty).attr('x', width/2 + 55).attr('y', 15).attr("font-family", "sans-serif").attr("font-size", "20px").attr("fill", "black")
 					}
-					
+
 					if(pid3radio.property("checked")){
 						svg2.append("rect").attr("width", 15).attr("height", 15).attr("fill", "blue").attr('x', width/4 - 60)
 						svg2.append("text").text("Democrat").attr('x', width/4 - 40).attr('y', 15).attr("font-family", "sans-serif").attr("font-size", "20px").attr("fill", "black")
-						
+
 						svg2.append("rect").attr("width", 15).attr("height", 15).attr("fill", "red").attr('x', 2*width/4 - 60)
 						svg2.append("text").text("Republican").attr('x', 2*width/4 - 40).attr('y', 15).attr("font-family", "sans-serif").attr("font-size", "20px").attr("fill", "black")
-						
+
 						svg2.append("rect").attr("width", 15).attr("height", 15).attr("fill", "green").attr('x', 3*width/4 - 60)
 						svg2.append("text").text("Independent").attr('x', 3*width/4 - 40).attr('y', 15).attr("font-family", "sans-serif").attr("font-size", "20px").attr("fill", "black")
 					}
@@ -1135,19 +1146,19 @@
 						svg3.attr("height", 30).attr("width", width)
 						svg2.append("rect").attr("width", 15).attr("height", 15).attr("fill", "red").attr('x', width/4 - 60)
 						svg2.append("text").text("Donald Trump").attr('x', width/4 - 40).attr('y', 15).attr("font-family", "sans-serif").attr("font-size", "20px").attr("fill", "black")
-						
+
 						svg2.append("rect").attr("width", 15).attr("height", 15).attr("fill", "blue").attr('x', 2*width/4 - 60)
 						svg2.append("text").text("Hillary Clinton").attr('x', 2*width/4 - 40).attr('y', 15).attr("font-family", "sans-serif").attr("font-size", "20px").attr("fill", "black")
-						
+
 						svg2.append("rect").attr("width", 15).attr("height", 15).attr("fill", "rgb(0, 200, 200)").attr('x', 3*width/4 - 60)
 						svg2.append("text").text("Gary Johnson").attr('x', 3*width/4 - 40).attr('y', 15).attr("font-family", "sans-serif").attr("font-size", "20px").attr("fill", "black")
-						
+
 						svg3.append("rect").attr("width", 15).attr("height", 15).attr("fill", "green").attr('x', width/4 - 60)
 						svg3.append("text").text("Jill Stein").attr('x', width/4 - 40).attr('y', 15).attr("font-family", "sans-serif").attr("font-size", "20px").attr("fill", "black")
-						
+
 						svg3.append("rect").attr("width", 15).attr("height", 15).attr("fill", "rgb(200, 200, 0)").attr('x', 2*width/4 - 60)
 						svg3.append("text").text("Evan McMullin").attr('x', 2*width/4 - 40).attr('y', 15).attr("font-family", "sans-serif").attr("font-size", "20px").attr("fill", "black")
-						
+
 						svg3.append("rect").attr("width", 15).attr("height", 15).attr("fill", "rgb(200, 0, 200)").attr('x', 3*width/4 - 60)
 						svg3.append("text").text("Other").attr('x', 3*width/4 - 40).attr('y', 15).attr("font-family", "sans-serif").attr("font-size", "20px").attr("fill", "black")
 					}
@@ -1163,7 +1174,331 @@
 						svg2.append("text").text("Someone Else").attr('x', 3*width/4 - 40).attr('y', 15).attr("font-family", "sans-serif").attr("font-size", "20px").attr("fill", "black")
 					}
 				});
+				//bar charts here
+				setupBarChartMapGroup(barPoliData);
 				});
+			}
+
+			function getBarChartData(poliData){
+				var dist = [];
+ 			 	poliData.forEach(function(index){
+ 				 if (!stateCountyCheckbox.property("checked")){
+ 					 if (filter(index)){
+ 						 var numToReplace = ["1", "2", "3", "4", "5", "6", "7", "8"];
+ 						 if (numToReplace.includes(index.CC16_410a)){
+ 							 index.CC16_410a = index.CC16_410a.concat(".0");
+ 						 }
+ 						 dist.push(index);
+ 					 }
+ 				 }
+ 			 });
+ 			 return dist;
+		 }
+
+		 function groupedBarChartDist(barGroupPoliData, group){
+			 var dist = [];
+			 var classes = ["gender", "birthyr", "sexuality", "trans", "educ", "race", "marstat", "employ", "religpew", "faminc", "pid3", "CC16_410a", "CC16_326"]
+			 if (group == "pop"){
+				 classes.forEach(function(fClass){
+					if (!filterClass.includes(fClass)){
+						var poliByClass = d3.nest()
+							.key(function(d) { return d[fClass]; })
+							.rollup(function(v) { return v.length; })
+							.entries(barGroupPoliData);
+					}
+					dist.push([fClass, poliByClass]);
+				});
+			 }
+			 else{
+				 classes.forEach(function(fClass){
+					if (!filterClass.includes(fClass)){
+						var poliByClass = d3.nest()
+							.key(function(d) { return d[group]; })
+							.key(function(d) { return d[fClass]; })
+							.rollup(function(v) { return v.length; })
+							.entries(barGroupPoliData);
+					}
+					dist.push([fClass, poliByClass]);
+				});
+		 	}
+
+			return dist;
+		}
+
+		function groupedMapPoliDataCt(data, group){
+			var poliByGroup = d3.nest()
+				.key(function(d) { return d[group]; })
+				.rollup(function(v) { return v.length; })
+				.sortKeys(d3.ascending)
+				.entries(data);
+			return poliByGroup;
+		}
+
+		function removeMissingData(data, col){
+			data = barPoliData.filter(function(d) { return d[col] !== "__NA__" && d[col] !== ""; });
+			return data;
+		}
+
+		function setupBarChartMapGroup(barPoliData){
+				barSVG.selectAll("*").remove();
+				if (!stateCountyCheckbox.property("checked")){
+					if(popradio.property("checked")){
+						console.log(popDist);
+						var totalPop = 0;
+						var popDistArry = [];
+						for (id in popDist){
+							totalPop += popDist[id];
+							popDistArry.push([idToState.get(parseInt(id)), popDist[id]]);
+						}
+
+						var maxPops = popDistArry.sort(function(x, y){
+						   return d3.descending(x[1], y[1]);
+						}).slice(0,10).map(function(x) {
+						    return {
+						        "key": x[0],
+						        "value": x[1],
+						    }
+						});
+
+						var poliByPop = groupedBarChartDist(barPoliData, "pop");
+
+						dsBarChart(maxPops, "pop");
+						//console.log(poliByPop)
+						return poliByPop;
+					}
+					else if(pid3radio.property("checked")){
+						barPoliData = removeMissingData(barPoliData, "pid3")
+						var poliByPid = groupedMapPoliDataCt(barPoliData, "pid3");
+
+						var poliByPidClasses = groupedBarChartDist(barPoliData, "pid3");
+						//console.log(poliByPid);
+						dsBarChart(poliByPid, "pid3")
+						return poliByPid;
+					}
+					else if(vote2016radio.property("checked")){
+						barPoliData = removeMissingData(barPoliData, "CC16_410a");
+						//deleting because not included in filter
+						barPoliData = barPoliData.filter(function(d) { return d["CC16_410a"] !== "4.0" && d["CC16_410a"] !== "5.0"; });
+						var poliByVote2016 = groupedMapPoliDataCt(barPoliData, "CC16_410a");
+
+						var poliByVote2016Classes = groupedBarChartDist(barPoliData, "CC16_410a");
+						dsBarChart(poliByVote2016, "CC16_410a")
+						//console.log(poliByVote2016)
+						return poliByVote2016;
+					}
+					else if(vote2012radio.property("checked")){
+						barPoliData = removeMissingData(barPoliData, "CC16_326");
+						//deleting because not included in filter
+						barPoliData = barPoliData.filter(function(d) { return d["CC16_326"] !== "7.0" && d["CC16_326"] !== "8.0"; });
+						var poliByVote2012 = groupedMapPoliDataCt(barPoliData, "CC16_326");
+
+						var poliByVote2012Classes = groupedBarChartDist(barPoliData, "CC16_326");
+						dsBarChart(poliByVote2012, "CC16_326")
+						//console.log(poliByVote2012)
+						return poliByVote2012;
+					}
+				}
+			}
+
+			function percentifyBarData(data){
+				var perList = [];
+				var sum = data.map(item => item.value).reduce((prev, next) => prev + next);
+				data.forEach(function(index){
+					index.value = +((100*index.value/sum).toFixed(2));
+					perList.push(index);
+ 			 });
+			 return perList;
+			}
+
+			function mapIDtoLabels(data, labels){
+				var labeledList = [];
+				data.forEach(function(index){
+					index.value = +((100*index.value/sum).toFixed(2));
+					labeledList.push(index);
+ 			 });
+			 return perList;
+			}
+
+			function dsBarChart(sample, attri) {
+				var isPercent = true;
+
+				if (attri == "pid3"){
+					title = "Political Party Identification of Respondents";
+					xTitle = "Political Party";
+					xLabels = ["Democrat", "Republican", "Independent", "Other", "Not Sure"];
+				}
+				else if (attri == "CC16_326") {
+					title = "Reported Candidate Voted for in 2012 Election by Respondents";
+					xTitle = "2012 Election Candidate";
+					xLabels = ["Barack Obama", "Mitt Romney", "Someone Else"];
+				}
+				else if (attri == "CC16_410a") {
+					title = "Reported Candidate Voted for in 2016 Election by Respondents";
+					xTitle = "2016 Election Candidate";
+					xLabels = ["Donald Trump", "Hillary Clinton", "Gary Johnson", "Jill Stein", "Evan McMullin", "Other"];
+				}
+				else if (attri == "pop"){
+					title = "Top 10 States with Most Respondents";
+					xTitle = "States";
+					isPercent = false;
+				}
+				else{
+					title = "error"
+					xTitle = "error"
+					xLabels = []
+				}
+
+				if (isPercent == true){
+					sample = percentifyBarData(sample);
+					yLabel = "Percentage of Respondents";
+					barLabel = "%";
+				}
+				else{
+					yLabel = "Number of Respondents";
+					barLabel = "";
+				}
+
+				var margin = 80;
+				var width = 1000 - 2 * margin;
+				var height = 600 - 2 * margin;
+
+				barSVG = barSVG.attr("width", 1000)
+					.attr("height", 600);
+
+				var chart = barSVG.append('g')
+					.attr('transform', `translate(${margin}, ${margin})`);
+
+				var xScale = d3.scaleBand()
+					.range([0, width])
+					.domain(sample.map((s) => s.key))
+					.padding(0.4)
+
+
+				var yScale = d3.scaleLinear()
+					.range([height, 0])
+					.domain([0, d3.max(sample, function (d) { return d.value; }) ]);
+
+				if (attri != "pop"){
+					var xAxis = d3.axisBottom()
+	              .scale(xScale)
+								.tickFormat(function(d,i){ return xLabels[i] });
+				}
+				else{
+					var xAxis = d3.axisBottom()
+	              .scale(xScale);
+				}
+
+				var makeYLines = () => d3.axisLeft()
+					.scale(yScale)
+
+				chart.append('g')
+					.attr('transform', `translate(0, ${height})`)
+					.call(xAxis);
+
+				chart.append('g')
+					.call(d3.axisLeft(yScale));
+
+				chart.append('g')
+					.attr('class', 'grid')
+					.call(makeYLines()
+						.tickSize(-width, 0, 0)
+						.tickFormat('')
+					)
+
+				var barGroups = chart.selectAll()
+					.data(sample)
+					.enter()
+					.append('g')
+
+				barGroups.append('rect')
+					.attr('class', 'bar')
+					.attr('x', (g) => xScale(g.key))
+					.attr('y', (g) => yScale(g.value))
+					.attr('height', (g) => height - yScale(g.value))
+					.attr('width', xScale.bandwidth())
+					.on('mouseenter', function(actual, i) {
+						d3.selectAll('.value')
+							.attr('opacity', 0)
+
+						d3.select(this)
+							.transition()
+							.duration(300)
+							.attr('opacity', 0.6)
+							.attr('x', (a) => xScale(a.key) - 5)
+							.attr('width', xScale.bandwidth() + 10)
+
+						var y = yScale(actual.value)
+
+						line = chart.append('line')
+							.attr('id', 'limit')
+							.attr('x1', 0)
+							.attr('y1', y)
+							.attr('x2', width)
+							.attr('y2', y)
+							.attr('fill', 'black')
+
+						barGroups.append('text')
+							.attr('class', 'divergence')
+							.attr('x', (a) => xScale(a.key) + xScale.bandwidth() / 2)
+							.attr('y', (a) => yScale(a.value) - 5)
+							.attr('fill', 'black')
+							.attr('text-anchor', 'middle')
+							.text((a, idx) => {
+								var divergence = (a.value - actual.value).toFixed(1)
+
+								let text = ''
+								if (divergence > 0) text += '+'
+								text += `${divergence}${barLabel}`
+
+								return idx !== i ? text : '';
+							})
+
+					})
+					.on('mouseleave', function() {
+						d3.selectAll('.value')
+							.attr('opacity', 1)
+
+						d3.select(this)
+							.transition()
+							.duration(300)
+							.attr('opacity', 1)
+							.attr('x', (a) => xScale(a.key))
+							.attr('width', xScale.bandwidth())
+
+						chart.selectAll('#limit').remove()
+						chart.selectAll('.divergence').remove()
+					})
+
+				barGroups.append('text')
+					.style("fill", "black")
+					.attr('class', 'value')
+					.attr('x', (a) => xScale(a.key) + xScale.bandwidth() / 2)
+					.attr('y', (a) => yScale(a.value) - 5)
+					.attr('text-anchor', 'middle')
+					.text((a) => `${a.value}${barLabel}`)
+
+				barSVG.append('text')
+					.attr('class', 'label')
+					.attr('x', -(height / 2) - margin)
+					.attr('y', margin / 2.4)
+					.attr('transform', 'rotate(-90)')
+					.attr('text-anchor', 'middle')
+					.text(yLabel)
+
+				barSVG.append('text')
+					.attr('class', 'label')
+					.attr('x', width / 2 + margin)
+					.attr('y', height + margin * 1.7)
+					.attr('text-anchor', 'middle')
+					.text(xTitle)
+
+				barSVG.append('text')
+					.attr('class', 'title')
+					.attr('x', width / 2 + margin)
+					.attr('y', 40)
+					.attr('text-anchor', 'middle')
+					.text(title)
+
 			}
         </script>
     </body>
