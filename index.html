@@ -79,9 +79,10 @@
 		<div style="display:flex; justify-content: space-evenly">
 			<div style="border: #090C9B solid 2px; margin:20px; border-radius: 10px">
 				<h2 style="text-align:center; background-color: #090C9B; color: white; margin: 0px; padding:20px; border-top-left-radius: 10px; border-top-right-radius: 10px">United State of America</h2>
-				<div id='mapHere' style="background-color: white; border-bottom-left-radius: 10px; border-bottom-right-radius: 10px"></div>
+				<div id='mapHere' style="width: 1000px; background-color: white; border-bottom-left-radius: 10px; border-bottom-right-radius: 10px"></div>
+				<div id='labelsHere' style="width: 1000px;"></div>
 			</div>
-			<div id='radio' style="border: #090C9B solid 2px; margin:20px; border-radius:10px">
+			<div id='radio' style="border: #090C9B solid 2px; margin:20px; border-radius:10px; width: 30%">
 				<h2 style="text-align:center; background-color: #090C9B; color: white; margin: 0px; margin-bottom:20px; padding:20px; border-top-left-radius: 10px; border-top-right-radius: 10px">Data Options</h2>
 				<div style="padding-left:10px; padding-right:10px">
 					<div style="display:flex; justify-content: flex-start">
@@ -107,55 +108,9 @@
 					<br>
 					<h3 style="text-align:center">Filters</h3>
 					<br>
-					<div style="display:flex; flex-direction: row; flex-wrap: wrap">
-						<div style="width: 33%">
-							<h4 style="margin: 0px">Generation (Birth Year)</h4>
-							<br>
-							<input type="checkbox" class="birthyr" value="1900,1924" id="greatest">The "Greatest Generation" (1924 or earlier)</input>
-							<br>
-							<input type="checkbox" class="birthyr" value="1925,1945" id="silent">The "Silent Generation" (1925 - 1945)</input>
-							<br>
-							<input type="checkbox" class="birthyr" value="1946,1964" id="boomers">Baby Boomers (1946-1964)</input>
-							<br>
-							<input type="checkbox" class="birthyr" value="1965,1979" id="genx">Generation X (1965-1979)</input>
-							<br>
-							<input type="checkbox" class="birthyr" value="1980,2000" id="mill">Millennials (1980-2000)</input>
-						</div>
-						<br>
-						<div style="width: 33%">
-							<h4 style="margin: 0px">Gender</h4>
-							<br>
-							<input type="checkbox" class="gender" value="1" id="male">Male</input>
-							<br>
-							<input type="checkbox" class="gender" value="2" id="female">Female</input>
-							<br>
-						</div>
-						<br>
-						<div style="width: 33%">
-							<h4 style="margin: 0px">Sexuality</h4>
-							<br>
-							<input type="checkbox" class="sexuality" value="1.0" id="hetero">Heterosexual/Straight</input>
-							<br>
-							<input type="checkbox" class="sexuality" value="2.0" id="lesbian">Lesbian/Gay Woman</input>
-							<br>
-							<input type="checkbox" class="sexuality" value="3.0" id="gay">Gay Man</input>
-							<br>
-							<input type="checkbox" class="sexuality" value="4.0" id="bi">Bisexual</input>
-							<br>
-						</div>
-						<br>
-						<div style="width: 33%">
-							<h4 style="margin: 0px">Trans</h4>
-							<br>
-							<input type="checkbox" class="trans" value="1.0" id="yes_trans">Yes</input>
-							<br>
-							<input type="checkbox" class="trans" value="2.0" id="no_trans">No</input>
-							<br>
-						</div>
-						<br>
-						<div style="width: 33%">
-							<h4 style="margin: 0px">Education</h4>
-							<br>
+					<div style="display:flex; flex-direction: row; flex-wrap: wrap;">
+						<div style="width: 50%">
+							<h4 style="margin: 0px; padding-top: 15px;">Education</h4>
 							<input type="checkbox" class="educ" value="1" id="no_hs">No HS</input>
 							<br>
 							<input type="checkbox" class="educ" value="2" id="hs_grad">High School Graduate</input>
@@ -170,62 +125,65 @@
 							<br>
 						</div>
 						<br>
-						<div style="width: 33%">
-							<h4 style="margin: 0px">Race</h4>
+						<div style="width: 50%">
+							<h4 style="margin: 0px; padding-top: 15px;">Race</h4>
+							<input type="checkbox" class="race" value="1" id="white">White</input>
 							<br>
-							<div style="display:flex; justify-content: flex-start">
-								<label class="switch">
-									<input id="white" type="checkbox" value="1" class="race">
-									<span class="slider round"></span>
-								</label>
-								<p style="margin:0px">&nbsp;White</p>
-							</div>
+							<input type="checkbox" class="race" value="2" id="black">Black</input>
 							<br>
-							<div style="display:flex; justify-content: flex-start">
-								<label class="switch">
-									<input id="black" type="checkbox" value="2" class="race">
-									<span class="slider round"></span>
-								</label>
-								<p style="margin:0px">&nbsp;Black</p>
-							</div>
+							<input type="checkbox" class="race" value="3" id="hispanic">Hispanic</input>
 							<br>
-							<div style="display:flex; justify-content: flex-start">
-								<label class="switch">
-									<input id="hispanic" type="checkbox" value="3" class="race">
-									<span class="slider round"></span>
-								</label>
-								<p style="margin:0px">&nbsp;Hispanic</p>
-							</div>
+							<input type="checkbox" class="race" value="4" id="asian">Asian</input>
 							<br>
-							<div style="display:flex; justify-content: flex-start">
-								<label class="switch">
-									<input id="asian" type="checkbox" value="4" class="race">
-									<span class="slider round"></span>
-								</label>
-								<p style="margin:0px">&nbsp;Asian</p>
-							</div>
+							<input type="checkbox" class="race" value="5" id="native">Native American</input>
 							<br>
-							<div style="display:flex; justify-content: flex-start">
-								<label class="switch">
-									<input id="native" type="checkbox" value="5" class="race">
-									<span class="slider round"></span>
-								</label>
-								<p style="margin:0px">&nbsp;Native American</p>
-							</div>
-							<br>
-							<div style="display:flex; justify-content: flex-start">
-								<label class="switch">
-									<input id="mid_east" type="checkbox" value="8" class="race">
-									<span class="slider round"></span>
-								</label>
-								<p style="margin:0px">&nbsp;Middle Eastern</p>
-							</div>
+							<input type="checkbox" class="race" value="8" id="mid_east">Middle Eastern</input>
 							<br>
 						</div>
 						<br>
-						<div style="width: 33%">
-							<h4 style="margin: 0px">Marital Status</h4>
+						<div style="width: 50%">
+							<h4 style="margin: 0px; padding-top: 15px;">Generation (Birth Year)</h4>
+							<input type="checkbox" class="birthyr" value="1900,1924" id="greatest">The "Greatest Generation" (1924 or earlier)</input>
 							<br>
+							<input type="checkbox" class="birthyr" value="1925,1945" id="silent">The "Silent Generation" (1925 - 1945)</input>
+							<br>
+							<input type="checkbox" class="birthyr" value="1946,1964" id="boomers">Baby Boomers (1946-1964)</input>
+							<br>
+							<input type="checkbox" class="birthyr" value="1965,1979" id="genx">Generation X (1965-1979)</input>
+							<br>
+							<input type="checkbox" class="birthyr" value="1980,2000" id="mill">Millennials (1980-2000)</input>
+						</div>
+						<br>
+						<div style="width: 50%">
+							<h4 style="margin: 0px; padding-top: 15px;">Sexuality</h4>
+							<input type="checkbox" class="sexuality" value="1.0" id="hetero">Heterosexual/Straight</input>
+							<br>
+							<input type="checkbox" class="sexuality" value="2.0" id="lesbian">Lesbian/Gay Woman</input>
+							<br>
+							<input type="checkbox" class="sexuality" value="3.0" id="gay">Gay Man</input>
+							<br>
+							<input type="checkbox" class="sexuality" value="4.0" id="bi">Bisexual</input>
+							<br>
+						</div>
+						<br>
+						<div style="width: 50%; padding-top: 10px">
+							<h4 style="margin: 0px; padding-top: 15px;">Gender</h4>
+							<input type="checkbox" class="gender" value="1" id="male">Male</input>
+							<br>
+							<input type="checkbox" class="gender" value="2" id="female">Female</input>
+							<br>
+						</div>
+						<br>
+						<div style="width: 50%">
+							<h4 style="margin: 0px; padding-top: 15px;">Transgender</h4>
+							<input type="checkbox" class="trans" value="1.0" id="yes_trans">Yes</input>
+							<br>
+							<input type="checkbox" class="trans" value="2.0" id="no_trans">No</input>
+							<br>
+						</div>
+						<br>
+						<div style="width: 50%">
+							<h4 style="margin: 0px; padding-top: 15px;">Marital Status</h4>
 							<input type="checkbox" class="marstat" value="1.0" id="mar">Married</input>
 							<br>
 							<input type="checkbox" class="marstat" value="2.0" id="sep">Separated</input>
@@ -240,9 +198,8 @@
 							<br>
 						</div>
 						<br>
-						<div style="width: 33%">
-							<h4 style="margin: 0px">Employment</h4>
-							<br>
+						<div style="width: 50%">
+							<h4 style="margin: 0px; padding-top: 15px;">Employment</h4>
 							<input type="checkbox" class="employ" value="1" id="full">Full-Time</input>
 							<br>
 							<input type="checkbox" class="employ" value="2" id="part">Part-Time</input>
@@ -261,9 +218,8 @@
 							<br>
 						</div>
 						<br>
-						<div style="width: 33%">
-							<h4 style="margin: 0px">Religion</h4>
-							<br>
+						<div style="width: 50%">
+							<h4 style="margin: 0px; padding-top: 15px;">Religion</h4>
 							<input type="checkbox" class="religpew" value="1.0" id="prot">Protestant</input>
 							<br>
 							<input type="checkbox" class="religpew" value="2.0" id="roman">Roman Catholic</input>
@@ -290,9 +246,8 @@
 							<br>
 						</div>
 						<br>
-						<div style="width: 33%">
-							<h4 style="margin: 0px">Family Income</h4>
-							<br>
+						<div style="width: 50%">
+							<h4 style="margin: 0px; padding-top: 15px;">Family Income</h4>
 							<input type="checkbox" class="faminc" value="1.0" id="lt10">Less than $10,000</input>
 							<br>
 							<input type="checkbox" class="faminc" value="2.0" id="ten">$10,000 - $19,999</input>
@@ -329,9 +284,8 @@
 							<br>
 						</div>
 						<br>
-						<div style="width: 33%">
-							<h4 style="margin: 0px">3 Point Party Identification</h4>
-							<br>
+						<div style="width: 50%">
+							<h4 style="margin: 0px; padding-top: 15px;">3 Point Party Identification</h4>
 							<input type="checkbox" class="pid3" value="1.0" id="dem">Democrat</input>
 							<br>
 							<input type="checkbox" class="pid3" value="2.0" id="rep">Republican</input>
@@ -344,9 +298,8 @@
 							<br>
 						</div>
 						<br>
-						<div style="width: 33%">
-							<h4 style="margin: 0px">2016 Predisential Election</h4>
-							<br>
+						<div style="width: 50%">
+							<h4 style="margin: 0px; padding-top: 15px;">2016 Predisential Election</h4>
 							<input type="checkbox" class="CC16_410a" value="1.0" id="trump">Donald Trump (Republican)</input>
 							<br>
 							<input type="checkbox" class="CC16_410a" value="2.0" id="clinton">Hillary Clinton (Democrat)</input>
@@ -361,9 +314,8 @@
 							<br>
 						</div>
 						<br>
-						<div style="width: 33%">
+						<div style="width: 50%; padding-top: 15px;">
 							<h4 style="margin: 0px">2012 Predidential Election</h4>
-							<br>
 							<input type="checkbox" class="CC16_326" value="1.0" id="obama">Barack Obama</input>
 							<br>
 							<input type="checkbox" class="CC16_326" value="2.0" id="romney">Mitt Romney</input>
@@ -373,18 +325,16 @@
 						</div>
 						<br>
 						<div>
-						Clause
-							<br>
+							<h4 style="margin: 0px; padding-top: 15px;">Clause</h4>
 							<input type="radio" name="clause" value="AND" id="and" checked>AND</input>
 							<br>
 							<input type="radio" name="clause" value="OR" id="or">OR</input>
 							<br>
 						</div>
-						<br>
 					</div>
-					<button type="button" id="clrButton">Clear Selection</button>
-					<button type="button" id="clrFilter">Clear Filters</button>
 					<br>
+					<button style="margin-bottom: 10px" type="button" id="clrButton">Clear Selection</button>
+					<button style="margin-bottom: 10px" type="button" id="clrFilter">Clear Filters</button>
 				</div>
 			</div>
 		</div>
@@ -413,6 +363,14 @@
 
 			var svg = d3.select("#mapHere").append("svg").attr("width", width).attr("height", height).call(zoom);
 			var barSVG = d3.select("#barChart").append("svg");
+			//used for labels
+			var svg2 = d3.select("#labelsHere").append("svg").attr("width", width).attr("height", 30);
+			var svg3 = d3.select("#labelsHere").append("svg").attr("width", 0).attr("height", 0);
+			var svg4 = d3.select("#labelsHere").append("svg").attr("width", width).attr("height", 30);
+
+			svg4.append("rect").attr("width", 15).attr("height", 15).attr("fill", "black").attr('x', width/2 - 60)
+			svg4.append("text").text("No Data").attr('x', width/2 - 40).attr('y', 15).attr("font-family", "sans-serif").attr("font-size", "20px").attr("fill", "black")
+
 			//distribution data var creation
 			var popDist;
 			var partyDist;
@@ -429,12 +387,23 @@
 			var filterLength = 0;
 			var filterClause = 'AND';
 
+			var minPopState = 1000000;
+			var maxPopState = 0;
+			var minPopCounty = 1000000;
+			var maxPopCounty = 0;
+
 			var maxPartyCty = new Map()
 			var max2016VtCty = new Map()
 			var max2012VtCty = new Map()
 
 			var popScale;
 			var popCountyScale;
+			var partyScale;
+			var partyCountyScale;
+			var vote2016Scale;
+			var vote2016CountyScale;
+			var vote2012Scale;
+			var vote2012CountyScale;
 
 			var barPoliData;
 
@@ -647,6 +616,16 @@
 						}
 					}
 				});
+
+				maxPopState = 0
+				minPopState = 1000000
+				for(var key in dist){
+					if(dist[key] > maxPopState){
+						maxPopState = dist[key]
+					} else if(dist[key] < minPopState){
+						minPopState = dist[key]
+					}
+				}
 				return dist;
 			}
 
@@ -663,6 +642,16 @@
 						}
 					}
 				});
+
+				maxPopCounty = 0
+				minPopCounty = 1000000
+				for(var key in dist){
+					if(dist[key] > maxPopCounty){
+						maxPopCounty = dist[key]
+					} else if(dist[key] < minPopCounty){
+						minPopCounty = dist[key]
+					}
+				}
 				return dist;
 			}
 
@@ -705,7 +694,8 @@
 				var id = parseInt(d.id);
 				if(partyDist[id]){
 					var party = partyDist[id].indexOf(Math.max.apply(Math, partyDist[id]));
-					var value = (partyDist[id][party]/popDist[id]) * 255;
+					//var value = (partyDist[id][party]/popDist[id]) * 255;
+					var value = partyScale(partyDist[id][party])
 					switch(party){
 						case 0:
 							return "rgb(0,0," + value + ")";
@@ -728,7 +718,8 @@
 				var id = parseInt(d.countyfips);
 				if(partyDistCounty[id]){
 					var party = partyDistCounty[id].indexOf(Math.max.apply(Math, partyDistCounty[id]));
-					var value = (partyDistCounty[id][party]/popDistCounty[id]) * 255;
+					//var value = (partyDistCounty[id][party]/popDistCounty[id]) * 255;
+					var value = partyCountyScale(partyDistCounty[id][party])
 					switch(party){
 						case 0:
 							return "rgb(0,0," + value + ")";
@@ -785,7 +776,8 @@
 				var id = parseInt(d.id);
 				if(vote2016[id]){
 					var pres = vote2016[id].indexOf(Math.max.apply(Math, vote2016[id]));
-					var value = (vote2016[id][pres]/popDist[id])*255;
+					//var value = (vote2016[id][pres]/popDist[id])*255;
+					var value  = vote2016Scale(vote2016[id][pres])
 					switch(pres){
 						case 0:
 							return "rgb(" + value + ",0,0)";
@@ -809,7 +801,8 @@
 				var id = parseInt(d.countyfips);
 				if(vote2016County[id]){
 					var pres = vote2016County[id].indexOf(Math.max.apply(Math, vote2016County[id]));
-					var value = (vote2016County[id][pres]/popDistCounty[id])*255;
+					//var value = (vote2016County[id][pres]/popDistCounty[id])*255;
+					var value = vote2016CountyScale(vote2016County[id][pres])
 					switch(pres){
 						case 0:
 							return "rgb(" + value + ",0,0)";
@@ -868,7 +861,8 @@
 				var id = parseInt(d.id);
 				if(vote2012[id]){
 					var pres = vote2012[id].indexOf(Math.max.apply(Math, vote2012[id]));
-					var value = (vote2012[id][pres]/popDist[id])*255;
+					//var value = (vote2012[id][pres]/popDist[id])*255;
+					var value = vote2012Scale(vote2012[id][pres])
 					switch(pres){
 						case 0:
 							return "rgb(0,0," + value + ")";
@@ -908,7 +902,8 @@
 				var colors = [0,0,0];
 				if(vote2012County[id]){
 					var pres = vote2012County[id].indexOf(Math.max.apply(Math, vote2012County[id]));
-					var value = (vote2012County[id][pres]/popDistCounty[id])*255;
+					//var value = (vote2012County[id][pres]/popDistCounty[id])*255;
+					var value = vote2012CountyScale(vote2012County[id][pres])
 					switch(pres){
 						case 0:
 							return "rgb(0,0," + value + ")";
@@ -946,6 +941,22 @@
 				return d3.scaleLinear().domain([min, max]).range([60, 255])
 			}
 
+			function makeScaleArrays(dist, minColor){
+				var max = 0
+				var min = 1000000
+				for(var k in dist){
+					var m = dist[k].indexOf(Math.max.apply(Math, dist[k]));
+					m = dist[k][m]
+					if (m > max){
+						max = m
+					}
+					else if (m < min){
+						min = m
+					}
+				}
+				return d3.scaleLinear().domain([min, max]).range([minColor, 255])
+			}
+
 			function radioUpdate(d){
 				if(d){
 					if(popradio.property("checked") && !(stateCountyCheckbox.property("checked"))){
@@ -953,7 +964,7 @@
 						if(popDist[parseInt(d.id)]){
 							value = popDist[parseInt(d.id)];
 						}
-						return "rgb(" + popScale(value) + ",0," + popScale(value) + ")"
+						return "rgb(0," + .5*popScale(value) + "," + popScale(value) + ")"
 					} else if(pid3radio.property("checked")  && !(stateCountyCheckbox.property("checked"))){
 						return maxParty(partyDist, d);
 					} else if(vote2016radio.property("checked") && !(stateCountyCheckbox.property("checked"))){
@@ -961,7 +972,7 @@
 					} else if(vote2012radio.property("checked") && !(stateCountyCheckbox.property("checked"))){
 						return maxVote2012(vote2012, d);
 					}else if(popradio.property("checked") && stateCountyCheckbox.property("checked")){
-						return "rgb(" + popCountyScale(popDistCounty[parseInt(d.id)]) + ",0," + popCountyScale(popDistCounty[parseInt(d.id)]) + ")"
+						return "rgb(0," + .5*popCountyScale(popDistCounty[parseInt(d.id)]) + "," + popCountyScale(popDistCounty[parseInt(d.id)]) + ")"
 					}else if(pid3radio.property("checked")  && stateCountyCheckbox.property("checked")){
 						if(!maxPartyCty.get(parseInt(d.id))){
 							return "rgb(0,0,0)"
@@ -1008,12 +1019,23 @@
 					popCountyScale = makeScale(popDistCounty);
 
 					partyDistCounty = getPartyCounty(poliData);
+					partyCountyScale = makeScaleArrays(partyDistCounty, 120)
+
 					vote2016County = getVote2016County(poliData);
+					vote2016CountyScale = makeScaleArrays(vote2016County, 120);
+
 					vote2012County = getVote2012County(poliData);
+					vote2012CountyScale = makeScaleArrays(vote2012County, 120);
+
 					partyDist = getParty(poliData);
+					partyScale = makeScaleArrays(partyDist, 120);
+
 					vote2016 = getVote2016(poliData);
+					vote2016Scale = makeScaleArrays(vote2016, 80);
+
 					vote2012 = getVote2012(poliData);
-					
+					vote2012Scale = makeScaleArrays(vote2012, 80);
+
 					countyNameMaker(poliData);
 					poliData.forEach(function(d){
 						maxPartyCty.set(parseInt(d.countyfips), maxPartyCounty(partyDistCounty, d))
@@ -1085,6 +1107,72 @@
 					svg.append("path")
 						.attr("class", "area-borders")
 						.attr("d", path(topojson.mesh(us, us.objects.states, function(a, b) { return a !== b; })));
+
+					svg2.selectAll("*").remove()
+					svg3.attr("height", 0).attr("width", 0)
+
+					if(popradio.property("checked") && !stateCountyCheckbox.property("checked")){
+						svg2.append("text").text(minPopState).attr('x', width/2 - 70).attr('y', 15).attr("font-family", "sans-serif").attr("font-size", "20px").attr("fill", "black")
+						svg2.append("rect").attr("width", 15).attr("height", 15).attr("fill", "rgb(0," + .5*popScale(minPopState) + "," + popScale(minPopState) + ")").attr('x', width/2 - 45)
+						svg2.append("rect").attr("width", 15).attr("height", 15).attr("fill", "rgb(0," + .5*popScale((maxPopState - minPopState)/5 + minPopState) + "," + popScale((maxPopState - minPopState)/5 + minPopState) + ")").attr('x', width/2 - 30)
+						svg2.append("rect").attr("width", 15).attr("height", 15).attr("fill", "rgb(0," + .5*popScale(2*(maxPopState - minPopState)/5 + minPopState) + "," + popScale(2*(maxPopState - minPopState)/5 + minPopState) + ")").attr('x', width/2 - 15)
+						svg2.append("rect").attr("width", 15).attr("height", 15).attr("fill", "rgb(0," + .5*popScale(3*(maxPopState - minPopState)/5 + minPopState) + "," + popScale(3*(maxPopState - minPopState)/5 + minPopState) + ")").attr('x', width/2)
+						svg2.append("rect").attr("width", 15).attr("height", 15).attr("fill", "rgb(0," + .5*popScale(4*(maxPopState - minPopState)/5 + minPopState) + "," + popScale(4*(maxPopState - minPopState)/5 + minPopState) + ")").attr('x', width/2 + 15)
+						svg2.append("rect").attr("width", 15).attr("height", 15).attr("fill", "rgb(0," + .5*popScale(maxPopState) + "," + popScale(maxPopState) + ")").attr('x', width/2 + 30)
+						svg2.append("text").text(maxPopState).attr('x', width/2 + 55).attr('y', 15).attr("font-family", "sans-serif").attr("font-size", "20px").attr("fill", "black")
+					} else if(popradio.property("checked") && stateCountyCheckbox.property("checked")){
+						svg2.append("text").text(minPopCounty).attr('x', width/2 - 70).attr('y', 15).attr("font-family", "sans-serif").attr("font-size", "20px").attr("fill", "black")
+						svg2.append("rect").attr("width", 15).attr("height", 15).attr("fill", "rgb(0," + .5*popCountyScale(minPopCounty) + "," + popCountyScale(minPopCounty) + ")").attr('x', width/2 - 45)
+						svg2.append("rect").attr("width", 15).attr("height", 15).attr("fill", "rgb(0," + .5*popCountyScale((maxPopCounty - minPopCounty)/5 + minPopCounty) + "," + popCountyScale((maxPopCounty - minPopCounty)/5 + minPopCounty) + ")").attr('x', width/2 - 30)
+						svg2.append("rect").attr("width", 15).attr("height", 15).attr("fill", "rgb(0," + .5*popCountyScale(2*(maxPopCounty - minPopCounty)/5 + minPopCounty) + "," + popCountyScale(2*(maxPopCounty - minPopCounty)/5 + minPopCounty) + ")").attr('x', width/2 - 15)
+						svg2.append("rect").attr("width", 15).attr("height", 15).attr("fill", "rgb(0," + .5*popCountyScale(3*(maxPopCounty - minPopCounty)/5 + minPopCounty) + "," + popCountyScale(3*(maxPopCounty - minPopCounty)/5 + minPopCounty) + ")").attr('x', width/2)
+						svg2.append("rect").attr("width", 15).attr("height", 15).attr("fill", "rgb(0," + .5*popCountyScale(4*(maxPopCounty - minPopCounty)/5 + minPopCounty) + "," + popCountyScale(4*(maxPopCounty - minPopCounty)/5 + minPopCounty) + ")").attr('x', width/2 + 15)
+						svg2.append("rect").attr("width", 15).attr("height", 15).attr("fill", "rgb(0," + .5*popCountyScale(maxPopCounty) + "," + popCountyScale(maxPopCounty) + ")").attr('x', width/2 + 30)
+						svg2.append("text").text(maxPopCounty).attr('x', width/2 + 55).attr('y', 15).attr("font-family", "sans-serif").attr("font-size", "20px").attr("fill", "black")
+					}
+
+					if(pid3radio.property("checked")){
+						svg2.append("rect").attr("width", 15).attr("height", 15).attr("fill", "blue").attr('x', width/4 - 60)
+						svg2.append("text").text("Democrat").attr('x', width/4 - 40).attr('y', 15).attr("font-family", "sans-serif").attr("font-size", "20px").attr("fill", "black")
+
+						svg2.append("rect").attr("width", 15).attr("height", 15).attr("fill", "red").attr('x', 2*width/4 - 60)
+						svg2.append("text").text("Republican").attr('x', 2*width/4 - 40).attr('y', 15).attr("font-family", "sans-serif").attr("font-size", "20px").attr("fill", "black")
+
+						svg2.append("rect").attr("width", 15).attr("height", 15).attr("fill", "green").attr('x', 3*width/4 - 60)
+						svg2.append("text").text("Independent").attr('x', 3*width/4 - 40).attr('y', 15).attr("font-family", "sans-serif").attr("font-size", "20px").attr("fill", "black")
+					}
+
+					if(vote2016radio.property("checked")){
+						svg3.attr("height", 30).attr("width", width)
+						svg2.append("rect").attr("width", 15).attr("height", 15).attr("fill", "red").attr('x', width/4 - 60)
+						svg2.append("text").text("Donald Trump").attr('x', width/4 - 40).attr('y', 15).attr("font-family", "sans-serif").attr("font-size", "20px").attr("fill", "black")
+
+						svg2.append("rect").attr("width", 15).attr("height", 15).attr("fill", "blue").attr('x', 2*width/4 - 60)
+						svg2.append("text").text("Hillary Clinton").attr('x', 2*width/4 - 40).attr('y', 15).attr("font-family", "sans-serif").attr("font-size", "20px").attr("fill", "black")
+
+						svg2.append("rect").attr("width", 15).attr("height", 15).attr("fill", "rgb(0, 200, 200)").attr('x', 3*width/4 - 60)
+						svg2.append("text").text("Gary Johnson").attr('x', 3*width/4 - 40).attr('y', 15).attr("font-family", "sans-serif").attr("font-size", "20px").attr("fill", "black")
+
+						svg3.append("rect").attr("width", 15).attr("height", 15).attr("fill", "green").attr('x', width/4 - 60)
+						svg3.append("text").text("Jill Stein").attr('x', width/4 - 40).attr('y', 15).attr("font-family", "sans-serif").attr("font-size", "20px").attr("fill", "black")
+
+						svg3.append("rect").attr("width", 15).attr("height", 15).attr("fill", "rgb(200, 200, 0)").attr('x', 2*width/4 - 60)
+						svg3.append("text").text("Evan McMullin").attr('x', 2*width/4 - 40).attr('y', 15).attr("font-family", "sans-serif").attr("font-size", "20px").attr("fill", "black")
+
+						svg3.append("rect").attr("width", 15).attr("height", 15).attr("fill", "rgb(200, 0, 200)").attr('x', 3*width/4 - 60)
+						svg3.append("text").text("Other").attr('x', 3*width/4 - 40).attr('y', 15).attr("font-family", "sans-serif").attr("font-size", "20px").attr("fill", "black")
+					}
+
+					if(vote2012radio.property("checked")){
+						svg2.append("rect").attr("width", 15).attr("height", 15).attr("fill", "blue").attr('x', width/4 - 60)
+						svg2.append("text").text("Barack Obama").attr('x', width/4 - 40).attr('y', 15).attr("font-family", "sans-serif").attr("font-size", "20px").attr("fill", "black")
+
+						svg2.append("rect").attr("width", 15).attr("height", 15).attr("fill", "red").attr('x', 2*width/4 - 60)
+						svg2.append("text").text("Mitt Romney").attr('x', 2*width/4 - 40).attr('y', 15).attr("font-family", "sans-serif").attr("font-size", "20px").attr("fill", "black")
+
+						svg2.append("rect").attr("width", 15).attr("height", 15).attr("fill", "green").attr('x', 3*width/4 - 60)
+						svg2.append("text").text("Someone Else").attr('x', 3*width/4 - 40).attr('y', 15).attr("font-family", "sans-serif").attr("font-size", "20px").attr("fill", "black")
+					}
 				});
 				//bar charts here
 				setupBarChartMapGroup(barPoliData)
