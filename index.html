@@ -954,7 +954,7 @@
 						if(popDist[parseInt(d.id)]){
 							value = popDist[parseInt(d.id)];
 						}
-						return "rgb(" + popScale(value) + ",0," + popScale(value) + ")"
+						return "rgb(0," + .5*popScale(value) + "," + popScale(value) + ")"
 					} else if(pid3radio.property("checked")  && !(stateCountyCheckbox.property("checked"))){
 						return maxParty(partyDist, d);
 					} else if(vote2016radio.property("checked") && !(stateCountyCheckbox.property("checked"))){
@@ -962,7 +962,7 @@
 					} else if(vote2012radio.property("checked") && !(stateCountyCheckbox.property("checked"))){
 						return maxVote2012(vote2012, d);
 					}else if(popradio.property("checked") && stateCountyCheckbox.property("checked")){
-						return "rgb(" + popCountyScale(popDistCounty[parseInt(d.id)]) + ",0," + popCountyScale(popDistCounty[parseInt(d.id)]) + ")"
+						return "rgb(0," + .5*popCountyScale(popDistCounty[parseInt(d.id)]) + "," + popCountyScale(popDistCounty[parseInt(d.id)]) + ")"
 					}else if(pid3radio.property("checked")  && stateCountyCheckbox.property("checked")){
 						if(!maxPartyCty.get(parseInt(d.id))){
 							return "rgb(0,0,0)"
@@ -1102,21 +1102,21 @@
 
 					if(popradio.property("checked") && !stateCountyCheckbox.property("checked")){
 						svg2.append("text").text(minPopState).attr('x', width/2 - 70).attr('y', 15).attr("font-family", "sans-serif").attr("font-size", "20px").attr("fill", "black")
-						svg2.append("rect").attr("width", 15).attr("height", 15).attr("fill", "rgb(" + popScale(minPopState) + ",0," + popScale(minPopState) + ")").attr('x', width/2 - 45)
-						svg2.append("rect").attr("width", 15).attr("height", 15).attr("fill", "rgb(" + popScale((maxPopState - minPopState)/5 + minPopState) + ",0," + popScale((maxPopState - minPopState)/5 + minPopState) + ")").attr('x', width/2 - 30)
-						svg2.append("rect").attr("width", 15).attr("height", 15).attr("fill", "rgb(" + popScale(2*(maxPopState - minPopState)/5 + minPopState) + ",0," + popScale(2*(maxPopState - minPopState)/5 + minPopState) + ")").attr('x', width/2 - 15)
-						svg2.append("rect").attr("width", 15).attr("height", 15).attr("fill", "rgb(" + popScale(3*(maxPopState - minPopState)/5 + minPopState) + ",0," + popScale(3*(maxPopState - minPopState)/5 + minPopState) + ")").attr('x', width/2)
-						svg2.append("rect").attr("width", 15).attr("height", 15).attr("fill", "rgb(" + popScale(4*(maxPopState - minPopState)/5 + minPopState) + ",0," + popScale(4*(maxPopState - minPopState)/5 + minPopState) + ")").attr('x', width/2 + 15)
-						svg2.append("rect").attr("width", 15).attr("height", 15).attr("fill", "rgb(" + popScale(maxPopState) + ",0," + popScale(maxPopState) + ")").attr('x', width/2 + 30)
+						svg2.append("rect").attr("width", 15).attr("height", 15).attr("fill", "rgb(0," + .5*popScale(minPopState) + "," + popScale(minPopState) + ")").attr('x', width/2 - 45)
+						svg2.append("rect").attr("width", 15).attr("height", 15).attr("fill", "rgb(0," + .5*popScale((maxPopState - minPopState)/5 + minPopState) + "," + popScale((maxPopState - minPopState)/5 + minPopState) + ")").attr('x', width/2 - 30)
+						svg2.append("rect").attr("width", 15).attr("height", 15).attr("fill", "rgb(0," + .5*popScale(2*(maxPopState - minPopState)/5 + minPopState) + "," + popScale(2*(maxPopState - minPopState)/5 + minPopState) + ")").attr('x', width/2 - 15)
+						svg2.append("rect").attr("width", 15).attr("height", 15).attr("fill", "rgb(0," + .5*popScale(3*(maxPopState - minPopState)/5 + minPopState) + "," + popScale(3*(maxPopState - minPopState)/5 + minPopState) + ")").attr('x', width/2)
+						svg2.append("rect").attr("width", 15).attr("height", 15).attr("fill", "rgb(0," + .5*popScale(4*(maxPopState - minPopState)/5 + minPopState) + "," + popScale(4*(maxPopState - minPopState)/5 + minPopState) + ")").attr('x', width/2 + 15)
+						svg2.append("rect").attr("width", 15).attr("height", 15).attr("fill", "rgb(0," + .5*popScale(maxPopState) + "," + popScale(maxPopState) + ")").attr('x', width/2 + 30)
 						svg2.append("text").text(maxPopState).attr('x', width/2 + 55).attr('y', 15).attr("font-family", "sans-serif").attr("font-size", "20px").attr("fill", "black")
 					} else if(popradio.property("checked") && stateCountyCheckbox.property("checked")){
 						svg2.append("text").text(minPopCounty).attr('x', width/2 - 70).attr('y', 15).attr("font-family", "sans-serif").attr("font-size", "20px").attr("fill", "black")
-						svg2.append("rect").attr("width", 15).attr("height", 15).attr("fill", "rgb(" + popScale(minPopCounty) + ",0," + popScale(minPopCounty) + ")").attr('x', width/2 - 45)
-						svg2.append("rect").attr("width", 15).attr("height", 15).attr("fill", "rgb(" + popScale((maxPopCounty - minPopCounty)/5 + minPopCounty) + ",0," + popScale((maxPopCounty - minPopCounty)/5 + minPopCounty) + ")").attr('x', width/2 - 30)
-						svg2.append("rect").attr("width", 15).attr("height", 15).attr("fill", "rgb(" + popScale(2*(maxPopCounty - minPopCounty)/5 + minPopCounty) + ",0," + popScale(2*(maxPopCounty - minPopCounty)/5 + minPopCounty) + ")").attr('x', width/2 - 15)
-						svg2.append("rect").attr("width", 15).attr("height", 15).attr("fill", "rgb(" + popScale(3*(maxPopCounty - minPopCounty)/5 + minPopCounty) + ",0," + popScale(3*(maxPopCounty - minPopCounty)/5 + minPopCounty) + ")").attr('x', width/2)
-						svg2.append("rect").attr("width", 15).attr("height", 15).attr("fill", "rgb(" + popScale(4*(maxPopCounty - minPopCounty)/5 + minPopCounty) + ",0," + popScale(4*(maxPopCounty - minPopCounty)/5 + minPopCounty) + ")").attr('x', width/2 + 15)
-						svg2.append("rect").attr("width", 15).attr("height", 15).attr("fill", "rgb(" + popScale(maxPopCounty) + ",0," + popScale(maxPopCounty) + ")").attr('x', width/2 + 30)
+						svg2.append("rect").attr("width", 15).attr("height", 15).attr("fill", "rgb(0," + .5*popScale(minPopCounty) + "," + popScale(minPopCounty) + ")").attr('x', width/2 - 45)
+						svg2.append("rect").attr("width", 15).attr("height", 15).attr("fill", "rgb(0," + .5*popScale((maxPopCounty - minPopCounty)/5 + minPopCounty) + "," + popScale((maxPopCounty - minPopCounty)/5 + minPopCounty) + ")").attr('x', width/2 - 30)
+						svg2.append("rect").attr("width", 15).attr("height", 15).attr("fill", "rgb(0," + .5*popScale(2*(maxPopCounty - minPopCounty)/5 + minPopCounty) + "," + popScale(2*(maxPopCounty - minPopCounty)/5 + minPopCounty) + ")").attr('x', width/2 - 15)
+						svg2.append("rect").attr("width", 15).attr("height", 15).attr("fill", "rgb(0," + .5*popScale(3*(maxPopCounty - minPopCounty)/5 + minPopCounty) + "," + popScale(3*(maxPopCounty - minPopCounty)/5 + minPopCounty) + ")").attr('x', width/2)
+						svg2.append("rect").attr("width", 15).attr("height", 15).attr("fill", "rgb(0," + .5*popScale(4*(maxPopCounty - minPopCounty)/5 + minPopCounty) + "," + popScale(4*(maxPopCounty - minPopCounty)/5 + minPopCounty) + ")").attr('x', width/2 + 15)
+						svg2.append("rect").attr("width", 15).attr("height", 15).attr("fill", "rgb(0," + .5*popScale(maxPopCounty) + "," + popScale(maxPopCounty) + ")").attr('x', width/2 + 30)
 						svg2.append("text").text(maxPopCounty).attr('x', width/2 + 55).attr('y', 15).attr("font-family", "sans-serif").attr("font-size", "20px").attr("fill", "black")
 					}
 					
