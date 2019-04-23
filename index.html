@@ -1295,7 +1295,6 @@
 			idToVote2012.set(1, "Barack Obama")
 			idToVote2012.set(2, "Mitt Romney")
 			idToVote2012.set(3, "Someone Else")
-//["gender", "sexuality", "trans", "educ", "race", "marstat", "employ", "religpew", "pid3", "CC16_410a", "CC16_326"]
 
 			var idToFClassName = new Map()
 			idToFClassName.set("gender", "Gender")
@@ -1341,13 +1340,51 @@
  			 return dist;
 		 }
 
+		 function getMapSizeFClass(fClass){
+		 //["gender", "sexuality", "trans", "educ", "race", "marstat", "employ", "religpew", "pid3", "CC16_410a", "CC16_326"]
+		 	if (fClass == "gender"){
+		 		return idToGender.size;
+		 	}
+		 	else if (fClass == "sexuality"){
+		 		return idToSexuality.size;
+		 	}
+		 	else if (fClass == "trans"){
+		 		return idToTrans.size;
+		 	}
+		 	else if (fClass == "educ"){
+		 		return idToEduc.size;
+		 	}
+		 	else if (fClass == "race"){
+		 		return idToRace.size;
+		 	}
+		 	else if (fClass == "marstat"){
+		 		return idToMarStat.size;
+		 	}
+		 	else if (fClass == "religpew"){
+		 		return idToReligion.size;
+		 	}
+		 	else if (fClass == "pid3"){
+		 		return idToPid.size;
+		 	}
+		 	else if (fClass == "CC16_410a"){
+		 		return idToVote2016.size;
+		 	}
+		 	else if (fClass == "CC16_326"){
+		 		return idToVote2012.size;
+		 	}
+			else if (fClass == "employ"){
+				return idToEmploy.size;
+			}
+		 }
+
 		 function groupedBarChartDist(barGroupPoliData, group){
-			 //gender = 2
-			 //sex,educ,marstat = 6
+			 //sex = 4
+			 //race,educ,marstat,CC16_410a = 6
 			 //trans = 3
-			 //race,CC16_410a = 8
+			 // employ = 8
 			 //religpew = 12
-			 //pid3,CC16_326 = 5
+			 //pid3 = 5
+			 //CC16_326 = 3
 			 var dist = [];
 			 var classes = ["gender", "sexuality", "trans", "educ", "race", "marstat", "employ", "religpew", "pid3", "CC16_410a", "CC16_326"]
 			 if (group == "pop"){
@@ -1356,10 +1393,20 @@
 						barGroupPoliData = removeMissingData(barGroupPoliData, fClass);
 						var poliByClass = d3.nest()
 							.key(function(d) { return d[fClass]; })
-							.rollup(function(v) { return v.length; })
 							.sortKeys(d3.ascending)
+							.rollup(function(v) { return v.length; })
 							.entries(barGroupPoliData);
-						dist.push([fClass, poliByClass]);
+						var countFClass = getMapSizeFClass(fClass);
+						var filteredData = [];
+						var keysPushed = [];
+						poliByClass.forEach(function(index){
+							//console.log(index.key)
+							if (parseInt(index.key) <= countFClass){
+								keysPushed.push(index.key)
+								filteredData.push(index)
+							}
+						});
+						dist.push([fClass, filteredData]);
 					}
 				});
 			 }
@@ -1374,12 +1421,26 @@
 							.rollup(function(v) { return v.length; })
 							.sortKeys(d3.ascending)
 							.entries(barGroupPoliData);
-						dist.push([fClass, poliByClass]);
+						var countFClass = getMapSizeFClass(fClass);
+						var filteredData = [];
+						var keysPushed = [];
+						poliByClass.forEach(function(index){
+							var filteredData1 = [];
+							index.values.forEach(function(index1){
+
+								if (parseInt(index1.key) <= countFClass){
+									keysPushed.push(index1.key)
+									filteredData1.push(index1)
+								}
+							});
+							index.values = filteredData1;
+							filteredData.push(index);
+						});
+
+						dist.push([fClass, filteredData]);
 					}
 				});
 		 	}
-			console.log("DIST")
-			console.log(dist)
 			return dist;
 		}
 
@@ -1395,6 +1456,43 @@
 		function removeMissingData(data, col){
 			data = data.filter(function(d) { return d[col] !== "__NA__" && d[col] !== ""; });
 			return data;
+		}
+
+		function selectMapForClass(fClass){
+			//["gender", "sexuality", "trans", "educ", "race", "marstat", "employ", "religpew", "pid3", "CC16_410a", "CC16_326"]
+			if (fClass == "gender"){
+				return idToGender;
+			}
+			else if (fClass == "sexuality"){
+				return idToSexuality;
+			}
+			else if (fClass == "trans"){
+				return idToTrans;
+			}
+			else if (fClass == "educ"){
+				return idToEduc;
+			}
+			else if (fClass == "race"){
+				return idToRace;
+			}
+			else if (fClass == "marstat"){
+				return idToMarStat;
+			}
+			else if (fClass == "religpew"){
+				return idToReligion;
+			}
+			else if (fClass == "pid3"){
+				return idToPid;
+			}
+			else if (fClass == "CC16_410a"){
+				return idToVote2016;
+			}
+			else if (fClass == "CC16_326"){
+				return idToVote2012;
+			}
+			else if (fClass == "employ"){
+				return idToEmploy;
+			}
 		}
 
 		function setupBarChartMapGroup(data){
@@ -1444,7 +1542,8 @@
 						  .selectAll('option')
 							.data(fClasses).enter()
 							.append('option')
-								.text(function (d) { return d; });
+								.attr("value", function(d) { return d; })
+								.text(function (d) { return idToFClassName.get(d); });
 
 						function onchange() {
 							selectValue = d3.select('select').property('value');
@@ -1505,7 +1604,8 @@
 							.selectAll('option')
 							.data(fClasses).enter()
 							.append('option')
-								.text(function (d) { return d; });
+								.attr("value", function(d) { return d; })
+								.text(function (d) { return idToFClassName.get(d); });
 
 						function onchange() {
 							selectValue = d3.select('select').property('value');
@@ -1544,7 +1644,8 @@
 						  .selectAll('option')
 							.data(fClasses).enter()
 							.append('option')
-								.text(function (d) { return d; });
+								.attr("value", function(d) { return d; })
+								.text(function (d) { return idToFClassName.get(d); });
 
 						function onchange() {
 							selectValue = d3.select('select').property('value');
@@ -1585,7 +1686,8 @@
 							.selectAll('option')
 							.data(fClasses).enter()
 							.append('option')
-								.text(function (d) { return d; });
+								.attr("value", function(d) { return d; })
+								.text(function (d) { return idToFClassName.get(d); });
 
 						function onchange() {
 							selectValue = d3.select('select').property('value');
@@ -1625,7 +1727,8 @@
 							.selectAll('option')
 							.data(fClasses).enter()
 							.append('option')
-								.text(function (d) { return d; });
+								.attr("value", function(d) { return d; })
+								.text(function (d) { return idToFClassName.get(d); });
 
 						function onchange() {
 							selectValue = d3.select('select').property('value');
@@ -1685,6 +1788,7 @@
 			function dsBarChart(data, attri) {
 				var isPercent = true;
 				var states = "";
+				var barLabel = "";
 				if (!stateCountyCheckbox.property("checked")){
 					if (selectedStates.length != 0){
 						states = " in the State of" + selectedAreatoLabels(selectedStates, idToState);
@@ -1889,7 +1993,7 @@
 					var sum = index.values.map(item => item.value).reduce((prev, next) => prev + next);
 					index.values.forEach(function(index1){
 						index1.value = +((100*index1.value/sum).toFixed(2));
-						perList1.push(index1)
+						perList1.push(index1);
 					});
 					index.values = perList1;
 					perList.push(index);
@@ -1899,6 +2003,8 @@
 			}
 
 			function dsGroupedBarChart(data, attri, fClass) {
+
+				var idToFClass = selectMapForClass(fClass);
 
 				var states = "";
 				if (!stateCountyCheckbox.property("checked")){
@@ -1973,7 +2079,7 @@
 				var	height = 990 - margin * 2;
 
 				var categoriesNames = data.map(function(d) { return d.key; });
-				var rateNames = data[0].values.map(function(d) { return d.key; });
+				var groupNames = data[0].values.map(function(d) { return d.key; });
 
 				barGroupSVG = barGroupSVG.attr("width", width + 2 * margin)
 						.attr("height", height + 2 * margin);
@@ -1987,7 +2093,7 @@
 						.padding(0.1);
 
 				var x1 = d3.scaleBand()
-						.domain(rateNames)
+						.domain(groupNames)
 						.rangeRound([0, x0.bandwidth()]);
 
 				var y = d3.scaleLinear()
@@ -2060,7 +2166,7 @@
 					.data(function(d) { return d.values; })
 					.enter().append("text")
 					.attr("class","barGroupSVGtext")
-					.attr("x", function(d) { console.log(d); return x1(d.key) + x1.bandwidth() / 2; })
+					.attr("x", function(d) { return x1(d.key) + x1.bandwidth() / 2; })
 					.attr("y",function(d) { return y(d.value)-5; })
 					.attr('text-anchor', 'middle')
 					.text((a) => `${a.value}${barLabel}`)
@@ -2108,12 +2214,13 @@
 						.attr("y", 9)
 						.attr("dy", ".35em")
 						.style("text-anchor", "end")
-						.text(function(d) {return d; });
+						.text(function(d) { return idToFClass.get(parseInt(d)); });
 
 				legend.style("opacity","1");
 
 			}
 			function dsPopBarChart(data, fClass) {
+				var idToFClass = selectMapForClass(fClass);
 				var isPercent = true;
 				var states = "";
 				if (!stateCountyCheckbox.property("checked")){
@@ -2126,7 +2233,7 @@
 						states = " in the County of" + selectedAreatoLabels(selectedCounties, idToCounty);
 					}
 				}
-				//console.log(states)
+
 				title = idToFClassName.get(fClass) + " of Respondents" + states;
 				xLabel = idToFClassName.get(fClass);
 
@@ -2161,7 +2268,8 @@
 					.domain([0, d3.max(data, function (d) { return d.value; }) ]);
 
 				var xAxis = d3.axisBottom()
-              .scale(x0);
+              .scale(x0)
+							.tickFormat(function(d){ return idToFClass.get(parseInt(d)); });
 
 				var makeYLines = () => d3.axisLeft()
 					.scale(y)
