@@ -344,6 +344,7 @@
 		</div>
 		<div style="border: #090C9B solid 2px; margin:20px; border-radius: 10px">
 			<h2 style="text-align:center; background-color: #090C9B; color: white; margin: 0px; padding:20px; border-top-left-radius: 10px; border-top-right-radius: 10px">Bar Chart</h2>
+			<div id='barGroupDropdown'></div>
 			<div id='groupBarChart' style="background-color: white; border-bottom-left-radius: 10px; border-bottom-right-radius: 10px"></div>
 		</div>
 		<script src="https://d3js.org/d3.v4.min.js"></script>
@@ -374,6 +375,7 @@
 
 			var barSVG = d3.select("#barChart").append("svg");
 			var barGroupSVG = d3.select("#groupBarChart").append("svg");
+			var barGroupDropdown = d3.select("#barGroupDropdown");
 
 			svg4.append("rect").attr("width", 15).attr("height", 15).attr("fill", "black").attr('x', width/2 - 60)
 			svg4.append("text").text("No Data").attr('x', width/2 - 40).attr('y', 15).attr("font-family", "sans-serif").attr("font-size", "20px").attr("fill", "black")
@@ -1235,7 +1237,7 @@
 
 		 function groupedBarChartDist(barGroupPoliData, group){
 			 var dist = [];
-			 var classes = ["gender", "birthyr", "sexuality", "trans", "educ", "race", "marstat", "employ", "religpew", "faminc", "pid3", "CC16_410a", "CC16_326"]
+			 var classes = ["gender", "sexuality", "trans", "educ", "race", "marstat", "employ", "religpew", "pid3", "CC16_410a", "CC16_326"]
 			 if (group == "pop"){
 				 classes.forEach(function(fClass){
 					if (!filterClass.includes(fClass) && (fClass != group)){
@@ -1284,16 +1286,28 @@
 		function setupBarChartMapGroup(data){
 				barSVG.selectAll("*").remove();
 				barGroupSVG.selectAll("*").remove();
+				barGroupDropdown.selectAll("*").remove();
 				if (!stateCountyCheckbox.property("checked")){
 					if(popradio.property("checked")){
-						//console.log(popDist);
+						console.log(popDist);
+
 						var totalPop = 0;
 						var popDistArry = [];
 						for (id in popDist){
-							totalPop += popDist[id];
-							popDistArry.push([idToState.get(parseInt(id)), popDist[id]]);
+							if (selectedStates.length == 0){
+								totalPop += popDist[id];
+								popDistArry.push([idToState.get(parseInt(id)), popDist[id]]);
+							}
+							else{
+								totalPop += popDist[id];
+								if (selectedStates.includes(parseInt(id))){
+									console.log("Sa")
+									console.log(idToState.get(parseInt(id)))
+									popDistArry.push([idToState.get(parseInt(id)), popDist[id]]);
+								}
+							}
 						}
-
+						console.log(popDistArry)
 						var maxPops = popDistArry.sort(function(x, y){
 						   return d3.descending(x[1], y[1]);
 						}).slice(0,10).map(function(x) {
@@ -1312,44 +1326,122 @@
 					else if(pid3radio.property("checked")){
 						data = removeMissingData(data, "pid3");
 						var poliByPid = groupedMapPoliDataCt(data, "pid3");
+						dsBarChart(poliByPid, "pid3");
 
 						var poliByPidClasses = groupedBarChartDist(data, "pid3");
-						console.log(poliByPidClasses);
+						var fClasses = poliByPidClasses.map(function(value,index) { return value[0]; });
 
+						var select = barGroupDropdown
+						  .append('select')
+						  	.attr('class','select')
+						    .on('change',onchange)
+
+						var options = select
+						  .selectAll('option')
+							.data(fClasses).enter()
+							.append('option')
+								.text(function (d) { return d; });
+
+						function onchange() {
+							selectValue = d3.select('select').property('value');
+							barGroupSVG.selectAll("*").remove();
+							poliByPidClasses.forEach(function(fClassData){
+		 						//console.log(fClassData);
+								if (fClassData[0] == selectValue){
+									dsGroupedBarChart(fClassData[1], "pid3", selectValue);
+									//dsGroupedBarChart(fClassData[1], "pid3", "gender");
+								}
+			 				});
+						};
+
+						var firstFClass = poliByPidClasses[0][0];
 						poliByPidClasses.forEach(function(fClassData){
-	 						//console.log(fClassData);
-							if (fClassData[0] == "gender"){
-								console.log(fClassData[1]);
-								console.log("done");
-								dsGroupedBarChart(fClassData[1], "pid3", "gender");
-								//dsGroupedBarChart(fClassData[1], "pid3", "gender");
+							if (fClassData[0] == firstFClass){
+								dsGroupedBarChart(fClassData[1], "pid3", firstFClass);
 							}
 		 				});
 
-						dsBarChart(poliByPid, "pid3")
-						return poliByPid;
 					}
 					else if(vote2016radio.property("checked")){
 						data = removeMissingData(data, "CC16_410a");
 						//deleting because not included in filter
-						data = data.filter(function(d) { return d["CC16_410a"] !== "4.0" && d["CC16_410a"] !== "5.0"; });
+						data = data.filter(function(d) { return d["CC16_410a"] !== "7.0" && d["CC16_410a"] !== "8.0"; });
 						var poliByVote2016 = groupedMapPoliDataCt(data, "CC16_410a");
+						dsBarChart(poliByVote2016, "CC16_410a");
 
 						var poliByVote2016Classes = groupedBarChartDist(data, "CC16_410a");
-						dsBarChart(poliByVote2016, "CC16_410a")
-						//console.log(poliByVote2016)
-						return poliByVote2016;
+						var fClasses = poliByVote2016Classes.map(function(value,index) { return value[0]; });
+
+						var select = barGroupDropdown
+							.append('select')
+								.attr('class','select')
+								.on('change',onchange)
+
+						var options = select
+							.selectAll('option')
+							.data(fClasses).enter()
+							.append('option')
+								.text(function (d) { return d; });
+
+						function onchange() {
+							selectValue = d3.select('select').property('value');
+							barGroupSVG.selectAll("*").remove();
+							poliByVote2016Classes.forEach(function(fClassData){
+								//console.log(fClassData);
+								if (fClassData[0] == selectValue){
+									dsGroupedBarChart(fClassData[1], "CC16_410a", selectValue);
+									//dsGroupedBarChart(fClassData[1], "pid3", "gender");
+								}
+							});
+						};
+
+						var firstFClass = poliByVote2016Classes[0][0];
+						poliByVote2016Classes.forEach(function(fClassData){
+							if (fClassData[0] == firstFClass){
+								dsGroupedBarChart(fClassData[1], "CC16_410a", firstFClass);
+							}
+						});
 					}
 					else if(vote2012radio.property("checked")){
 						data = removeMissingData(data, "CC16_326");
 						//deleting because not included in filter
-						data = data.filter(function(d) { return d["CC16_326"] !== "7.0" && d["CC16_326"] !== "8.0"; });
+						data = data.filter(function(d) { return d["CC16_326"] !== "4.0" && d["CC16_326"] !== "5.0"; });
 						var poliByVote2012 = groupedMapPoliDataCt(data, "CC16_326");
+						dsBarChart(poliByVote2012, "CC16_326");
 
 						var poliByVote2012Classes = groupedBarChartDist(data, "CC16_326");
-						dsBarChart(poliByVote2012, "CC16_326")
+						var fClasses = poliByVote2012Classes.map(function(value,index) { return value[0]; });
+
+						var select = barGroupDropdown
+							.append('select')
+								.attr('class','select')
+								.on('change',onchange)
+
+						var options = select
+							.selectAll('option')
+							.data(fClasses).enter()
+							.append('option')
+								.text(function (d) { return d; });
+
+						function onchange() {
+							selectValue = d3.select('select').property('value');
+							barGroupSVG.selectAll("*").remove();
+							poliByVote2012Classes.forEach(function(fClassData){
+								//console.log(fClassData);
+								if (fClassData[0] == selectValue){
+									dsGroupedBarChart(fClassData[1], "CC16_326", selectValue);
+									//dsGroupedBarChart(fClassData[1], "pid3", "gender");
+								}
+							});
+						};
+
+						var firstFClass = poliByVote2012Classes[0][0];
+						poliByVote2012Classes.forEach(function(fClassData){
+							if (fClassData[0] == firstFClass){
+								dsGroupedBarChart(fClassData[1], "CC16_326", firstFClass);
+							}
+						});
 						//console.log(poliByVote2012)
-						return poliByVote2012;
 					}
 				}
 			}
@@ -1410,7 +1502,12 @@
 					xLabels = ["Donald Trump", "Hillary Clinton", "Gary Johnson", "Jill Stein", "Evan McMullin", "Other"];
 				}
 				else if (attri == "pop"){
-					title = "Top 10 States with Most Respondents";
+					if (selectedStates.length == 0){
+						title = "Top 10 States with Most Respondents";
+					}
+					else{
+						title = "Number of Respondents" + states;
+					}
 					xLabel = "States";
 					isPercent = false;
 				}
@@ -1431,11 +1528,11 @@
 				}
 
 				var margin = 80;
-				var width = 1000 - 2 * margin;
-				var height = 600 - 2 * margin;
+				var width = 1650 - 2 * margin;
+				var height = 990 - 2 * margin;
 
-				barSVG = barSVG.attr("width", 1000)
-					.attr("height", 600);
+				barSVG = barSVG.attr("width", width+ 2*margin)
+					.attr("height", height+ 2*margin);
 
 				var chart = barSVG.append('g')
 					.attr('transform', `translate(${margin}, ${margin})`);
@@ -1588,17 +1685,17 @@
 
 				var isPercent = false;
 				if (attri == "pid3"){
-					title = "Political Party Identification of Respondents by " + fClass + states;
+					title = "Political Party Identification of Respondents by " + fClass[0].toUpperCase() + fClass.slice(1,fClass.length) + states;
 					xLabel = "Political Party";
 					xLabels = ["Democrat", "Republican", "Independent", "Other", "Not Sure"];
 				}
 				else if (attri == "CC16_326") {
-					title = "Reported Candidate Voted for in 2012 Election by Respondents " + fClass + states;
+					title = "Reported Candidate Voted for in 2012 Election by Respondents by " + fClass[0].toUpperCase() + fClass.slice(1,fClass.length) + states;
 					xLabel = "2012 Election Candidate";
 					xLabels = ["Barack Obama", "Mitt Romney", "Someone Else"];
 				}
 				else if (attri == "CC16_410a") {
-					title = "Reported Candidate Voted for in 2016 Election by Respondents " + fClass + states;
+					title = "Reported Candidate Voted for in 2016 Election by Respondents by " + fClass[0].toUpperCase() + fClass.slice(1,fClass.length) + states;
 					xLabel = "2016 Election Candidate";
 					xLabels = ["Donald Trump", "Hillary Clinton", "Gary Johnson", "Jill Stein", "Evan McMullin", "Other"];
 				}
@@ -1624,8 +1721,8 @@
 				}
 
 				var margin = 80;
-				var width = 1000 - margin * 2;
-				var	height = 600 - margin * 2;
+				var width = 1650 - margin * 2;
+				var	height = 990 - margin * 2;
 
 				var categoriesNames = data.map(function(d) { return d.key; });
 				var rateNames = data[0].values.map(function(d) { return d.key; });
@@ -1639,7 +1736,7 @@
 				var x0 = d3.scaleBand()
 						.rangeRound([0, width])
 						.domain(categoriesNames)
-						.padding(0.4);
+						.padding(0.1);
 
 				var x1 = d3.scaleBand()
 						.domain(rateNames)
