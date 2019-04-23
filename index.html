@@ -342,6 +342,10 @@
 			<h2 style="text-align:center; background-color: #090C9B; color: white; margin: 0px; padding:20px; border-top-left-radius: 10px; border-top-right-radius: 10px">Bar Chart</h2>
 			<div id='barChart' style="background-color: white; border-bottom-left-radius: 10px; border-bottom-right-radius: 10px"></div>
 		</div>
+		<div style="border: #090C9B solid 2px; margin:20px; border-radius: 10px">
+			<h2 style="text-align:center; background-color: #090C9B; color: white; margin: 0px; padding:20px; border-top-left-radius: 10px; border-top-right-radius: 10px">Bar Chart</h2>
+			<div id='groupBarChart' style="background-color: white; border-bottom-left-radius: 10px; border-bottom-right-radius: 10px"></div>
+		</div>
 		<script src="https://d3js.org/d3.v4.min.js"></script>
 		<script src="https://d3js.org/topojson.v2.min.js"></script>
 		<script type="text/javascript">
@@ -369,6 +373,7 @@
 			var svg4 = d3.select("#labelsHere").append("svg").attr("width", width).attr("height", 30);
 
 			var barSVG = d3.select("#barChart").append("svg");
+			var barGroupSVG = d3.select("#groupBarChart").append("svg");
 
 			svg4.append("rect").attr("width", 15).attr("height", 15).attr("fill", "black").attr('x', width/2 - 60)
 			svg4.append("text").text("No Data").attr('x', width/2 - 40).attr('y', 15).attr("font-family", "sans-serif").attr("font-size", "20px").attr("fill", "black")
@@ -408,6 +413,8 @@
 			var vote2012CountyScale;
 
 			var barPoliData;
+			var selectedStates = [];
+			var selectedCounties = [];
 
 			//clear button
 			d3.select("#clrButton").on("click", clrButtonClick)
@@ -539,6 +546,9 @@
 			function clrButtonClick(){
 				selected = new Map()
 				renderMap()
+				selectedStates = [];
+				selectedCounties = [];
+				generateBarChart();
 			}
 
 			function clrFilterClick(){
@@ -881,7 +891,7 @@
 				});
 			}
 
-			function highlightSelectedArea(element){
+			function highlightSelectedArea(element, action){
 				if(selected.get(d3.select(element).attr("class")) === "undefined"){
 					selected.set(d3.select(element).attr("class"), true)
 				} else {
@@ -890,8 +900,30 @@
 
 				if(selected.get(d3.select(element).attr("class"))){
 					d3.select(element).attr("stroke", selectedColor).attr("stroke-width", selectedWidth)
+					if (action == "click"){
+						if (!(stateCountyCheckbox.property("checked"))){
+							selectedStates.push(parseInt(d3.select(element).attr("class")));
+							generateBarChart();
+						}
+						else{
+							selectedCounties.push(parseInt(d3.select(element).attr("class")));
+							generateBarChart();
+						}
+					}
 				} else {
 					d3.select(element).attr("stroke", unselectedColor).attr("stroke-width", unselectedWidth)
+					if (action == "click"){
+						if (!(stateCountyCheckbox.property("checked"))){
+							var index = selectedStates.indexOf(parseInt(d3.select(element).attr("class")));
+							if (index !== -1) selectedStates.splice(index, 1);
+							generateBarChart();
+						}
+						else{
+							var index = selectedCounties.indexOf(parseInt(d3.select(element).attr("class")));
+							if (index !== -1) selectedCounties.splice(index, 1);
+							generateBarChart();
+						}
+					}
 				}
 			}
 
@@ -1092,7 +1124,7 @@
 								return unselectedWidth
 							}
 						}).on("click", function(){
-							highlightSelectedArea(this)
+							highlightSelectedArea(this,"click")
 						}).on("mouseover", function(){
 							//d3.select(this).attr("fill", "orange");
 							d3.select(this).attr("stroke", "orange").attr("stroke-width", selectedWidth)
@@ -1100,8 +1132,8 @@
 							/*d3.select(this).attr("fill", function(d){
 								return radioUpdate(d)
 							});*/
-							highlightSelectedArea(this)
-							highlightSelectedArea(this)
+							highlightSelectedArea(this, "mouseout")
+							highlightSelectedArea(this, "mouseout")
 						})
 
 					svg.append("path")
@@ -1175,15 +1207,21 @@
 					}
 				});
 				//bar charts here
-				setupBarChartMapGroup(barPoliData);
+				generateBarChart();
 				});
 			}
 
+			function generateBarChart(){
+				var newBarData = getBarChartData(barPoliData);
+				setupBarChartMapGroup(newBarData);
+			}
+
 			function getBarChartData(poliData){
+				console.log(selectedStates);
 				var dist = [];
  			 	poliData.forEach(function(index){
  				 if (!stateCountyCheckbox.property("checked")){
- 					 if (filter(index)){
+ 					 if (filter(index) && (selectedStates.includes(parseInt(index.inputstate)) || selectedStates.length == 0 || selectedStates.length == 51)){
  						 var numToReplace = ["1", "2", "3", "4", "5", "6", "7", "8"];
  						 if (numToReplace.includes(index.CC16_410a)){
  							 index.CC16_410a = index.CC16_410a.concat(".0");
@@ -1200,25 +1238,29 @@
 			 var classes = ["gender", "birthyr", "sexuality", "trans", "educ", "race", "marstat", "employ", "religpew", "faminc", "pid3", "CC16_410a", "CC16_326"]
 			 if (group == "pop"){
 				 classes.forEach(function(fClass){
-					if (!filterClass.includes(fClass)){
+					if (!filterClass.includes(fClass) && (fClass != group)){
 						var poliByClass = d3.nest()
 							.key(function(d) { return d[fClass]; })
 							.rollup(function(v) { return v.length; })
+							.sortKeys(d3.ascending)
 							.entries(barGroupPoliData);
+						dist.push([fClass, poliByClass]);
 					}
-					dist.push([fClass, poliByClass]);
 				});
 			 }
 			 else{
 				 classes.forEach(function(fClass){
-					if (!filterClass.includes(fClass)){
+					if (!filterClass.includes(fClass) && (fClass != group)){
+						barGroupPoliData = removeMissingData(barGroupPoliData, fClass);
 						var poliByClass = d3.nest()
 							.key(function(d) { return d[group]; })
+							.sortKeys(d3.ascending)
 							.key(function(d) { return d[fClass]; })
 							.rollup(function(v) { return v.length; })
+							.sortKeys(d3.ascending)
 							.entries(barGroupPoliData);
+						dist.push([fClass, poliByClass]);
 					}
-					dist.push([fClass, poliByClass]);
 				});
 		 	}
 
@@ -1235,12 +1277,13 @@
 		}
 
 		function removeMissingData(data, col){
-			data = barPoliData.filter(function(d) { return d[col] !== "__NA__" && d[col] !== ""; });
+			data = data.filter(function(d) { return d[col] !== "__NA__" && d[col] !== ""; });
 			return data;
 		}
 
-		function setupBarChartMapGroup(barPoliData){
+		function setupBarChartMapGroup(data){
 				barSVG.selectAll("*").remove();
+				barGroupSVG.selectAll("*").remove();
 				if (!stateCountyCheckbox.property("checked")){
 					if(popradio.property("checked")){
 						//console.log(popDist);
@@ -1260,39 +1303,50 @@
 						    }
 						});
 
-						var poliByPop = groupedBarChartDist(barPoliData, "pop");
+						var poliByPop = groupedBarChartDist(data, "pop");
 
 						dsBarChart(maxPops, "pop");
 						//console.log(poliByPop)
 						return poliByPop;
 					}
 					else if(pid3radio.property("checked")){
-						barPoliData = removeMissingData(barPoliData, "pid3")
-						var poliByPid = groupedMapPoliDataCt(barPoliData, "pid3");
+						data = removeMissingData(data, "pid3");
+						var poliByPid = groupedMapPoliDataCt(data, "pid3");
 
-						var poliByPidClasses = groupedBarChartDist(barPoliData, "pid3");
-						//console.log(poliByPid);
+						var poliByPidClasses = groupedBarChartDist(data, "pid3");
+						console.log(poliByPidClasses);
+
+						poliByPidClasses.forEach(function(fClassData){
+	 						//console.log(fClassData);
+							if (fClassData[0] == "gender"){
+								console.log(fClassData[1]);
+								console.log("done");
+								dsGroupedBarChart(fClassData[1], "pid3", "gender");
+								//dsGroupedBarChart(fClassData[1], "pid3", "gender");
+							}
+		 				});
+
 						dsBarChart(poliByPid, "pid3")
 						return poliByPid;
 					}
 					else if(vote2016radio.property("checked")){
-						barPoliData = removeMissingData(barPoliData, "CC16_410a");
+						data = removeMissingData(data, "CC16_410a");
 						//deleting because not included in filter
-						barPoliData = barPoliData.filter(function(d) { return d["CC16_410a"] !== "4.0" && d["CC16_410a"] !== "5.0"; });
-						var poliByVote2016 = groupedMapPoliDataCt(barPoliData, "CC16_410a");
+						data = data.filter(function(d) { return d["CC16_410a"] !== "4.0" && d["CC16_410a"] !== "5.0"; });
+						var poliByVote2016 = groupedMapPoliDataCt(data, "CC16_410a");
 
-						var poliByVote2016Classes = groupedBarChartDist(barPoliData, "CC16_410a");
+						var poliByVote2016Classes = groupedBarChartDist(data, "CC16_410a");
 						dsBarChart(poliByVote2016, "CC16_410a")
 						//console.log(poliByVote2016)
 						return poliByVote2016;
 					}
 					else if(vote2012radio.property("checked")){
-						barPoliData = removeMissingData(barPoliData, "CC16_326");
+						data = removeMissingData(data, "CC16_326");
 						//deleting because not included in filter
-						barPoliData = barPoliData.filter(function(d) { return d["CC16_326"] !== "7.0" && d["CC16_326"] !== "8.0"; });
-						var poliByVote2012 = groupedMapPoliDataCt(barPoliData, "CC16_326");
+						data = data.filter(function(d) { return d["CC16_326"] !== "7.0" && d["CC16_326"] !== "8.0"; });
+						var poliByVote2012 = groupedMapPoliDataCt(data, "CC16_326");
 
-						var poliByVote2012Classes = groupedBarChartDist(barPoliData, "CC16_326");
+						var poliByVote2012Classes = groupedBarChartDist(data, "CC16_326");
 						dsBarChart(poliByVote2012, "CC16_326")
 						//console.log(poliByVote2012)
 						return poliByVote2012;
@@ -1302,6 +1356,7 @@
 
 			function percentifyBarData(data){
 				var perList = [];
+				//console.log(data);
 				var sum = data.map(item => item.value).reduce((prev, next) => prev + next);
 				data.forEach(function(index){
 					index.value = +((100*index.value/sum).toFixed(2));
@@ -1310,46 +1365,63 @@
 			 return perList;
 			}
 
-			function mapIDtoLabels(data, labels){
-				var labeledList = [];
-				data.forEach(function(index){
-					index.value = +((100*index.value/sum).toFixed(2));
-					labeledList.push(index);
- 			 });
-			 return perList;
+			function selectedSTtoLabels(){
+				var labeledList = "";
+				if (selectedStates.length == 2){
+					labeledList = " " + idToState.get(parseInt(selectedStates[0])) +" and " + idToState.get(parseInt(selectedStates[1]));
+				}
+				else if (selectedStates.length == 1){
+					labeledList = " " + idToState.get(parseInt(selectedStates[0]));
+				}
+				else{
+					selectedStates.forEach(function(id){
+						var state = idToState.get(parseInt(id));
+						if (id != selectedStates[selectedStates.length - 1]){
+							labeledList += " " + state+",";
+						}
+						else{
+							labeledList += " and " + state;
+						}
+	 			 });
+			 }
+			 return labeledList;
 			}
 
-			function dsBarChart(sample, attri) {
+			function dsBarChart(data, attri) {
 				var isPercent = true;
-
+				var states = "";
+				if (selectedStates.length != 0){
+					states = " in the State of" + selectedSTtoLabels();
+				}
+				console.log(states)
 				if (attri == "pid3"){
-					title = "Political Party Identification of Respondents";
-					xTitle = "Political Party";
+					title = "Political Party Identification of Respondents" + states;
+					xLabel = "Political Party";
 					xLabels = ["Democrat", "Republican", "Independent", "Other", "Not Sure"];
 				}
 				else if (attri == "CC16_326") {
-					title = "Reported Candidate Voted for in 2012 Election by Respondents";
-					xTitle = "2012 Election Candidate";
+					title = "Reported Candidate Voted for in 2012 Election by Respondents" + states;
+					xLabel = "2012 Election Candidate";
 					xLabels = ["Barack Obama", "Mitt Romney", "Someone Else"];
 				}
 				else if (attri == "CC16_410a") {
-					title = "Reported Candidate Voted for in 2016 Election by Respondents";
-					xTitle = "2016 Election Candidate";
+					title = "Reported Candidate Voted for in 2016 Election by Respondents" + states;
+					xLabel = "2016 Election Candidate";
 					xLabels = ["Donald Trump", "Hillary Clinton", "Gary Johnson", "Jill Stein", "Evan McMullin", "Other"];
 				}
 				else if (attri == "pop"){
 					title = "Top 10 States with Most Respondents";
-					xTitle = "States";
+					xLabel = "States";
 					isPercent = false;
 				}
 				else{
 					title = "error"
-					xTitle = "error"
+					xLabel = "error"
 					xLabels = []
 				}
 
 				if (isPercent == true){
-					sample = percentifyBarData(sample);
+					data = percentifyBarData(data);
 					yLabel = "Percentage of Respondents";
 					barLabel = "%";
 				}
@@ -1368,35 +1440,35 @@
 				var chart = barSVG.append('g')
 					.attr('transform', `translate(${margin}, ${margin})`);
 
-				var xScale = d3.scaleBand()
+				var x0 = d3.scaleBand()
 					.range([0, width])
-					.domain(sample.map((s) => s.key))
+					.domain(data.map((s) => s.key))
 					.padding(0.4)
 
 
-				var yScale = d3.scaleLinear()
+				var y = d3.scaleLinear()
 					.range([height, 0])
-					.domain([0, d3.max(sample, function (d) { return d.value; }) ]);
+					.domain([0, d3.max(data, function (d) { return d.value; }) ]);
 
 				if (attri != "pop"){
 					var xAxis = d3.axisBottom()
-	              .scale(xScale)
+	              .scale(x0)
 								.tickFormat(function(d,i){ return xLabels[i] });
 				}
 				else{
 					var xAxis = d3.axisBottom()
-	              .scale(xScale);
+	              .scale(x0);
 				}
 
 				var makeYLines = () => d3.axisLeft()
-					.scale(yScale)
+					.scale(y)
 
 				chart.append('g')
 					.attr('transform', `translate(0, ${height})`)
 					.call(xAxis);
 
 				chart.append('g')
-					.call(d3.axisLeft(yScale));
+					.call(d3.axisLeft(y));
 
 				chart.append('g')
 					.attr('class', 'grid')
@@ -1406,41 +1478,31 @@
 					)
 
 				var barGroups = chart.selectAll()
-					.data(sample)
+					.data(data)
 					.enter()
 					.append('g')
 
 				barGroups.append('rect')
 					.attr('class', 'bar')
-					.attr('x', (g) => xScale(g.key))
-					.attr('y', (g) => yScale(g.value))
-					.attr('height', (g) => height - yScale(g.value))
-					.attr('width', xScale.bandwidth())
+					.attr('x', (g) => x0(g.key))
+					.attr('y', (g) => y(g.value))
+					.attr('height', (g) => height - y(g.value))
+					.attr('width', x0.bandwidth())
 					.on('mouseenter', function(actual, i) {
-						d3.selectAll('.value')
+						d3.select("#barChart").selectAll('.value')
 							.attr('opacity', 0)
 
 						d3.select(this)
 							.transition()
 							.duration(300)
 							.attr('opacity', 0.6)
-							.attr('x', (a) => xScale(a.key) - 5)
-							.attr('width', xScale.bandwidth() + 10)
-
-						var y = yScale(actual.value)
-
-						line = chart.append('line')
-							.attr('id', 'limit')
-							.attr('x1', 0)
-							.attr('y1', y)
-							.attr('x2', width)
-							.attr('y2', y)
-							.attr('fill', 'black')
+							.attr('x', (a) => x0(a.key) - 5)
+							.attr('width', x0.bandwidth() + 10)
 
 						barGroups.append('text')
 							.attr('class', 'divergence')
-							.attr('x', (a) => xScale(a.key) + xScale.bandwidth() / 2)
-							.attr('y', (a) => yScale(a.value) - 5)
+							.attr('x', (a) => x0(a.key) + x0.bandwidth() / 2)
+							.attr('y', (a) => y(a.value) - 5)
 							.attr('fill', 'black')
 							.attr('text-anchor', 'middle')
 							.text((a, idx) => {
@@ -1462,8 +1524,8 @@
 							.transition()
 							.duration(300)
 							.attr('opacity', 1)
-							.attr('x', (a) => xScale(a.key))
-							.attr('width', xScale.bandwidth())
+							.attr('x', (a) => x0(a.key))
+							.attr('width', x0.bandwidth())
 
 						chart.selectAll('#limit').remove()
 						chart.selectAll('.divergence').remove()
@@ -1472,8 +1534,8 @@
 				barGroups.append('text')
 					.style("fill", "black")
 					.attr('class', 'value')
-					.attr('x', (a) => xScale(a.key) + xScale.bandwidth() / 2)
-					.attr('y', (a) => yScale(a.value) - 5)
+					.attr('x', (a) => x0(a.key) + x0.bandwidth() / 2)
+					.attr('y', (a) => y(a.value) - 5)
 					.attr('text-anchor', 'middle')
 					.text((a) => `${a.value}${barLabel}`)
 
@@ -1490,7 +1552,7 @@
 					.attr('x', width / 2 + margin)
 					.attr('y', height + margin * 1.7)
 					.attr('text-anchor', 'middle')
-					.text(xTitle)
+					.text(xLabel)
 
 				barSVG.append('text')
 					.attr('class', 'title')
@@ -1498,6 +1560,212 @@
 					.attr('y', 40)
 					.attr('text-anchor', 'middle')
 					.text(title)
+
+			}
+
+			function percentifyGroupBarData(data){
+				var perList = [];
+				data.forEach(function(index){
+					var perList1 = [];
+					var sum = index.values.map(item => item.value).reduce((prev, next) => prev + next);
+					index.values.forEach(function(index1){
+						index1.value = +((100*index1.value/sum).toFixed(2));
+						perList1.push(index1)
+					});
+					index.values = perList1;
+					perList.push(index);
+				 });
+			 console.log(perList)
+			 return perList;
+			}
+
+			function dsGroupedBarChart(data, attri, fClass) {
+
+				var states = "";
+				if (selectedStates.length != 0){
+					states = " in the State of" + selectedSTtoLabels();
+				}
+
+				var isPercent = false;
+				if (attri == "pid3"){
+					title = "Political Party Identification of Respondents by " + fClass + states;
+					xLabel = "Political Party";
+					xLabels = ["Democrat", "Republican", "Independent", "Other", "Not Sure"];
+				}
+				else if (attri == "CC16_326") {
+					title = "Reported Candidate Voted for in 2012 Election by Respondents " + fClass + states;
+					xLabel = "2012 Election Candidate";
+					xLabels = ["Barack Obama", "Mitt Romney", "Someone Else"];
+				}
+				else if (attri == "CC16_410a") {
+					title = "Reported Candidate Voted for in 2016 Election by Respondents " + fClass + states;
+					xLabel = "2016 Election Candidate";
+					xLabels = ["Donald Trump", "Hillary Clinton", "Gary Johnson", "Jill Stein", "Evan McMullin", "Other"];
+				}
+				else if (attri == "pop"){
+					title = "Top 10 States with Most Respondents";
+					xLabel = "States";
+					isPercent = false;
+				}
+				else{
+					title = "error"
+					xLabel = "error"
+					xLabels = []
+				}
+
+				if (isPercent == true){
+					data = percentifyGroupBarData(data);
+					yLabel = "Percentage of Respondents";
+					barLabel = "%";
+				}
+				else{
+					yLabel = "Number of Respondents";
+					barLabel = "";
+				}
+
+				var margin = 80;
+				var width = 1000 - margin * 2;
+				var	height = 600 - margin * 2;
+
+				var categoriesNames = data.map(function(d) { return d.key; });
+				var rateNames = data[0].values.map(function(d) { return d.key; });
+
+				barGroupSVG = barGroupSVG.attr("width", width + 2 * margin)
+						.attr("height", height + 2 * margin);
+
+				var chart = barGroupSVG.append('g')
+			    .attr('transform', `translate(${margin}, ${margin})`);
+
+				var x0 = d3.scaleBand()
+						.rangeRound([0, width])
+						.domain(categoriesNames)
+						.padding(0.4);
+
+				var x1 = d3.scaleBand()
+						.domain(rateNames)
+						.rangeRound([0, x0.bandwidth()]);
+
+				var y = d3.scaleLinear()
+						.domain([0, d3.max(data, function(categorie) { return d3.max(categorie.values, function(d) { return d.value; }); })])
+						.range([height, 0]);
+
+				if (attri != "pop"){
+					var xAxis = d3.axisBottom()
+	              .scale(x0)
+								.tickFormat(function(d,i){ return xLabels[i] });
+				}
+				else{
+					var xAxis = d3.axisBottom()
+	              .scale(x0);
+				}
+
+				var yAxis = d3.axisLeft()
+						.scale(y);
+
+				var makeYLines = () => d3.axisLeft()
+						.scale(y);
+
+				var color = d3.scaleOrdinal()
+						.range(["#5E4FA2", "#3288BD", "#66C2A5", "#ABDDA4", "#E6F598",
+						"#FFFFBF", "#FEE08B", "#FDAE61", "#F46D43", "#D53E4F", "#9E0142"]);
+
+
+				chart.append("g")
+						.attr('transform', `translate(0, ${height})`)
+						.call(xAxis);
+
+				chart.append("g")
+						.call(yAxis);
+
+				chart.append('g')
+			    .attr('class', 'grid')
+			    .call(makeYLines()
+			      .tickSize(-width, 0, 0)
+			      .tickFormat('')
+			    )
+
+				var barGroups = chart.selectAll()
+						.data(data)
+						.enter()
+						.append("g")
+						.attr("transform",function(d) { return `translate(${x0(d.key)} ,0)`; });
+
+				barGroups.selectAll("rect")
+						.data(function(d) { return d.values; })
+						.enter()
+						.append("rect")
+						.attr("x", function(d) { return x1(d.key); })
+						.attr("y", function(d) { return y(d.value); })
+						.attr("height", function(d) { return height - y(d.value); })
+						.attr("width", x1.bandwidth())
+						.style("fill", function(d) { return color(d.key) })
+						.on("mouseover", function(d, i) {
+								//d3.select("#groupBarChart").selectAll('.barGroupSVGtext')
+				        	//.attr('opacity', 0)
+								d3.select(this).style("fill", d3.rgb(color(d.key)).darker(2))
+
+						})
+						.on("mouseout", function(d) {
+								//d3.select("#groupBarChart").selectAll('.barGroupSVGtext')
+								//	.attr('opacity', 1)
+								d3.select(this).style("fill", color(d.key));
+						});
+
+				barGroups.selectAll("text")
+					.data(function(d) { return d.values; })
+					.enter().append("text")
+					.attr("class","barGroupSVGtext")
+					.attr("x", function(d) { return x1(d.key) + x1.bandwidth() / 2; })
+					.attr("y",function(d) { return y(d.value)-5; })
+					.attr('text-anchor', 'middle')
+					.text((a) => `${a.value}${barLabel}`)
+
+
+				barGroupSVG.append("text")
+						.attr('class', 'label')
+						.attr('x', -(height / 2) - margin)
+						.attr('y', margin / 2.4)
+						.attr('transform', 'rotate(-90)')
+						.attr('text-anchor', 'middle')
+						.text(yLabel)
+
+				barGroupSVG.append('text')
+			    .attr('class', 'label')
+			    .attr('x', width / 2 + margin)
+			    .attr('y', height + margin * 1.7)
+			    .attr('text-anchor', 'middle')
+			    .text(xLabel)
+
+				barGroupSVG.append('text')
+			    .attr('class', 'title')
+			    .attr('x', width / 2 + margin)
+			    .attr('y', 40)
+			    .attr('text-anchor', 'middle')
+			    .text(title)
+
+				//Legend
+				var legend = chart.selectAll(".legend")
+						.data(data[0].values.map(function(d) { return d.key; }))
+						.enter()
+						.append("g")
+						.attr("class", "legend")
+						.attr("transform", function(d,i) { return `translate(0, ${i*20})`; })
+						.style("opacity","0");
+
+				legend.append("rect")
+						.attr("x", width - 18)
+						.attr("height", 18)
+						.attr("width", 18)
+						.style("fill", function(d) { return color(d); });
+
+				legend.append("text")
+						.attr("x", width - 24)
+						.attr("y", 9)
+						.attr("dy", ".35em")
+						.style("text-anchor", "end")
+						.text(function(d) {return d; });
+
+				legend.style("opacity","1");
 
 			}
         </script>
