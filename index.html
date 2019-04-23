@@ -214,7 +214,7 @@
 							<br>
 							<input type="checkbox" class="employ" value="7" id="home">Homemaker</input>
 							<br>
-							<input type="checkbox" class="employ" value="8" id="stud">Sudent</input>
+							<input type="checkbox" class="employ" value="8" id="stud">Student</input>
 							<br>
 						</div>
 						<br>
@@ -299,7 +299,7 @@
 						</div>
 						<br>
 						<div style="width: 50%">
-							<h4 style="margin: 0px; padding-top: 15px;">2016 Predisential Election</h4>
+							<h4 style="margin: 0px; padding-top: 15px;">2016 Presidential Election</h4>
 							<input type="checkbox" class="CC16_410a" value="1.0" id="trump">Donald Trump (Republican)</input>
 							<br>
 							<input type="checkbox" class="CC16_410a" value="2.0" id="clinton">Hillary Clinton (Democrat)</input>
@@ -315,7 +315,7 @@
 						</div>
 						<br>
 						<div style="width: 50%; padding-top: 15px;">
-							<h4 style="margin: 0px">2012 Predidential Election</h4>
+							<h4 style="margin: 0px">2012 Presidential Election</h4>
 							<input type="checkbox" class="CC16_326" value="1.0" id="obama">Barack Obama</input>
 							<br>
 							<input type="checkbox" class="CC16_326" value="2.0" id="romney">Mitt Romney</input>
@@ -1214,6 +1214,101 @@
 				generateBarChart();
 				});
 			}
+			var idToGender = new Map()
+			idToGender.set(1, "Male")
+			idToGender.set(2, "Female")
+
+			var idToSexuality = new Map()
+			idToSexuality.set(1, "Heterosexual")
+			idToSexuality.set(2, "Lesbian/Gay Woman")
+			idToSexuality.set(3, "Gay Man")
+			idToSexuality.set(4, "Bisexual")
+
+			var idToTrans = new Map()
+			idToTrans.set(1, "Transgender")
+			idToTrans.set(2, "Not Transgender")
+
+			var idToEduc = new Map()
+			idToEduc.set(1, "No HS")
+			idToEduc.set(2, "HS Grad")
+			idToEduc.set(3, "Some College")
+			idToEduc.set(4, "2-Year College")
+			idToEduc.set(5, "4-Year College")
+			idToEduc.set(6, "Post-Grad")
+
+			var idToRace = new Map()
+			idToRace.set(1, "White")
+			idToRace.set(2, "Black")
+			idToRace.set(3, "Hispanic")
+			idToRace.set(4, "Asian")
+			idToRace.set(5, "Native American")
+			idToRace.set(6, "Middle Eastern")
+
+			var idToMarStat = new Map()
+			idToMarStat.set(1, "Married")
+			idToMarStat.set(2, "Separated")
+			idToMarStat.set(3, "Divorced")
+			idToMarStat.set(4, "Widowed")
+			idToMarStat.set(5, "Single")
+			idToMarStat.set(6, "Domestic Partnership")
+
+			var idToEmploy = new Map()
+			idToEmploy.set(1, "Full-Time")
+			idToEmploy.set(2, "Part-Time")
+			idToEmploy.set(3, "Temporarily Laid-Off")
+			idToEmploy.set(4, "Unemployed")
+			idToEmploy.set(5, "Retired")
+			idToEmploy.set(6, "Permanently Disabled")
+			idToEmploy.set(7, "Homemaker")
+			idToEmploy.set(8, "Student")
+
+			var idToReligion = new Map()
+			idToReligion.set(1, "Protestant")
+			idToReligion.set(2, "Roman Catholic")
+			idToReligion.set(3, "Mormon")
+			idToReligion.set(4, "Eastern/Greek Ortodox")
+			idToReligion.set(5, "Jewish")
+			idToReligion.set(6, "Muslim")
+			idToReligion.set(7, "Buddhist")
+			idToReligion.set(8, "Hindu")
+			idToReligion.set(9, "Atheist")
+			idToReligion.set(10, "Agnostic")
+			idToReligion.set(11, "Nothing in Particular")
+			idToReligion.set(12, "Other")
+
+			var idToPid = new Map()
+			idToPid.set(1, "Democrat")
+			idToPid.set(2, "Republican")
+			idToPid.set(3, "Independent")
+			idToPid.set(4, "Other")
+			idToPid.set(5, "Not Sure")
+
+			var idToVote2016 = new Map()
+			idToVote2016.set(1, "Donald Trump")
+			idToVote2016.set(2, "Hillary Clinton")
+			idToVote2016.set(3, "Gary Johnson")
+			idToVote2016.set(4, "Jill Stein")
+			idToVote2016.set(5, "Evan McMullin")
+			idToVote2016.set(6, "Other")
+
+			var idToVote2012 = new Map()
+			idToVote2012.set(1, "Barack Obama")
+			idToVote2012.set(2, "Mitt Romney")
+			idToVote2012.set(3, "Someone Else")
+//["gender", "sexuality", "trans", "educ", "race", "marstat", "employ", "religpew", "pid3", "CC16_410a", "CC16_326"]
+
+			var idToFClassName = new Map()
+			idToFClassName.set("gender", "Gender")
+			idToFClassName.set("sexuality", "Sexuality")
+			idToFClassName.set("trans", "Transgender")
+			idToFClassName.set("educ", "Education Achieved")
+			idToFClassName.set("race", "Race")
+			idToFClassName.set("marstat", "Marital Status")
+			idToFClassName.set("employ", "Employment Status")
+			idToFClassName.set("religpew", "Religion")
+			idToFClassName.set("pid3", "Party Identification")
+			idToFClassName.set("CC16_410a", "2012 Presidential Election")
+			idToFClassName.set("CC16_326", "2016 Presidential Election")
 
 			function generateBarChart(){
 				var newBarData = getBarChartData(barPoliData);
@@ -1247,6 +1342,12 @@
 		 }
 
 		 function groupedBarChartDist(barGroupPoliData, group){
+			 //gender = 2
+			 //sex,educ,marstat = 6
+			 //trans = 3
+			 //race,CC16_410a = 8
+			 //religpew = 12
+			 //pid3,CC16_326 = 5
 			 var dist = [];
 			 var classes = ["gender", "sexuality", "trans", "educ", "race", "marstat", "employ", "religpew", "pid3", "CC16_410a", "CC16_326"]
 			 if (group == "pop"){
@@ -1277,7 +1378,8 @@
 					}
 				});
 		 	}
-
+			console.log("DIST")
+			console.log(dist)
 			return dist;
 		}
 
@@ -1809,20 +1911,21 @@
 						states = " in the County of" + selectedAreatoLabels(selectedCounties, idToCounty);
 					}
 				}
+				var fClassLabel = idToFClassName.get(fClass);
 
 				var isPercent = false;
 				if (attri == "pid3"){
-					title = "Political Party Identification of Respondents by " + fClass[0].toUpperCase() + fClass.slice(1,fClass.length) + states;
+					title = "Political Party Identification of Respondents by " + fClassLabel + states;
 					xLabel = "Political Party";
 					xLabels = ["Democrat", "Republican", "Independent", "Other", "Not Sure"];
 				}
 				else if (attri == "CC16_326") {
-					title = "Reported Candidate Voted for in 2012 Election by Respondents by " + fClass[0].toUpperCase() + fClass.slice(1,fClass.length) + states;
+					title = "Reported Candidate Voted for in 2012 Election by Respondents by " + fClassLabel + states;
 					xLabel = "2012 Election Candidate";
 					xLabels = ["Barack Obama", "Mitt Romney", "Someone Else"];
 				}
 				else if (attri == "CC16_410a") {
-					title = "Reported Candidate Voted for in 2016 Election by Respondents by " + fClass[0].toUpperCase() + fClass.slice(1,fClass.length) + states;
+					title = "Reported Candidate Voted for in 2016 Election by Respondents by " + fClassLabel + states;
 					xLabel = "2016 Election Candidate";
 					xLabels = ["Donald Trump", "Hillary Clinton", "Gary Johnson", "Jill Stein", "Evan McMullin", "Other"];
 				}
@@ -1957,7 +2060,7 @@
 					.data(function(d) { return d.values; })
 					.enter().append("text")
 					.attr("class","barGroupSVGtext")
-					.attr("x", function(d) { return x1(d.key) + x1.bandwidth() / 2; })
+					.attr("x", function(d) { console.log(d); return x1(d.key) + x1.bandwidth() / 2; })
 					.attr("y",function(d) { return y(d.value)-5; })
 					.attr('text-anchor', 'middle')
 					.text((a) => `${a.value}${barLabel}`)
@@ -2024,8 +2127,8 @@
 					}
 				}
 				//console.log(states)
-				title = fClass + " of Respondents" + states;
-				xLabel = fClass;
+				title = idToFClassName.get(fClass) + " of Respondents" + states;
+				xLabel = idToFClassName.get(fClass);
 
 				if (isPercent == true){
 					data = percentifyBarData(data);
