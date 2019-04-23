@@ -638,6 +638,9 @@
 						minPopState = dist[key]
 					}
 				}
+				if(minPopState === 1000000){
+					minPopState = 0
+				}
 				return dist;
 			}
 
@@ -663,6 +666,9 @@
 					} else if(dist[key] < minPopCounty){
 						minPopCounty = dist[key]
 					}
+				}
+				if(minPopCounty === 1000000){
+					minPopCounty = 0
 				}
 				return dist;
 			}
@@ -972,6 +978,9 @@
 						min = dist[k]
 					}
 				}
+				if(max === 0){
+					min = 0
+				}
 				return d3.scaleLinear().domain([min, max]).range([60, 255])
 			}
 
@@ -998,6 +1007,9 @@
 						if(popDist[parseInt(d.id)]){
 							value = popDist[parseInt(d.id)];
 						}
+						if(maxPopState === 0){
+							return "rgb(0,0,0)"
+						}
 						return "rgb(0," + .5*popScale(value) + "," + popScale(value) + ")"
 					} else if(pid3radio.property("checked")  && !(stateCountyCheckbox.property("checked"))){
 						return maxParty(partyDist, d);
@@ -1006,6 +1018,9 @@
 					} else if(vote2012radio.property("checked") && !(stateCountyCheckbox.property("checked"))){
 						return maxVote2012(vote2012, d);
 					}else if(popradio.property("checked") && stateCountyCheckbox.property("checked")){
+						if(maxPopCounty === 0){
+							return "rgb(0,0,0)"
+						}
 						return "rgb(0," + .5*popCountyScale(popDistCounty[parseInt(d.id)]) + "," + popCountyScale(popDistCounty[parseInt(d.id)]) + ")"
 					}else if(pid3radio.property("checked")  && stateCountyCheckbox.property("checked")){
 						if(!maxPartyCty.get(parseInt(d.id))){
