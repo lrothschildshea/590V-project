@@ -1488,13 +1488,25 @@
 						var filteredData = [];
 						var keysPushed = [];
 						poliByClass.forEach(function(index){
-							//console.log(index.key)
 							if (parseInt(index.key) <= countFClass){
 								keysPushed.push(index.key)
 								filteredData.push(index)
 							}
 						});
-						dist.push([fClass, filteredData]);
+						var filledData = [];
+						for (i = 1; i <= countFClass; i++){
+							var noBlanks = false;
+							filteredData.forEach(function(index){
+									if (parseInt(index.key) == i){
+										noBlanks = true;
+										filledData.push(index)
+									}
+							});
+							if (!noBlanks){
+								filledData.push({key: i, value: 0});
+							}
+						}
+						dist.push([fClass, filledData]);
 					}
 				});
 			 }
@@ -1511,21 +1523,45 @@
 							.entries(barGroupPoliData);
 						var countFClass = getMapSizeFClass(fClass);
 						var filteredData = [];
-						var keysPushed = [];
 						poliByClass.forEach(function(index){
 							var filteredData1 = [];
-							index.values.forEach(function(index1){
-
-								if (parseInt(index1.key) <= countFClass){
-									keysPushed.push(index1.key)
-									filteredData1.push(index1)
+							for (i = 1; i <= countFClass; i++){
+								var noBlanks = false;
+								index.values.forEach(function(index1){
+									if (parseInt(index1.key) == i){
+										noBlanks = true;
+										index1.key = parseInt(index1.key);
+										filteredData1.push(index1);
+									}
+								});
+								if (!noBlanks){
+									filteredData1.push({key: i, value: 0});
 								}
-							});
+							}
 							index.values = filteredData1;
 							filteredData.push(index);
 						});
+						var countGroupClass = getMapSizeFClass(group);
+						var filledData = [];
+						for (i = 1; i <= countGroupClass; i++){
+							var noBlanks = false;
+							filteredData.forEach(function(index){
+									if (parseInt(index.key) == i){
+										noBlanks = true;
+										index.key = parseInt(index.key)
+										filledData.push(index)
+									}
+							});
+							if (!noBlanks){
+								var missingArry = [];
+								for (j = 1; j <= countFClass; j++){
+									missingArry.push({key: j, value : 0})
+								}
+								filledData.push({key: i, values: missingArry});
+							}
+						}
 
-						dist.push([fClass, filteredData]);
+						dist.push([fClass, filledData]);
 					}
 				});
 		 	}
@@ -1533,12 +1569,26 @@
 		}
 
 		function groupedMapPoliDataCt(data, group){
+			var countFClass = getMapSizeFClass(group);
 			var poliByGroup = d3.nest()
 				.key(function(d) { return d[group]; })
 				.rollup(function(v) { return v.length; })
 				.sortKeys(d3.ascending)
 				.entries(data);
-			return poliByGroup;
+			var filledData = [];
+			for (i = 1; i <= countFClass; i++){
+				var noBlanks = false;
+				poliByGroup.forEach(function(index){
+						if (parseInt(index.key) == i){
+							noBlanks = true;
+							filledData.push(index)
+						}
+				});
+				if (!noBlanks){
+					filledData.push({key: i, value: 0});
+				}
+			}
+			return filledData;
 		}
 
 		function removeMissingData(data, col){
@@ -1623,7 +1673,6 @@
 						var poliByPop = groupedBarChartDist(data, "pop");
 
 						dsBarChart(maxPops, "pop");
-						//console.log(poliByPop)
 
 						var fClasses = poliByPop.map(function(value,index) { return value[0]; });
 
@@ -1643,10 +1692,8 @@
 							selectValue = d3.select('select').property('value');
 							barPopSVG.selectAll("*").remove();
 							poliByPop.forEach(function(fClassData){
-		 						//console.log(fClassData);
 								if (fClassData[0] == selectValue){
 									dsPopBarChart(fClassData[1], selectValue);
-									//dsGroupedBarChart(fClassData[1], "pid3", "gender");
 								}
 			 				});
 						};
@@ -1705,10 +1752,8 @@
 							selectValue = d3.select('select').property('value');
 							barPopSVG.selectAll("*").remove();
 							poliByPop.forEach(function(fClassData){
-								//console.log(fClassData);
 								if (fClassData[0] == selectValue){
 									dsPopBarChart(fClassData[1], selectValue);
-									//dsGroupedBarChart(fClassData[1], "pid3", "gender");
 								}
 							});
 						};
@@ -1745,10 +1790,8 @@
 							selectValue = d3.select('select').property('value');
 							barGroupSVG.selectAll("*").remove();
 							poliByPidClasses.forEach(function(fClassData){
-		 						//console.log(fClassData);
 								if (fClassData[0] == selectValue){
 									dsGroupedBarChart(fClassData[1], "pid3", selectValue);
-									//dsGroupedBarChart(fClassData[1], "pid3", "gender");
 								}
 			 				});
 						};
@@ -1787,10 +1830,8 @@
 							selectValue = d3.select('select').property('value');
 							barGroupSVG.selectAll("*").remove();
 							poliByVote2016Classes.forEach(function(fClassData){
-								//console.log(fClassData);
 								if (fClassData[0] == selectValue){
 									dsGroupedBarChart(fClassData[1], "CC16_410a", selectValue);
-									//dsGroupedBarChart(fClassData[1], "pid3", "gender");
 								}
 							});
 						};
@@ -1828,10 +1869,8 @@
 							selectValue = d3.select('select').property('value');
 							barGroupSVG.selectAll("*").remove();
 							poliByVote2012Classes.forEach(function(fClassData){
-								//console.log(fClassData);
 								if (fClassData[0] == selectValue){
 									dsGroupedBarChart(fClassData[1], "CC16_326", selectValue);
-									//dsGroupedBarChart(fClassData[1], "pid3", "gender");
 								}
 							});
 						};
@@ -1842,13 +1881,11 @@
 								dsGroupedBarChart(fClassData[1], "CC16_326", firstFClass);
 							}
 						});
-						//console.log(poliByVote2012)
 				}
 			}
 
 			function percentifyBarData(data){
 				var perList = [];
-				//console.log(data);
 				var sum = data.map(item => item.value).reduce((prev, next) => prev + next);
 				data.forEach(function(index){
 					index.value = +((100*index.value/sum).toFixed(2));
@@ -2096,7 +2133,6 @@
 					index.values = perList1;
 					perList.push(index);
 				 });
-			 //console.log(perList)
 			 return perList;
 			}
 
