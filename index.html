@@ -75,16 +75,16 @@
 		</style>
 	</head>
 	<body style="background-color: rgb(253,253,253); margin:0px">
-		<h1 style="text-align:center; color: white; font-size: 45px; background-color:#090C9B; margin:0px; padding:30px">What influences American Voting?</h1>
+		<h1 style="text-align:center; color: white; font-size: 45px; background-color:#090C9B; margin:0px; padding:30px">What Influences American Voting?</h1>
 		<div style="display:flex; justify-content: space-evenly">
 			<div>
 				<div style="border: #090C9B solid 2px; margin:20px; border-radius: 10px">
 					<h2 style="text-align:center; background-color: #090C9B; color: white; margin: 0px; padding:20px; border-top-left-radius: 5px; border-top-right-radius: 5px">United State of America</h2>
 					<div id='mapHere' style="width: 1000px; background-color: white; border-bottom-left-radius: 10px; border-bottom-right-radius: 10px"></div>
-					<div id='labelsHere' style="width: 1000px;"></div>
+					<div id='labelsHere' style="width: 1000px; background-color: white; border-bottom-left-radius: 10px; border-bottom-right-radius: 10px"></div>
 				</div>
 				<div style="border: #090C9B solid 2px; margin:20px; border-radius: 10px">
-					<h2 style="text-align:center; background-color: #090C9B; color: white; margin: 0px; padding:20px; border-top-left-radius: 5px; border-top-right-radius: 5px">Bar Chart</h2>
+					<h2 style="text-align:center; background-color: #090C9B; color: white; margin: 0px; padding:20px; border-top-left-radius: 5px; border-top-right-radius: 5px">Respondents</h2>
 					<div id='barChart' style="background-color: white; border-bottom-left-radius: 10px; border-bottom-right-radius: 10px"></div>
 				</div>
 			</div>
@@ -412,7 +412,7 @@
 					</div>
 				</div>
 				<div style="border: #090C9B solid 2px; margin:20px; border-radius: 10px">
-					<h2 style="text-align:center; background-color: #090C9B; color: white; margin: 0px; padding:20px; border-top-left-radius: 5px; border-top-right-radius: 5px">Bar Chart</h2>
+					<h2 style="text-align:center; background-color: #090C9B; color: white; margin: 0px; padding:20px; border-top-left-radius: 5px; border-top-right-radius: 5px">Respondent Groups</h2>
 					<div id='barGroupDropdown'></div>
 					<div id='groupBarChart' style="background-color: white; border-bottom-left-radius: 10px; border-bottom-right-radius: 10px"></div>
 					<div id='popBarChart' style="background-color: white; border-bottom-left-radius: 10px; border-bottom-right-radius: 10px"></div>
@@ -1394,8 +1394,8 @@
 			idToFClassName.set("employ", "Employment Status")
 			idToFClassName.set("religpew", "Religion")
 			idToFClassName.set("pid3", "Party Identification")
-			idToFClassName.set("CC16_410a", "2012 Presidential Election")
-			idToFClassName.set("CC16_326", "2016 Presidential Election")
+			idToFClassName.set("CC16_410a", "2016 Presidential Election")
+			idToFClassName.set("CC16_326", "2012 Presidential Election")
 
 			function generateBarChart(){
 				var newBarData = getBarChartData(barPoliData);
@@ -2046,6 +2046,7 @@
 					.attr('y', (g) => y(g.value))
 					.attr('height', (g) => height - y(g.value))
 					.attr('width', x0.bandwidth())
+					.attr('fill', "rgb(0,102,204)")
 					.on('mouseenter', function(actual, i) {
 						d3.select("#barChart").selectAll('.value')
 							.attr('opacity', 0)
@@ -2256,7 +2257,7 @@
 
 				var color = d3.scaleOrdinal()
 						.range(["#5E4FA2", "#3288BD", "#66C2A5", "#ABDDA4", "#E6F598",
-						"#FFFFBF", "#FEE08B", "#FDAE61", "#F46D43", "#D53E4F", "#9E0142"]);
+						"#FFFFBF", "#FEE08B", "#FDAE61", "#F46D43", "#D53E4F", "#9E0142", "purple"]);
 
 
 				chart.append("g")
@@ -2289,14 +2290,9 @@
 						.attr("width", x1.bandwidth())
 						.style("fill", function(d) { return color(d.key) })
 						.on("mouseover", function(d, i) {
-								//d3.select("#groupBarChart").selectAll('.barGroupSVGtext')
-				        	//.attr('opacity', 0)
 								d3.select(this).style("fill", d3.rgb(color(d.key)).darker(2))
-
 						})
 						.on("mouseout", function(d) {
-								//d3.select("#groupBarChart").selectAll('.barGroupSVGtext')
-								//	.attr('opacity', 1)
 								d3.select(this).style("fill", color(d.key));
 						});
 
@@ -2308,7 +2304,7 @@
 					.attr("y",function(d) { return y(d.value)-5; })
 					.attr('text-anchor', 'middle')
 					.text((a) => `${a.value}${barLabel}`)
-
+					.attr("font-size", "10px")
 
 				barGroupSVG.append("text")
 						.attr('class', 'label')
@@ -2441,6 +2437,7 @@
 					.attr('y', (g) => y(g.value))
 					.attr('height', (g) => height - y(g.value))
 					.attr('width', x0.bandwidth())
+					.attr('fill', "rgb(0,102,204)")
 					.on('mouseenter', function(actual, i) {
 						d3.select("#popBarChart").selectAll('.value')
 							.attr('opacity', 0)
