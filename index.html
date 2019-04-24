@@ -713,6 +713,8 @@
 				}
 				if(minPopState === 1000000){
 					minPopState = 0
+				}else if(minPopState === maxPopState){
+					minPopState = 0
 				}
 				return dist;
 			}
@@ -1080,7 +1082,7 @@
 						if(popDist[parseInt(d.id)]){
 							value = popDist[parseInt(d.id)];
 						}
-						if(maxPopState === 0){
+						if(maxPopState === 0 || value === 0){
 							return "rgb(0,0,0)"
 						}
 						return "rgb(0," + .5*popScale(value) + "," + popScale(value) + ")"
@@ -1267,6 +1269,7 @@
 					}
 
 					if(vote2016radio.property("checked")){
+						svg3.selectAll("*").remove()
 						svg3.attr("height", 30).attr("width", width)
 						svg2.append("rect").attr("width", 15).attr("height", 15).attr("fill", "red").attr('x', width/4 - 60)
 						svg2.append("text").text("Donald Trump").attr('x', width/4 - 40).attr('y', 15).attr("font-family", "sans-serif").attr("font-size", "20px").attr("fill", "black")
@@ -1948,7 +1951,7 @@
 				else if (attri == "pop"){
 					if (!stateCountyCheckbox.property("checked")){
 						if (selectedStates.length == 0){
-							title = "Top 10 States with Most Respondents";
+							title = "States with Most Respondents";
 						}
 						else{
 							title = "Number of Respondents" + states;
@@ -1957,7 +1960,7 @@
 					}
 					else{
 						if (selectedCounties.length == 0){
-							title = "Top 10 Counties with Most Respondents";
+							title = "Counties with Most Respondents";
 						}
 						else{
 							title = "Number of Respondents" + states;
@@ -2173,7 +2176,7 @@
 				else if (attri == "pop"){
 					if (!stateCountyCheckbox.property("checked")){
 						if (selectedStates.length == 0){
-							title = "Top 10 States with Most Respondents";
+							title = "States with Most Respondents";
 						}
 						else{
 							title = "Number of Respondents" + states;
@@ -2182,7 +2185,7 @@
 					}
 					else{
 						if (selectedCounties.length == 0){
-							title = "Top 10 Counties with Most Respondents";
+							title = "Counties with Most Respondents";
 						}
 						else{
 							title = "Number of Respondents" + states;
